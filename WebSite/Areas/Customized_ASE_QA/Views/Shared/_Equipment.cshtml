@@ -1,0 +1,135 @@
+﻿@model Models.ASE.QA.Shared.EquipmentModel
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">設備資訊</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <td class="col-sm-2 center" rowspan="5">
+                        @if (!string.IsNullOrEmpty(Model.Extension))
+                        {
+                            <span class="profile-picture">
+                                <img class="img-responsive" style="max-height:200px;max-width:160px;" alt="" src="@Url.Content(string.Format("~/QAPhoto/{0}?t={1}", Model.PhotoName, Guid.NewGuid().ToString()))" />
+                            </span>
+                        }
+                        else
+                        {
+                            <i class="fa fa-cog fa-5x" aria-hidden="true"></i>
+                        }
+                    </td>
+                    <th class="col-sm-1"><label>校驗編號</label></th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.CalNo)</td>
+                    <th class="col-sm-1"><label>MSA校驗編號</label></th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.MSACalNo)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.IchiTypeDisplay)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.IchiTypeDisplay)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.SerialNo)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.SerialNo)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.IchiDisplay)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.IchiDisplay)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.MachineNo)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.MachineNo)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Spec)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.Spec)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Brand)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.Brand)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Model)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.Model)</td>
+                </tr>
+                <tr>
+                    <th><label>廠別</label></th>
+                    <td colspan="4">@Html.DisplayFor(x => x.Factory)</td>
+                </tr>
+                <tr>
+                    <th><label>部門</label></th>
+                    <td colspan="4">@Html.DisplayFor(x => x.OrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-2"><label>量測特性</label></th>
+                    <td colspan="4">@Html.DisplayFor(x => x.CharacteristicType)</td>
+                </tr>
+
+                @if (!Model.CAL && !Model.MSA)
+                {
+                    <tr>
+                        <th class="col-sm-2"><label>免校驗</label></th>
+                        <td colspan="4">
+                            <i class="ace-icon fa fa-check bigger-110 red"></i>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <th class="col-sm-2">@Html.LabelFor(x => x.CAL)</th>
+                        <td colspan="2">
+                            @if (Model.CAL)
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.MSA)</th>
+                        <td class="col-sm-4">
+                            @if (Model.MSA)
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <th class="col-sm-2"><label>校正頻率(月)</label></th>
+                        <td colspan="2">@Html.DisplayFor(x => x.CalCycle)</td>
+                        <th class="col-sm-1"><label>MSA頻率(月)</label></th>
+                        <td class="col-sm-4">@Html.DisplayFor(x => x.MSACycle)</td>
+                    </tr>
+    <tr>
+        <th class="col-sm-2"><label>上次校驗日期</label></th>
+        <td colspan="2">@Html.DisplayFor(x => x.LastCalDateString)</td>
+        <th class="col-sm-1"><label>上次MSA日期</label></th>
+        <td class="col-sm-4">@Html.DisplayFor(x => x.LastMSADateString)</td>
+    </tr>
+                    <tr>
+        <th class="col-sm-2"><label>下次校驗日期</label></th>
+        <td colspan="2">@Html.DisplayFor(x => x.NextCalDateString)</td>
+        <th class="col-sm-1"><label>下次MSA日期</label></th>
+        <td class="col-sm-4">@Html.DisplayFor(x => x.NextMSADateString)</td>
+    </tr>
+                }
+                <tr>
+                    <th class="col-sm-2">@Html.LabelFor(x => x.Owner)</th>
+                    <td colspan="2">@Html.DisplayFor(x => x.Owner)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.PE)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.PE)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-2">@Html.LabelFor(x => x.OwnerManager)</th>
+                    <td colspan="2">@Html.DisplayFor(x => x.OwnerManager)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.PEManager)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.PEManager)</td>
+                </tr>
+                <tr>
+                    <th><label>備註</label></th>
+                    <td colspan="4">@Html.DisplayFor(x => x.Remark)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

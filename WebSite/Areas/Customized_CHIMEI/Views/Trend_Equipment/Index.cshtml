@@ -1,0 +1,147 @@
+﻿@model Customized.CHIMEI.Models.TrendQuery.QueryFormModel
+
+@{
+    Layout = "~/Areas/Customized_CHIMEI/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+<link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+<link href="@Url.Content("~/assets/css/datepicker.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.maskedinput.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-datepicker.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/locales/bootstrap-datepicker."+ViewBag.Lang+".js")"></script>
+
+@*<script type="text/javascript" src="@Url.Content("~/Scripts/flot/excanvas.min.js")"></script>*@
+<script type="text/javascript" src="@Url.Content("~/Scripts/flot/jquery.flot.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/flot/jquery.flot.time.min.js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        InitTree();
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+            Query();
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        $('#ExpandTree').click(function () {
+            debugger;
+            var i = $(this).find('i');
+
+            if (i.hasClass('fa-chevron-down')) {
+                i.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                $('#divTree').jstree("open_all");
+            }
+            else {
+                i.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                $('#divTree').jstree("close_all");
+            }
+        });
+    });
+
+    var InitTree = function () {
+        var container = $('#divTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Form = function (url, data) {
+        var form = $('#divForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            data: data,
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Query = function () {
+        if ($('#Parameters_ControlPointUniqueID').val() != '' || $('#Parameters_EquipmentUniqueID').val() != '') {
+            Form('@Url.Action("Query")', $('#QueryForm').serialize());
+        }
+        else {
+            $('#divForm').empty();
+        }
+    };
+</script>
+}
+
+<div class="row">
+    <div class="col-xs-3">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.CheckDate</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+                    {
+                        @Html.HiddenFor(x => x.Parameters.ControlPointUniqueID)
+                        @Html.HiddenFor(x => x.Parameters.EquipmentUniqueID)
+                        @Html.HiddenFor(x => x.Parameters.PartUniqueID)
+
+                        <table class="table table-bordered table-input">
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.BeginDateString)</th>
+                                <td class="col-sm-11">@Html.TextBoxFor(x => x.Parameters.BeginDateString, new { @class = "datepicker col-sm-9" })</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.EndDateString)</th>
+                                <td class="col-sm-11">@Html.TextBoxFor(x => x.Parameters.EndDateString, new { @class = "datepicker col-sm-9" })</td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.CheckResult @Resources.Resource.Query</h5>
+                <div class="widget-toolbar">
+                    <a href="#" id="ExpandTree" title="">
+                        <i class="ace-icon fa fa-chevron-down white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4" style="overflow-x:scroll;">
+                    <div id="divTreeContainer" style="min-height:200px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-9">
+        <div id="divForm" style="min-height:200px;"></div>
+    </div>
+</div>

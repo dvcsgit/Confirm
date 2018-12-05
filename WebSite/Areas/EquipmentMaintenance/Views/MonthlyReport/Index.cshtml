@@ -1,0 +1,129 @@
+﻿@model Models.EquipmentMaintenance.MonthlyReport.QueryFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+<link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        InitTree();
+
+        $('#Parameters_Year, #Parameters_Month').change(function () {
+            Query();
+        });
+
+        $('#ExpandTree').click(function () {
+            debugger;
+            var i = $(this).find('i');
+
+            if (i.hasClass('fa-chevron-down')) {
+                i.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                $('#divTree').jstree("open_all");
+            }
+            else {
+                i.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                $('#divTree').jstree("close_all");
+            }
+        });
+    });
+
+    var InitTree = function () {
+        var container = $('#divTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Query = function () {
+        var form = $('#divForm');
+
+        form.empty();
+
+        if ($('#Parameters_RouteUniqueID').val() != '' && $('#Parameters_Year').val() != '' && $('#Parameters_Month').val() != '') {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: '@Url.Action("Query")',
+                data: $('#QueryForm').serialize(),
+                dataType: "html",
+                beforeSend: function () { form.Overlay('show'); },
+                success: function (data) { form.Overlay('show').html(data); },
+                error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+            });
+        }
+    }
+</script>
+}
+
+<div class="row">
+    <div class="col-xs-3">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.PatrolDate</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+                    {
+                        @Html.HiddenFor(x => x.Parameters.RouteUniqueID)
+
+                        <table class="table table-bordered table-input">
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.Year)</th>
+                                <td class="col-sm-11">@Html.DropDownListFor(x => x.Parameters.Year, Model.YearSelectItemList)</td>
+                            </tr>
+                            <tr>
+                                <th>@Html.LabelFor(x => x.Parameters.Month)</th>
+                                <td>@Html.DropDownListFor(x => x.Parameters.Month, Model.MonthSelectItemList)</td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Route</h5>
+                <div class="widget-toolbar">
+                    <a href="#" id="ExpandTree" title="">
+                        <i class="ace-icon fa fa-chevron-down white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4" style="overflow-x:scroll;">
+                    <div id="divTreeContainer" style="min-height:200px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-9">
+        <div id="divForm" style="min-height:200px;"></div>
+    </div>
+</div>

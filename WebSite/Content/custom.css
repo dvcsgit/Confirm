@@ -1,0 +1,166 @@
+﻿li.disabled span.ui-icon {
+    color:inherit;
+}
+
+.pagination {
+    margin: 5px;
+}
+
+.sidebar {
+    width: 240px;
+}
+
+.sidebar+.main-content {
+    margin-left: 240px;
+}
+
+.sidebar~.footer .footer-inner {
+    left: 240px;
+}
+
+.sidebar.menu-min .nav-list > li > .submenu {
+    width:230px;
+}
+
+.sidebar.menu-min .nav-list > li > a > .menu-text {
+    width:230px;
+}
+
+table.nowrap th, table.nowrap td {
+    white-space:nowrap;
+}
+
+.widget-main.no-padding .table.border {
+    border-width: 1px;
+}
+
+span.field-validation-error {
+    display: inline-block !important;
+    font-size: 11px;
+    padding: 4px 8px;
+    color: #FFF;
+    background: #B94A48;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.35);
+    position: relative;
+    top: 10px;
+    margin-bottom:5px;
+}
+
+span.field-validation-error::after {
+    content: '';
+    display: inline-block;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #B94A48;
+    position: absolute;
+    top: -6px;
+    left: 7px;
+}
+
+.table-input tr th {
+    font-weight: bold;
+    padding: 8px;
+    text-align: right;
+    background: linear-gradient(rgb(248, 248, 248) 0px, rgb(236, 236, 236) 100%) repeat-x rgb(242, 242, 242);
+    color: rgb(112, 112, 112);
+    vertical-align:middle;
+    width:auto;
+    white-space: nowrap;
+}
+
+.table-input tr th label {
+    font-weight: bold;
+    padding: 8px;
+    text-align: right;
+    background: linear-gradient(rgb(248, 248, 248) 0px, rgb(236, 236, 236) 100%) repeat-x rgb(242, 242, 242);
+    color: rgb(112, 112, 112);
+    vertical-align:middle;
+    width:auto;
+    white-space: nowrap;
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    vertical-align:middle;
+}
+
+table.th-bold tr th label {
+    font-weight: bold;
+}
+
+label {
+    font-size:13px;
+}
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
+    font-size:13px;
+}
+
+.radio, .checkbox {
+    margin-top:0;
+    margin-bottom:0;
+}
+
+body {
+    font-size:13px;
+}
+
+.select2-match {
+    font-weight: bold;
+    color: #dd4814;
+}
+
+.nav-list > li > a {
+    font-size:16px;
+}
+
+.btn {
+    font-size:13px;
+}
+
+input[type=checkbox].ace + .lbl, input[type=radio].ace + .lbl {
+    z-index:auto;
+}
+
+.nav-tabs > li > a, .nav-tabs > li > a:focus {
+     z-index:auto;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus{
+     z-index:auto;
+}
+
+.tab-content{
+     z-index:auto;
+}
+
+#Overlay.widget-box-overlay > .loading-icon {
+    position:fixed;
+}
+
+textarea {
+    resize: none;
+}
+
+.space {
+    margin:6px 0;
+}
+
+.col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9 {
+    float:none;
+}
+
+.no-skin .nav-list>li .submenu>li.active>a>.menu-icon {
+  color:inherit;
+}
+
+.input-group-addon {
+    font-size:13px;
+}
+
+.tab-content {
+    padding: 5px 12px;
+}

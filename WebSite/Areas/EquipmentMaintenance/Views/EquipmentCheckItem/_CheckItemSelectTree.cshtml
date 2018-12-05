@@ -1,0 +1,50 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(function () {
+        $('#divCheckItemSelectTree').jstree({
+            "core": { animation: 0 },
+            "json_data": {
+                "data": [@(Html.Raw(Model))],
+                "ajax": {
+                    "url": '@Url.Action("GetCheckItemSelectTreeItem")',
+                    "data": function (n) {
+                        return {
+                            RefOrganizationUniqueID: $('#OrganizationUniqueID').val(),
+                            OrganizationUniqueID: n.attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID"),
+                            CheckType: n.attr("@Utility.Define.EnumTreeAttribute.CheckType")
+                        };
+                    }
+                }
+            },
+            "animation": 0,
+            "plugins": ["themes", "json_data", "checkbox", "ui"],
+            "themes": { "theme": "apple", "dots": true, "icons": true },
+            "ui": { "select_limit": 1 }
+        }).bind("hover_node.jstree", function (e, data) {
+            var tooltip = data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.ToolTip");
+
+            if (tooltip != '') {
+                var a = data.rslt.obj.find('a:first');
+
+                a.tooltip({
+                    'title': tooltip
+                });
+
+                a.tooltip('show');
+            }
+
+            e.preventDefault();
+        }).bind("load_node.jstree", function (e, data) {
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Organization"]').find('a:first ins.jstree-icon').remove();
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.CheckType"]').find('a:first ins.jstree-icon').addClass('fa fa-chevron-right red').removeClass('jstree-icon');
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.CheckItem"]').find('a:first ins.jstree-icon').addClass('fa fa-check-square-o red').removeClass('jstree-icon');
+
+            e.preventDefault();
+        });
+    });
+</script>
+
+<div id="divCheckItemSelectTree"></div>
+
+

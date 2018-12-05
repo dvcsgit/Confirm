@@ -1,0 +1,284 @@
+﻿@model Models.ASE.AbnormalNotify_v2.CreateFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var maxWidth = 0;
+
+        $('.Group').each(function () {
+            var width = $(this).parent()[0].clientWidth;
+            if (width > maxWidth) {
+                maxWidth = width;
+            }
+        });
+
+        $('.Group').each(function () {
+            $(this).parent().css('width', maxWidth);
+        });
+
+        $.validator.unobtrusive.parse("#CreateForm");
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        $('#OccurTimePicker').timepicker({
+            showSeconds: false,
+            showMeridian: false,
+            defaultTime: false,
+            minuteStep: 1
+        }).on('changeTime.timepicker', function (e) {
+            $('#FormInput_OccurTime').val(padLeft(e.time.hours.toString(), 2) + padLeft(e.time.minutes.toString(), 2));
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        if ($('#OccurTimePickerValue').val() != '') {
+            $('#OccurTimePicker').timepicker('setTime', $('#OccurTimePickerValue').val());
+        }
+
+        $('#RecoveryTimePicker').timepicker({
+            showSeconds: false,
+            showMeridian: false,
+            defaultTime: false,
+            minuteStep: 1
+        }).on('changeTime.timepicker', function (e) {
+            $('#FormInput_RecoveryTime').val(padLeft(e.time.hours.toString(), 2) + padLeft(e.time.minutes.toString(), 2));
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+    });
+
+    var Save = function () {
+        var form = $('#CreateForm');
+
+        if (form.valid())
+        {
+            var data = [];
+
+            $('.Group:checked').each(function () {
+                data.push($(this).val());
+            });
+
+            $('#FormInput_Groups').val(JSON.stringify(data));
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Create")',
+                data: form.serialize(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Query();
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    var ClearOccurTime = function () {
+        $('#OccurTimePicker, #FormInput_OccurTime').val('');
+    };
+
+    var ClearRecoveryTime = function () {
+        $('#RecoveryTimePicker, #FormInput_RecoveryTime').val('');
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-bullhorn bigger-160"></i>
+        發佈
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+   <div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.AbnormalNotifyForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm" }))
+            {
+                @Html.HiddenFor(x => x.FormInput.Groups)
+                
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">*@Html.LabelFor(x => x.FormInput.OccurDateString)</th>
+                        <td class="col-sm-3">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.FormInput.OccurDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                            @Html.ValidationMessageFor(x => x.FormInput.OccurDateString)
+                        </td>
+                        <td class="col-sm-3">
+                            @Html.HiddenFor(x => x.OccurTimePickerValue)
+                            @Html.HiddenFor(x => x.FormInput.OccurTime)
+                            <div class="input-group bootstrap-timepicker">
+                                <input type="text" id="OccurTimePicker" class="form-control timepicker" readonly="readonly" style="cursor:pointer" />
+                                <span class="input-group-addon" style="cursor:pointer;">
+                                    <i class="fa fa-clock-o bigger-110"></i>
+                                </span>
+                                <span class="input-group-addon" style="cursor:pointer;" onclick="ClearOccurTime();" title="@Resources.Resource.Clear">
+                                    <i class="fa fa-eraser bigger-110"></i>
+                                </span>
+                            </div>
+                            @Html.ValidationMessageFor(x => x.FormInput.OccurTime)
+                        </td>
+                        <td class="col-sm-5"></td>
+                    </tr>
+                    <tr>
+                        <th>*@Html.LabelFor(x => x.FormInput.Contact)</th>
+                        <td colspan="3">
+                            @Html.TextBoxFor(x => x.FormInput.Contact, new { @class = "col-sm-6" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Contact)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>*@Html.LabelFor(x => x.FormInput.Mvpn)</th>
+                        <td colspan="3">
+                            @Html.TextBoxFor(x => x.FormInput.Mvpn)
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Mvpn)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>*@Html.LabelFor(x => x.FormInput.Subject)</th>
+                        <td colspan="3">
+                            @Html.TextBoxFor(x => x.FormInput.Subject, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Subject)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>*@Html.LabelFor(x => x.FormInput.Location)</th>
+                        <td colspan="3">
+                            @Html.TextAreaFor(x => x.FormInput.Location, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Location)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>*@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td colspan="3">
+                            @Html.TextAreaFor(x => x.FormInput.Description, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Description)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>*@Html.LabelFor(x => x.FormInput.HandlingDescription)</th>
+                        <td colspan="3">
+                            @Html.TextAreaFor(x => x.FormInput.HandlingDescription, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.HandlingDescription)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.RecoveryDateString)</th>
+                        <td class="col-sm-3">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.FormInput.RecoveryDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                        <td class="col-sm-3">
+                            @Html.HiddenFor(x => x.FormInput.RecoveryTime)
+                            <div class="input-group bootstrap-timepicker">
+                                <input type="text" id="RecoveryTimePicker" class="form-control timepicker" readonly="readonly" style="cursor:pointer" />
+                                <span class="input-group-addon" style="cursor:pointer;">
+                                    <i class="fa fa-clock-o bigger-110"></i>
+                                </span>
+                                <span class="input-group-addon" style="cursor:pointer;" onclick="ClearRecoveryTime();" title="@Resources.Resource.Clear">
+                                    <i class="fa fa-eraser bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.RecoveryDescription)</th>
+                        <td colspan="3">@Html.TextAreaFor(x => x.FormInput.RecoveryDescription, new { @class = "col-sm-11" })</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.EffectArea)</th>
+                        <td colspan="3">@Html.TextAreaFor(x => x.FormInput.EffectArea, new { @class = "col-sm-11" })</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.EffectSystem)</th>
+                        <td colspan="3">@Html.TextAreaFor(x => x.FormInput.EffectSystem, new { @class = "col-sm-11" })</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Cost)</th>
+                        <td colspan="3">@Html.TextBoxFor(x => x.FormInput.Cost)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1"><label>負責單位</label></th>
+                        <td colspan="3">
+                        @Html.DropDownListFor(x => x.FormInput.ResponsibleOrganizationUniqueID, Model.ResponsibleOrganizationSelectItemList)
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.ResponsibleOrganizationUniqueID)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Groups)</th>
+                        <td colspan="3">
+                            @foreach (var group in Model.GroupList)
+                            { 
+                            <label>
+                                <input class="ace ace-checkbox-2 Group" type="checkbox" value="@group.Key" >
+                                <span class="lbl"> @group.Value</span>
+                            </label>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_UserSelect")
+
+<div class="space"></div>
+
+@Html.Partial("_CCUserSelect")
+
+<div class="space"></div>
+
+@Html.Partial("_File")
+
+
+
+

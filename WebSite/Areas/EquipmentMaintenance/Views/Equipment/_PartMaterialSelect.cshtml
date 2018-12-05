@@ -1,0 +1,285 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetPartList('');
+
+        InitPartMaterialSelectTree();
+
+        $('#divCreatePartWidget').hide();
+        $('#divEditPartWidget').hide();
+        $('#divPartMaterialSelectTreeWidget').hide();
+    });
+
+    function GetPartList(partUniqueID) {
+        var list = $('#divPartList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetPartList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) {
+                list.Overlay('show').html(data);
+
+                if (partUniqueID != '') {
+                    $('#divTab li[data-uniqueid="' + partUniqueID + '"] a').tab('show');
+                }
+                else {
+                    $('#divTab li a:first').tab('show');
+                }
+            },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var CreatePartForm = function () {
+        $('#divPartListWidget').hide();
+        $('#divCreatePartWidget').show();
+
+        var form = $('#divCreatePartForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("CreatePart")',
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var EditPartForm = function (partUniqueID) {
+        $('#divPartListWidget').hide();
+        $('#divEditPartWidget').show();
+
+        var form = $('#divEditPartForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("EditPart")',
+            data: { PartUniqueID: partUniqueID },
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var DeletePart = function (partUniqueID) {
+        $.ConfirmDialog('@string.Format("{0} {1} {2}?", Resources.Resource.Confirm, Resources.Resource.Delete, Resources.Resource.EquipmentPart)', function (confirmed) {
+            if (confirmed) {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("DeletePart")',
+                    data: { PartUniqueID: partUniqueID, PageStates: PartPageState() },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            GetPartList('');
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+    };
+
+    function InitPartMaterialSelectTree() {
+        var container = $('#divPartMaterialSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitPartMaterialSelectTree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectPartMaterial = function () {
+        if ($('.tabLink.active').length == 0) {
+            $.InfoDialog('@string.Format("{0} {1}", Resources.Resource.SelectOne, Resources.Resource.EquipmentPart)');
+        }
+        else {
+            $('#divPartListWidget').hide();
+            $('#divPartMaterialSelectTreeWidget').show();
+        }
+    };
+
+    var CancelSelectPartMaterial = function () {
+        $('#divPartListWidget').show();
+        $('#divPartMaterialSelectTreeWidget').hide();
+    };
+
+    var PartPageState = function () {
+        var pageState = [];
+
+        $('.PartMaterial').each(function () {
+            var partUniqueID = $(this).data('partuniqueid');
+            var materialUniqueid = $(this).data('materialuniqueid');
+            var qty = $(this).val();
+
+            pageState.push(partUniqueID + '@Utility.Define.Seperator' + materialUniqueid + '@Utility.Define.Seperator' + qty);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddPartMaterial = function () {
+        var data = [];
+
+        $("#divPartMaterialSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.EquipmentType") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.MaterialUniqueID"));
+        });
+
+        var partUniqueID = $('.tabLink.active').data('uniqueid');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddPartMaterial")',
+            data: {
+                PartUniqueID: partUniqueID,
+                Selecteds: JSON.stringify(data),
+                PageStates: PartPageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divPartMaterialSelectTreeWidget').hide();
+                $('#divPartListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divPartListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetPartList(partUniqueID);
+                    $("#divPartMaterialSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divPartListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeletePartMaterial = function (partUniqueID, materialUniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeletePartMaterial")',
+            data: {
+                'PartUniqueID': partUniqueID,
+                'MaterialUniqueID': materialUniqueID,
+                'PageStates': PartPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divPartListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divPartListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetPartList(partUniqueID);
+                    $("#divPartMaterialSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divPartListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+
+<div id="divPartMaterialSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.EquipmentPart @Resources.Resource.Material</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divPartMaterialSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddPartMaterial(); return false;">
+                <i class="ace-icon fa fa-check-circle-o"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectPartMaterial(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divPartListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.EquipmentPart @Resources.Resource.And @Resources.Resource.Material</h5>
+        <div class="widget-toolbar">
+            <div class="widget-menu">
+                <a href="#" data-toggle="dropdown">
+                    <i class="ace-icon fa fa-plus white"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                    <li>
+                        <a href="#" onclick="CreatePartForm(); return false;">@Resources.Resource.EquipmentPart</a>
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="SelectPartMaterial(); return false;">@Resources.Resource.Material</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-8" style="overflow-x:scroll; min-height:50px;">
+            <div id="divPartList"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divCreatePartWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.EquipmentPart</h5>
+    </div>
+
+    <div class="widget-body">
+        <div id="divCreatePartForm" class="widget-main no-padding"></div>
+    </div>
+</div>
+
+<div id="divEditPartWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Edit @Resources.Resource.EquipmentPart</h5>
+    </div>
+
+    <div id="divEditPartForm" class="widget-body"></div>
+</div>

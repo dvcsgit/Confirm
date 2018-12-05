@@ -1,0 +1,145 @@
+﻿@model IEnumerable<Models.EquipmentMaintenance.MaintenanceJobManagement.EquipmentModel>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.EquipmentStandard, .EquipmentStandardParent, .EquipmentMaterial, .EquipmentMaterialParent').each(function () {
+            if ($(this).data('checked') == 'Y') {
+                $(this).prop('checked', true);
+            }
+        });
+
+        $('.EquipmentStandardParent').click(function () {
+            var parent = $(this);
+            var equipmentUniqueID = parent.data('equipmentuniqueid');
+            var partUniqueID = parent.data('partuniqueid');
+            var checked = parent.prop('checked') ? 'Y' : 'N';
+
+            $('.EquipmentStandard').each(function () {
+                var chk = $(this);
+                if (chk.data('equipmentuniqueid') == equipmentUniqueID && chk.data('partuniqueid') == partUniqueID) {
+                    chk.prop('checked', checked == 'Y');
+                }
+            });
+        });
+
+        $('.EquipmentMaterialParent').click(function () {
+            var parent = $(this);
+            var equipmentUniqueID = parent.data('equipmentuniqueid');
+            var partUniqueID = parent.data('partuniqueid');
+            var checked = parent.prop('checked') ? 'Y' : 'N';
+
+            $('.EquipmentMaterial').each(function () {
+                var chk = $(this);
+                if (chk.data('equipmentuniqueid') == equipmentUniqueID && chk.data('partuniqueid') == partUniqueID) {
+                    chk.prop('checked', checked == 'Y');
+                }
+            });
+        });
+    });
+</script>
+
+<div class="accordion-style1 panel-group">
+    @foreach (var equipment in Model)
+    {
+        <div class="panel panel-default" data-equipmentuniqueid="@equipment.EquipmentUniqueID" data-partuniqueid="@equipment.PartUniqueID">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" href="@("#Collapse" + equipment.EquipmentUniqueID + (equipment.PartUniqueID == "*" ? "" : equipment.PartUniqueID))">
+                        <i class="ace-icon fa fa-trash-o bigger-130 red" style="cursor:pointer;" title="@Resources.Resource.Delete" onclick="DeleteEquipment('@equipment.EquipmentUniqueID', '@equipment.PartUniqueID'); return false;"></i>
+                        <i class="bigger-110 ace-icon fa fa-angle-right" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
+                        @equipment.Display
+                    </a>
+                </h4>
+            </div>
+
+            <div class="panel-collapse collapse" id="@("Collapse" + equipment.EquipmentUniqueID + (equipment.PartUniqueID == "*" ? "" : equipment.PartUniqueID))" style="height: 0px;">
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead class="thin-border-bottom">
+                            <tr>
+                                <th class="col-sm-1 center">
+                                    <label>
+                                        <input class="ace ace-checkbox-2 EquipmentStandardParent" type="checkbox" value="true" data-checked="@(equipment.StandardList.Any(x => x.IsChecked == false) ? "N" : "Y")" data-equipmentuniqueid="@equipment.EquipmentUniqueID" data-partuniqueid="@equipment.PartUniqueID">
+                                        <span class="lbl"> </span>
+                                    </label>
+                                </th>
+                                <th>@Resources.Resource.MaintenanceType</th>
+                                <th>@Resources.Resource.StandardID</th>
+                                <th>@Resources.Resource.StandardDescription</th>
+                                <th>預設值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in equipment.StandardList)
+                            {
+                                <tr>
+                                    <td class="center">
+                                        <label>
+                                            <input class="ace ace-checkbox-2 EquipmentStandard" type="checkbox" value="true" data-equipmentuniqueid="@equipment.EquipmentUniqueID" data-partuniqueid="@equipment.PartUniqueID" data-standarduniqueid="@item.UniqueID" data-checked="@(item.IsChecked ? "Y" : "N")">
+                                            <span class="lbl"> </span>
+                                        </label>
+                                    </td>
+                                    <td>@item.MaintenanceType</td>
+                                    <td>@item.StandardID</td>
+                                    <td>@item.StandardDescription</td>
+                                    <td>
+                                        @if (item.OptionList != null && item.OptionList.Count > 0)
+                                        {
+                                            foreach (var option in item.OptionList)
+                                            {
+                                                <label>
+                                                    <input class="ace" name="@string.Format("DefaultOption{0}", item.UniqueID)" type="radio" value="@option.UniqueID" />
+                                <span class="lbl"> @option.Display</span>
+                            </label>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead class="thin-border-bottom">
+                            <tr>
+                                <th class="col-sm-1 center">
+                                    <label>
+                                        <input class="ace ace-checkbox-2 EquipmentMaterialParent" type="checkbox" value="true" data-checked="@(equipment.MaterialList.Any(x => x.IsChecked == false) ? "N" : "Y")" data-equipmentuniqueid="@equipment.EquipmentUniqueID" data-partuniqueid="@equipment.PartUniqueID">
+                                        <span class="lbl"> </span>
+                                    </label>
+                                </th>
+                                <th>@Resources.Resource.MaterialID</th>
+                                <th>@Resources.Resource.MaterialName</th>
+                                <th>@Resources.Resource.RMaterialQTY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in equipment.MaterialList)
+                            {
+                                <tr>
+                                    <td class="center">
+                                        <label>
+                                            <input class="ace ace-checkbox-2 EquipmentMaterial" type="checkbox" value="true" data-equipmentuniqueid="@equipment.EquipmentUniqueID" data-partuniqueid="@equipment.PartUniqueID" data-materialuniqueid="@item.UniqueID" data-checked="@(item.IsChecked ? "Y" : "N")">
+                                            <span class="lbl"> </span>
+                                        </label>
+                                    </td>
+                                    <td>@item.ID</td>
+                                    <td>@item.Name</td>
+                                    <td>
+                                        <select class="Quantity">
+                                            <option value="">= @Resources.Resource.SelectOne =</option>
+                                            @for (int i = 1; i <= item.Quantity; i++)
+                                            { 
+                                            <option value="@i">@i</option>
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>

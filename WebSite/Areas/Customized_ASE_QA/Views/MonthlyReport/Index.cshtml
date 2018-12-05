@@ -1,0 +1,117 @@
+﻿@model Models.ASE.QA.MonthlyReport.QueryFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+<link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+<link href="@Url.Content("~/assets/css/datepicker.css")" rel="stylesheet" />
+<link href="@Url.Content("~/assets/css/bootstrap-timepicker.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.maskedinput.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-datepicker.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/locales/bootstrap-datepicker."+ViewBag.Lang+".js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-timepicker.min.js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+    });
+
+    function Query() {
+        $('#divQueryFormContainer').show();
+        $('#divForm').empty();
+        $('#divFormContainer').hide();
+
+        var div = $('#divQueryResult');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Query")',
+            data: $('#QueryForm').serialize(),
+            dataType: "html",
+            beforeSend: function () { div.Overlay('show'); },
+            success: function (data) { div.Overlay('show').html(data); },
+            error: function (x, h, r) { div.Overlay('hide').html(x.responseText); }
+        });
+    }
+</script>
+}
+
+<div class="row" id="divQueryFormContainer">
+    <div class="col-xs-12">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Search</h5>
+                <div class="widget-toolbar">
+                    <a href="#" onclick="Query(); return false;">
+                        <i class="ace-icon fa fa-search white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+                    {
+                        <table class="table table-bordered table-input">
+                            <tr>
+                                <th class="col-sm-1"><label>開始年月</label></th>
+                                <td class="col-sm-5">
+                                    @Html.TextBoxFor(x => x.Parameters.BeginYear) 年
+                                    @Html.DropDownListFor(x=>x.Parameters.BeginMonth, Model.MonthSelectItemList) 月
+                                </td>
+                                <th class="col-sm-1"><label>結束年月</label></th>
+                                <td class="col-sm-5">
+                                    @Html.TextBoxFor(x => x.Parameters.EndYear) 年
+                                    @Html.DropDownListFor(x => x.Parameters.EndMonth, Model.MonthSelectItemList) 月
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.CalNo)</th>
+                                <td class="col-sm-5">@Html.TextBoxFor(x => x.Parameters.CalNo)</td>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.SerialNo)</th>
+                                <td class="col-sm-5">@Html.TextBoxFor(x => x.Parameters.SerialNo)</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.Brand)</th>
+                                <td class="col-sm-5">@Html.TextBoxFor(x => x.Parameters.Brand)</td>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.Model)</th>
+                                <td class="col-sm-5">@Html.TextBoxFor(x => x.Parameters.Model)</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.FactoryUniqueID)</th>
+                                <td class="col-sm-5">@Html.DropDownListFor(x => x.Parameters.FactoryUniqueID, Model.FactorySelectItemList)</td>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.IchiName)</th>
+                                <td class="col-sm-5">@Html.TextBoxFor(x => x.Parameters.IchiName)</td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+        <div id="divQueryResult" style="min-height:200px;"></div>
+    </div>
+</div>

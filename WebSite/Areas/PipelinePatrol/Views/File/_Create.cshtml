@@ -1,0 +1,79 @@
+﻿@model Models.PipelinePatrol.FileManagement.CreateFormModel
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateForm");
+
+        var file_input = $('input[name="FormInput.File"]');
+
+        file_input.ace_file_input({
+            style: 'well',
+            btn_choose: '@Resources.Resource.UploadButtonChoose',
+            btn_change: '@Resources.Resource.UploadButtonChange',
+            droppable: true,
+            thumbnail: 'small'
+        });
+    });
+
+    var Save = function () {
+        $('#CreateForm').submit();
+    };
+</script>
+
+
+<p>
+    @if (ViewBag.CanCreate)
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+            <i class="ace-icon fa fa-save bigger-160"></i>
+            @Resources.Resource.Save
+        </button>
+    }
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.File</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm", enctype = "multipart/form-data" }))
+            {
+                @Html.HiddenFor(x => x.OrganizationUniqueID)
+                @Html.HiddenFor(x => x.PipelineUniqueID)
+                @Html.HiddenFor(x => x.PipePointUniqueID)
+                @Html.HiddenFor(x => x.FolderUniqueID)
+
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.FileName)</th>
+                        <td class="col-sm-11">
+                            @Html.TextBoxFor(x => x.FormInput.FileName, new { @class = "col-sm-6" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.FileName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.IsDownload2Mobile)</th>
+                        <td>
+                            <label>
+                                <input id="FormInput_IsDownload2Mobile" name="FormInput.IsDownload2Mobile" class="ace ace-checkbox-2" type="checkbox" value="true">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><input type="file" name="FormInput.File"></td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>

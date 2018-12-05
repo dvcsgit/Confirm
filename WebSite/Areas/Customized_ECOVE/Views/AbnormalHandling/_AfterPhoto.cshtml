@@ -1,0 +1,98 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetAfterPhotoList();
+
+        $('#divUploadAfterPhotoWidget').hide();
+    });
+    
+    function GetAfterPhotoList() {
+        var list = $('#divAfterPhotoList');
+        
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetAfterPhotoList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var UploadAfterPhoto = function () {
+        $('#divAfterPhotoListWidget').hide();
+        $('#divUploadAfterPhotoWidget').show();
+
+        var form = $('#divUploadAfterPhoto');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("AfterPhotoUpload")',
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var CanelUploadAfterPhoto = function () {
+        $('#divAfterPhotoListWidget').show();
+        $('#divUploadAfterPhoto').empty();
+        $('#divUploadAfterPhotoWidget').hide();
+    };
+
+    var DeleteAfterPhoto = function (abnormalUniqueID, seq) {
+        debugger;
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteAfterPhoto")',
+            data: { AbnormalUniqueID: abnormalUniqueID, Seq: seq },
+            dataType: "json",
+            beforeSend: function () { $('#divAfterPhotoListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divAfterPhotoListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetAfterPhotoList();
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divAfterPhotoListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divAfterPhotoListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.AfterHandling @Resources.Resource.Photo</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="UploadAfterPhoto(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-8" style="min-height:150px;">
+            <div id="divAfterPhotoList"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divUploadAfterPhotoWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Upload @Resources.Resource.AfterHandling @Resources.Resource.Photo</h5>
+    </div>
+
+    <div class="widget-body">
+        <div id="divUploadAfterPhoto"></div>
+    </div>
+</div>

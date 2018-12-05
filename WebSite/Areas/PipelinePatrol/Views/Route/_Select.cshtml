@@ -1,0 +1,200 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedList('');
+
+        InitCheckPointSelectTree();
+
+        $('#divCheckPointSelectTreeWidget').hide();
+    });
+
+    function GetSelectedList(checkPointUniqueID) {
+        var list = $('#divSelectedList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) {
+                list.Overlay('show').html(data);
+
+                if (checkPointUniqueID != '') {
+                    $('#divTab a[data-checkpointuniqueid="' + checkPointUniqueID + '"]').tab('show');
+                }
+                else {
+                    $('#divTab a:first').tab('show');
+                }
+            },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitCheckPointSelectTree() {
+        var container = $('#divCheckPointSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitCheckPointSelectTree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectCheckPoint = function () {
+        $('#divSelectedListWidget').hide();
+        $('#divCheckPointSelectTreeWidget').show();
+    };
+
+    var CancelSelectCheckPoint = function () {
+        $('#divSelectedListWidget').show();
+        $('#divCheckPointSelectTreeWidget').hide();
+    };
+
+    var CheckPointPageState = function () {
+        var pageState = [];
+
+        $('.tabLink').each(function () {
+            var checkPointUniqueID = $(this).data('checkpointuniqueid');
+
+            var minTimeSpan = $('.MinTimeSpan[data-checkpointuniqueid="' + checkPointUniqueID + '"]').val();
+
+            pageState.push(checkPointUniqueID + '@Utility.Define.Seperator' + minTimeSpan + '@Utility.Define.Seperator' + $(this).index());
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var CheckPointCheckItemPageState = function () {
+        var pageState = [];
+
+        $('.CheckPointCheckItem').each(function () {
+            var chk = $(this);
+            var checked = chk.prop('checked') ? 'Y' : 'N';
+            var checkPointUniqueID = chk.data('checkpointuniqueid');
+            var checkItemUniqueID = chk.data('checkitemuniqueid');
+            var seq = chk.parent().parent().parent().index();
+
+            pageState.push(checkPointUniqueID + '@Utility.Define.Seperator' + checkItemUniqueID + '@Utility.Define.Seperator' + seq + '@Utility.Define.Seperator' + checked);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddCheckPoint = function () {
+        var data = [];
+
+        $("#divCheckPointSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.PipePointType") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.PipePointUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddCheckPoint")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                CheckPointPageStates: CheckPointPageState(),
+                CheckPointCheckItemPageStates: CheckPointCheckItemPageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divCheckPointSelectTreeWidget').hide();
+                $('#divSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedList('');
+                    $("#divCheckPointSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteCheckPoint = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteCheckPoint")',
+            data: {
+                CheckPointUniqueID: uniqueID,
+                CheckPointPageStates: CheckPointPageState(),
+                CheckPointCheckItemPageStates: CheckPointCheckItemPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedList('');
+                    $("#divCheckPointSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+
+<div id="divCheckPointSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.CheckPoint</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divCheckPointSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddCheckPoint(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectCheckPoint(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Route @Resources.Resource.CheckPoint @Resources.Resource.CheckItem</h5>
+
+        <div class="widget-toolbar">
+            <a href="#" onclick="SelectCheckPoint(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divSelectedList" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

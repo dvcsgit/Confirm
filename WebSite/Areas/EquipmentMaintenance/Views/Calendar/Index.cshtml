@@ -1,0 +1,114 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles 
+{
+<link href="@Url.Content("~/assets/css/fullcalendar.css")" rel="stylesheet">
+}
+
+@section Scripts 
+{
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/moment.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/fullcalendar.min.js")"></script>
+
+@if (ViewBag.Lang != "en-us")
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/" + ViewBag.Lang + ".js")"></script>
+}
+
+    <script type="text/javascript">
+        $(function () {
+            RenderCalendar();
+
+            $('.Event').click(function () {
+                $('#calendar').fullCalendar('destroy');
+                RenderCalendar();
+            });
+        });
+
+        function RenderCalendar() {
+            $('#calendar').fullCalendar({
+                eventClick: function(calEvent, jsEvent, view) {
+                    if (calEvent.IsMaintenanceForm)
+                    {
+                        $.Redirect('@Url.Action("Index", "MaintenanceForm", new { Area = "EquipmentMaintenance" })' + '?VHNO=' + calEvent.VHNO);
+                    }
+                    else if (calEvent.IsRepairForm)
+                    {
+                        $.Redirect('@Url.Action("Index", "RepairForm", new { Area = "EquipmentMaintenance" })' + '?VHNO=' + calEvent.VHNO);
+                    }
+                },
+                header: {
+                    left: 'today prev,next',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultView: 'agendaDay',
+                events: {
+                    url: '@Url.Action("GetEvents")',
+                    beforeSend: function () { $.Overlay('show'); },
+                    complete: function () { $.Overlay('hide'); },
+                    data: {
+                        Patrol: $('#Patrol') != null && $('#Patrol').prop('checked'),
+                        MaintenanceForm: $('#MaintenanceForm') != null && $('#MaintenanceForm').prop('checked'),
+                        RepairForm: $('#RepairForm') != null && $('#RepairForm').prop('checked')
+                    }
+                },
+            });
+    }
+</script>
+}
+
+<div class="row">
+    <div class="col-xs-10">
+        <div id="calendar"></div>
+    </div>
+
+    <div class="col-xs-2">
+        <div class="widget-box transparent">
+            <div class="widget-header">
+                <h4>事件</h4>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <ul class="item-list">
+@if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.EquipmentPatrol))
+                    {
+                        <li class="item-blue clearfix">
+                            <label class="inline">
+                                <input id="Patrol" class="ace ace-checkbox-2 Event" type="checkbox" value="true" checked="checked">
+                                <span class="lbl"> 巡檢作業</span>
+                            </label>
+                        </li>
+}
+@if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.EquipmentMaintenance))
+                    {
+                        <li class="item-blue clearfix">
+                            <label class="inline">
+                                <input id="MaintenanceForm" class="ace ace-checkbox-2 Event" type="checkbox" value="true" checked="checked">
+                                <span class="lbl"> 預防保養作業</span>
+                            </label>
+                        </li>
+                    }
+                    
+@if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.RepairForm))
+{ 
+    <li class="item-blue clearfix">
+                            <label class="inline">
+                                <input id="RepairForm" class="ace ace-checkbox-2 Event" type="checkbox" value="true" checked="checked">
+                                <span class="lbl"> 設備異常修復</span>
+                            </label>
+                        </li>
+}
+                        
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

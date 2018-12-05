@@ -1,0 +1,150 @@
+﻿@model Models.PipelinePatrol.FileManagement.GridViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#All').click(function () {
+            if ($(this).prop('checked')) {
+                $('.File').prop('checked', true);
+            }
+            else {
+                $('.File').prop('checked', false);
+            }
+        });
+    });
+</script>
+
+@if (ViewBag.CanCreate && !string.IsNullOrEmpty(Model.PathDescription))
+{
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="CreateFolder('@Model.Parameters.OrganizationUniqueID', '@Model.Parameters.PipelineUniqueID', '@Model.Parameters.PipePointUniqueID',  '@Model.Parameters.FolderUniqueID');">
+            <i class="ace-icon fa fa-plus"></i>
+            @Resources.Resource.Create @Resources.Resource.Folder @Resources.Resource.At @Model.PathDescription
+        </button>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="CreateFile('@Model.Parameters.OrganizationUniqueID', '@Model.Parameters.PipelineUniqueID', '@Model.Parameters.PipePointUniqueID','@Model.Parameters.FolderUniqueID');">
+            <i class="ace-icon fa fa-plus"></i>
+            @Resources.Resource.Create @Resources.Resource.File @Resources.Resource.At @Model.PathDescription
+        </button>
+    </div>
+}
+
+@if (ViewBag.CanEdit && !string.IsNullOrEmpty(Model.Parameters.FolderUniqueID) && !string.IsNullOrEmpty(Model.PathDescription))
+{
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="EditFolder('@Model.Parameters.FolderUniqueID');">
+            <i class="ace-icon fa fa-pencil"></i>
+            @Resources.Resource.Edit @Resources.Resource.Folder @Model.PathDescription
+        </button>
+    </div>
+}
+
+@if (ViewBag.CanDelete)
+{
+    if (!string.IsNullOrEmpty(Model.Parameters.FolderUniqueID) && !string.IsNullOrEmpty(Model.PathDescription))
+    {
+        <div class="btn-group">
+            <button class="btn btn-danger" onclick="DeleteFolder('@Model.Parameters.FolderUniqueID');">
+                <i class="ace-icon fa fa-trash-o"></i>
+                @Resources.Resource.Delete @Resources.Resource.Folder @Model.PathDescription
+            </button>
+        </div>
+    }
+
+    if (Model.ItemList.Count > 0)
+    {
+        <div class="btn-group">
+            <button class="btn btn-danger" onclick="DeleteFile('');">
+                <i class="ace-icon fa fa-trash-o"></i>
+                @Resources.Resource.Delete @Resources.Resource.Selected @Resources.Resource.File
+            </button>
+        </div>
+    }
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Model.FullPathDescription
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1  center">
+                            <label>
+                                <input id="All" class="ace ace-checkbox-2" type="checkbox">
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
+                        <th class="col-sm-1 center"></th>
+                        <th>@Resources.Resource.FileName</th>
+                        <th>@Resources.Resource.FilePath</th>
+                        <th>@Resources.Resource.FileSize</th>
+                        <th>@Resources.Resource.FileAuthor</th>
+                        <th>@Resources.Resource.FileTime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemList)
+                    {
+                        <tr>
+                            <td class="col-sm-1 center">
+                                <label>
+                                    <input class="ace ace-checkbox-2 File" type="checkbox" value="@item.UniqueID">
+                                    <span class="lbl"></span>
+                                </label>
+                            </td>
+                            <td class="col-sm-1 center">
+                                <div class="action-buttons">
+                                    @if (ViewBag.CanDownload)
+                                    {
+                                        <a class="purple" href="@Url.Action("Download", new { UniqueID=item.UniqueID})" title="@Resources.Resource.Download">
+
+                                            <i class="ace-icon fa fa-cloud-download bigger-130"></i>
+                                        </a>
+                                    }
+                                    
+                                    @if (ViewBag.CanQuery)
+                                    {
+                                        <a class="blue" href="#" onclick="Detail('@item.UniqueID');" title="@Resources.Resource.Detail">
+                                            <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                        </a>
+                                    }
+                                    
+                                    @if (ViewBag.CanEdit)
+                                    {
+                                        <a class="green" href="#" onclick="EditFile('@item.UniqueID');" title="@Resources.Resource.Edit">
+                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        </a>
+                                    }
+
+                                    @if (ViewBag.CanDelete)
+                                    {
+                                        <a class="red" href="#" onclick="DeleteFile('@item.UniqueID');" title="@Resources.Resource.Delete">
+                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                            <td>@item.Display</td>
+                            <td>@item.FullPathDescription</td>
+                            <td>@item.FileSize</td>
+                            <td>@item.User.User</td>
+                            <td>@item.LastModifyTime</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+

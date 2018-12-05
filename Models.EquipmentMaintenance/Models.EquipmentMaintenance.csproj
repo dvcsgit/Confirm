@@ -1,0 +1,985 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{745783D5-C98C-464B-88F0-DB41A840CDAE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Models.EquipmentMaintenance</RootNamespace>
+    <AssemblyName>Models.EquipmentMaintenance</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28Oracle%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28Oracle%29\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;ORACLE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28Oracle%29|AnyCPU'">
+    <OutputPath>bin\Release%28Oracle%29\</OutputPath>
+    <DefineConstants>TRACE;ORACLE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28CIIC%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28CIIC%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28CIIC%29|AnyCPU'">
+    <OutputPath>bin\Release%28CIIC%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28ASE%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28ASE%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28ASE%29|AnyCPU'">
+    <OutputPath>bin\Release%28ASE%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28ASE.UAT%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28ASE.UAT%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28ASE.Production%29|AnyCPU'">
+    <OutputPath>bin\Release%28ASE.Production%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28CHIMEI%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28CHIMEI%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28CHIMEI%29|AnyCPU'">
+    <OutputPath>bin\Release%28CHIMEI%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28GuardPatrol%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28GuardPatrol%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28GuardPatrol%29|AnyCPU'">
+    <OutputPath>bin\Release%28GuardPatrol%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28PipelinePatrol%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28PipelinePatrol%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28PipelinePatrol%29|AnyCPU'">
+    <OutputPath>bin\Release%28PipelinePatrol%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28EquipmentPatrol%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28EquipmentPatrol%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28EquipmentPatrol%29|AnyCPU'">
+    <OutputPath>bin\Release%28EquipmentPatrol%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28EquipmentMaintenance%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28EquipmentMaintenance%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28EquipmentMaintenance%29|AnyCPU'">
+    <OutputPath>bin\Release%28EquipmentMaintenance%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28TruckPatrol%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28TruckPatrol%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28LCY%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28LCY%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28LCY%29|AnyCPU'">
+    <OutputPath>bin\Release%28LCY%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28CPDC%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28CPDC%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28CPDC%29|AnyCPU'">
+    <OutputPath>bin\Release%28CPDC%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28FPG.Guard%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28FPG.Guard%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28FPG.Guard%29|AnyCPU'">
+    <OutputPath>bin\Release%28FPG.Guard%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28FPTC%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28FPTC%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28FPTC%29|AnyCPU'">
+    <OutputPath>bin\Release%28FPTC%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28PFG%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28PFG%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28PFG%29|AnyCPU'">
+    <OutputPath>bin\Release%28PFG%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28PSI%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28PSI%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28PSI%29|AnyCPU'">
+    <OutputPath>bin\Release%28PSI%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28RENDA%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28RENDA%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28RENDA%29|AnyCPU'">
+    <OutputPath>bin\Release%28RENDA%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28TAIWAY%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28TAIWAY%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28TAIWAY%29|AnyCPU'">
+    <OutputPath>bin\Release%28TAIWAY%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28PFG.CN%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28PFG.CN%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28PFG.CN%29|AnyCPU'">
+    <OutputPath>bin\Release%28PFG.CN%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28SESC%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28SESC%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28SESC%29|AnyCPU'">
+    <OutputPath>bin\Release%28SESC%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28ASE.QAS%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28ASE.QAS%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28ASE.QAS%29|AnyCPU'">
+    <OutputPath>bin\Release%28ASE.QAS%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28NMP%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28NMP%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28NMP%29|AnyCPU'">
+    <OutputPath>bin\Release%28NMP%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28ECOVE%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28ECOVE%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28ECOVE%29|AnyCPU'">
+    <OutputPath>bin\Release%28ECOVE%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28EVERLIGHT%29|AnyCPU'">
+    <OutputPath>bin\Release%28EVERLIGHT%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28EVERLIGHT%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28EVERLIGHT%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.6\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.6\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbnormalHandlingManagement\AbnormalReasonModel.cs" />
+    <Compile Include="AbnormalHandlingManagement\EditFormModel.cs" />
+    <Compile Include="AbnormalHandlingManagement\DetailViewModel.cs" />
+    <Compile Include="AbnormalHandlingManagement\FileModel.cs" />
+    <Compile Include="AbnormalHandlingManagement\GridItem.cs" />
+    <Compile Include="AbnormalHandlingManagement\GridViewModel.cs" />
+    <Compile Include="AbnormalHandlingManagement\HandlingMethodModel.cs" />
+    <Compile Include="AbnormalHandlingManagement\PhotoModel.cs" />
+    <Compile Include="AbnormalHandlingManagement\QueryFormModel.cs" />
+    <Compile Include="AbnormalHandlingManagement\QueryParameters.cs" />
+    <Compile Include="AbnormalHandlingManagement\RepairFormCreateFormInput.cs" />
+    <Compile Include="AbnormalHandlingManagement\RepairFormCreateFormModel.cs" />
+    <Compile Include="AbnormalHandlingManagement\RepairFormModel.cs" />
+    <Compile Include="AbnormalHandlingManagement\RFormSubject.cs" />
+    <Compile Include="AbnormalHandlingManagement\SummaryItem.cs" />
+    <Compile Include="AbnormalHandlingManagement\SummaryViewModel.cs" />
+    <Compile Include="AbnormalReasonManagement\CreateFormModel.cs" />
+    <Compile Include="AbnormalReasonManagement\DetailViewModel.cs" />
+    <Compile Include="AbnormalReasonManagement\EditFormModel.cs" />
+    <Compile Include="AbnormalReasonManagement\FormInput.cs" />
+    <Compile Include="AbnormalReasonManagement\GridItem.cs" />
+    <Compile Include="AbnormalReasonManagement\GridViewModel.cs" />
+    <Compile Include="AbnormalReasonManagement\HandlingMethodModel.cs" />
+    <Compile Include="AbnormalReasonManagement\QueryFormModel.cs" />
+    <Compile Include="AbnormalReasonManagement\QueryParameters.cs" />
+    <Compile Include="Calendar\Event.cs" />
+    <Compile Include="Calendar\JobItem.cs" />
+    <Compile Include="Calendar\MFormItem.cs" />
+    <Compile Include="Calendar\MJobItem.cs" />
+    <Compile Include="Calendar\RFormItem.cs" />
+    <Compile Include="CheckItemManagement\AbnormalReasonModel.cs" />
+    <Compile Include="CheckItemManagement\CreateFormModel.cs" />
+    <Compile Include="CheckItemManagement\DetailViewModel.cs" />
+    <Compile Include="CheckItemManagement\EditFormModel.cs" />
+    <Compile Include="CheckItemManagement\FeelOptionModel.cs" />
+    <Compile Include="CheckItemManagement\FormInput.cs" />
+    <Compile Include="CheckItemManagement\GridItem.cs" />
+    <Compile Include="CheckItemManagement\GridViewModel.cs" />
+    <Compile Include="CheckItemManagement\QueryFormModel.cs" />
+    <Compile Include="CheckItemManagement\QueryParameters.cs" />
+    <Compile Include="ControlPointManagement\CheckItemModel.cs" />
+    <Compile Include="ControlPointManagement\CreateFormModel.cs" />
+    <Compile Include="ControlPointManagement\DetailViewModel.cs" />
+    <Compile Include="ControlPointManagement\EditFormModel.cs" />
+    <Compile Include="ControlPointManagement\FormInput.cs" />
+    <Compile Include="ControlPointManagement\GridItem.cs" />
+    <Compile Include="ControlPointManagement\GridViewModel.cs" />
+    <Compile Include="ControlPointManagement\QueryFormModel.cs" />
+    <Compile Include="ControlPointManagement\QueryParameters.cs" />
+    <Compile Include="DailyReport\AbnormalReasonModel.cs" />
+    <Compile Include="DailyReport\CheckItemModel.cs" />
+    <Compile Include="DailyReport\CheckResultModel.cs" />
+    <Compile Include="DailyReport\HandlingMethodModel.cs" />
+    <Compile Include="DailyReport\JobModel.cs" />
+    <Compile Include="DailyReport\QueryFormModel.cs" />
+    <Compile Include="DailyReport\QueryParameters.cs" />
+    <Compile Include="DailyReport\ReportModel.cs" />
+    <Compile Include="DataSync\AbnormalReasonModel.cs" />
+    <Compile Include="DataSync\ApiFormInput.cs" />
+    <Compile Include="DataSync\CheckItemModel.cs" />
+    <Compile Include="DataSync\ControlPointModel.cs" />
+    <Compile Include="DataSync\DownloadDataModel.cs" />
+    <Compile Include="DataSync\DownloadFormModel.cs" />
+    <Compile Include="DataSync\DownloadParameters.cs" />
+    <Compile Include="DataSync\EmgContactModel.cs" />
+    <Compile Include="DataSync\EmgContactTelModel.cs" />
+    <Compile Include="DataSync\EquipmentModel.cs" />
+    <Compile Include="DataSync\EquipmentSpecModel.cs" />
+    <Compile Include="DataSync\FeelOptionModel.cs" />
+    <Compile Include="DataSync\FileModel.cs" />
+    <Compile Include="DataSync\HandlingMethodModel.cs" />
+    <Compile Include="DataSync\JobItem.cs" />
+    <Compile Include="DataSync\JobModel.cs" />
+    <Compile Include="DataSync\MaintenanceFormModel.cs" />
+    <Compile Include="DataSync\MaterialModel.cs" />
+    <Compile Include="DataSync\MaterialSpecModel.cs" />
+    <Compile Include="DataSync\MFormMaterialModel.cs" />
+    <Compile Include="DataSync\OverTimeReason.cs" />
+    <Compile Include="DataSync\PartModel.cs" />
+    <Compile Include="DataSync\PrevCheckResultAbnormalReasonModel.cs" />
+    <Compile Include="DataSync\PrevCheckResultHandlingMethodModel.cs" />
+    <Compile Include="DataSync\PrevCheckResultModel.cs" />
+    <Compile Include="DataSync\RepairFormModel.cs" />
+    <Compile Include="DataSync\StandardModel.cs" />
+    <Compile Include="DataSync\TimeSpanAbnormalReason.cs" />
+    <Compile Include="DataSync\UnPatrolReason.cs" />
+    <Compile Include="DataSync\UnRFIDReason.cs" />
+    <Compile Include="DataSync\UserModel.cs" />
+    <Compile Include="DataSync\Version.cs" />
+    <Compile Include="EquipmentCheckItemManagement\CheckItemModel.cs" />
+    <Compile Include="EquipmentCheckItemManagement\CreateFormModel.cs" />
+    <Compile Include="EquipmentCheckItemManagement\CreatePartFormModel.cs" />
+    <Compile Include="EquipmentCheckItemManagement\DetailViewModel.cs" />
+    <Compile Include="EquipmentCheckItemManagement\EditFormModel.cs" />
+    <Compile Include="EquipmentCheckItemManagement\EditPartFormModel.cs" />
+    <Compile Include="EquipmentCheckItemManagement\FormInput.cs" />
+    <Compile Include="EquipmentCheckItemManagement\GridItem.cs" />
+    <Compile Include="EquipmentCheckItemManagement\GridViewModel.cs" />
+    <Compile Include="EquipmentCheckItemManagement\PartFormInput.cs" />
+    <Compile Include="EquipmentCheckItemManagement\PartModel.cs" />
+    <Compile Include="EquipmentCheckItemManagement\QueryFormModel.cs" />
+    <Compile Include="EquipmentCheckItemManagement\QueryParameters.cs" />
+    <Compile Include="EquipmentManagement\CreatePartFormModel.cs" />
+    <Compile Include="EquipmentManagement\EditPartFormModel.cs" />
+    <Compile Include="EquipmentManagement\EquipmentSpecOption.cs" />
+    <Compile Include="EquipmentManagement\PartFormInput.cs" />
+    <Compile Include="EquipmentManagement\PartModel.cs" />
+    <Compile Include="EquipmentManagement\QueryFormModel.cs" />
+    <Compile Include="EquipmentManagement\QueryParameters.cs" />
+    <Compile Include="EquipmentManagement\SpecModel.cs" />
+    <Compile Include="EquipmentManagement\CreateFormModel.cs" />
+    <Compile Include="EquipmentManagement\DetailViewModel.cs" />
+    <Compile Include="EquipmentManagement\EditFormModel.cs" />
+    <Compile Include="EquipmentManagement\FormInput.cs" />
+    <Compile Include="EquipmentManagement\GridItem.cs" />
+    <Compile Include="EquipmentManagement\GridViewModel.cs" />
+    <Compile Include="EquipmentManagement\MaterialModel.cs" />
+    <Compile Include="EquipmentResumeQuery\DetailViewModel.cs" />
+    <Compile Include="EquipmentResumeQuery\EquipmentSpecOption.cs" />
+    <Compile Include="EquipmentResumeQuery\RecordModel.cs" />
+    <Compile Include="EquipmentResumeQuery\MaterialModel.cs" />
+    <Compile Include="EquipmentResumeQuery\PartModel.cs" />
+    <Compile Include="EquipmentResumeQuery\SpecModel.cs" />
+    <Compile Include="EquipmentSpecManagement\CreateFormModel.cs" />
+    <Compile Include="EquipmentSpecManagement\DetailViewModel.cs" />
+    <Compile Include="EquipmentSpecManagement\EditFormModel.cs" />
+    <Compile Include="EquipmentSpecManagement\FormInput.cs" />
+    <Compile Include="EquipmentSpecManagement\GridItem.cs" />
+    <Compile Include="EquipmentSpecManagement\GridViewModel.cs" />
+    <Compile Include="EquipmentSpecManagement\OptionModel.cs" />
+    <Compile Include="EquipmentSpecManagement\QueryFormModel.cs" />
+    <Compile Include="EquipmentSpecManagement\QueryParameters.cs" />
+    <Compile Include="EquipmentStandardManagement\StandardModel.cs" />
+    <Compile Include="EquipmentStandardManagement\DetailViewModel.cs" />
+    <Compile Include="EquipmentStandardManagement\EditFormModel.cs" />
+    <Compile Include="EquipmentStandardManagement\GridItem.cs" />
+    <Compile Include="EquipmentStandardManagement\GridViewModel.cs" />
+    <Compile Include="EquipmentStandardManagement\PartModel.cs" />
+    <Compile Include="EquipmentStandardManagement\QueryFormModel.cs" />
+    <Compile Include="EquipmentStandardManagement\QueryParameters.cs" />
+    <Compile Include="FolderManagement\CreateFormModel.cs" />
+    <Compile Include="FileManagement\CreateFormModel.cs" />
+    <Compile Include="FileManagement\DetailViewModel.cs" />
+    <Compile Include="FolderManagement\EditFormModel.cs" />
+    <Compile Include="FileManagement\EditFormModel.cs" />
+    <Compile Include="FileManagement\FileModel.cs" />
+    <Compile Include="FolderManagement\FormInput.cs" />
+    <Compile Include="FileManagement\FormInput.cs" />
+    <Compile Include="FileManagement\GridItem.cs" />
+    <Compile Include="FileManagement\GridViewModel.cs" />
+    <Compile Include="FileManagement\QueryFormModel.cs" />
+    <Compile Include="FileManagement\QueryParameters.cs" />
+    <Compile Include="HandlingMethodManagement\CreateFormModel.cs" />
+    <Compile Include="HandlingMethodManagement\DetailViewModel.cs" />
+    <Compile Include="HandlingMethodManagement\EditFormModel.cs" />
+    <Compile Include="HandlingMethodManagement\FormInput.cs" />
+    <Compile Include="HandlingMethodManagement\GridItem.cs" />
+    <Compile Include="HandlingMethodManagement\GridViewModel.cs" />
+    <Compile Include="HandlingMethodManagement\QueryFormModel.cs" />
+    <Compile Include="HandlingMethodManagement\QueryParameters.cs" />
+    <Compile Include="Import\AbnormalReasonHandlingMethodModel.cs" />
+    <Compile Include="Import\AbnormalReasonModel.cs" />
+    <Compile Include="Import\AbnormalReasonRowData.cs" />
+    <Compile Include="Import\CheckItemAbnormalReasonModel.cs" />
+    <Compile Include="Import\CheckItemModel.cs" />
+    <Compile Include="Import\CheckItemRowData.cs" />
+    <Compile Include="Import\ControlPointCheckItemModel.cs" />
+    <Compile Include="Import\ControlPointModel.cs" />
+    <Compile Include="Import\ControlPointRowData.cs" />
+    <Compile Include="Import\EquipmentCheckItemModel.cs" />
+    <Compile Include="Import\EquipmentModel.cs" />
+    <Compile Include="Import\EquipmentRowData.cs" />
+    <Compile Include="Import\FeelOptionModel.cs" />
+    <Compile Include="Import\FormInput.cs" />
+    <Compile Include="Import\HandlingMethodModel.cs" />
+    <Compile Include="Import\HandlingMethodRowData.cs" />
+    <Compile Include="Import\ImportModel.cs" />
+    <Compile Include="Import\NoOrganizationItem.cs" />
+    <Compile Include="Import\OrganizationModel.cs" />
+    <Compile Include="Import\OrganizationRowData.cs" />
+    <Compile Include="Import\OverTimeReasonModel.cs" />
+    <Compile Include="Import\OverTimeReasonRowData.cs" />
+    <Compile Include="Import\ProgressFormModel.cs" />
+    <Compile Include="Import\RouteControlPointCheckItemModel.cs" />
+    <Compile Include="Import\RouteControlPointModel.cs" />
+    <Compile Include="Import\RouteEquipmentCheckItemModel.cs" />
+    <Compile Include="Import\RouteEquipmentModel.cs" />
+    <Compile Include="Import\RouteModel.cs" />
+    <Compile Include="Import\RouteRowData.cs" />
+    <Compile Include="Import\RowData.cs" />
+    <Compile Include="Import\UnPatrolReasonModel.cs" />
+    <Compile Include="Import\UnPatrolReasonRowData.cs" />
+    <Compile Include="Import\UnRFIDReasonModel.cs" />
+    <Compile Include="Import\UnRFIDReasonRowData.cs" />
+    <Compile Include="Import\UploadFormModel.cs" />
+    <Compile Include="Import\UserModel.cs" />
+    <Compile Include="Import\UserRowData.cs" />
+    <Compile Include="JobManagement\CheckItemModel.cs" />
+    <Compile Include="JobManagement\ControlPointModel.cs" />
+    <Compile Include="JobManagement\CreateFormModel.cs" />
+    <Compile Include="JobManagement\DetailViewModel.cs" />
+    <Compile Include="JobManagement\EditFormModel.cs" />
+    <Compile Include="JobManagement\EquipmentModel.cs" />
+    <Compile Include="JobManagement\FormInput.cs" />
+    <Compile Include="JobManagement\UserModel.cs" />
+    <Compile Include="JobResultManagement\ArriveRecordModel.cs" />
+    <Compile Include="JobResultManagement\CheckItemModel.cs" />
+    <Compile Include="JobResultManagement\CheckResultModel.cs" />
+    <Compile Include="JobResultManagement\ControlPointModel.cs" />
+    <Compile Include="JobResultManagement\JobResultModel.cs" />
+    <Compile Include="MaintenanceFormManagement\CreateResultFormModel.cs" />
+    <Compile Include="MaintenanceFormManagement\CreateWorkingHourFormModel.cs" />
+    <Compile Include="MaintenanceFormManagement\DetailViewModel.cs" />
+    <Compile Include="MaintenanceFormManagement\EditFormModel.cs" />
+    <Compile Include="MaintenanceFormManagement\ExcelItem.cs" />
+    <Compile Include="MaintenanceFormManagement\ExtendFlowLogModel.cs" />
+    <Compile Include="MaintenanceFormManagement\ExtendFormInput.cs" />
+    <Compile Include="MaintenanceFormManagement\ExtendFormModel.cs" />
+    <Compile Include="MaintenanceFormManagement\ExtendLogModel.cs" />
+    <Compile Include="MaintenanceFormManagement\FeelOptionModel.cs" />
+    <Compile Include="MaintenanceFormManagement\FileDownloadModel.cs" />
+    <Compile Include="MaintenanceFormManagement\FileModel.cs" />
+    <Compile Include="MaintenanceFormManagement\FlowLogModel.cs" />
+    <Compile Include="MaintenanceFormManagement\FormViewModel.cs" />
+    <Compile Include="MaintenanceFormManagement\GridItem.cs" />
+    <Compile Include="MaintenanceFormManagement\GridViewModel.cs" />
+    <Compile Include="MaintenanceFormManagement\MaterialModel.cs" />
+    <Compile Include="MaintenanceFormManagement\QueryFormModel.cs" />
+    <Compile Include="MaintenanceFormManagement\QueryParameters.cs" />
+    <Compile Include="MaintenanceFormManagement\ResultModel.cs" />
+    <Compile Include="MaintenanceFormManagement\StandardModel.cs" />
+    <Compile Include="MaintenanceFormManagement\StandardResultModel.cs" />
+    <Compile Include="MaintenanceFormManagement\SummaryItem.cs" />
+    <Compile Include="MaintenanceFormManagement\SummaryViewModel.cs" />
+    <Compile Include="MaintenanceFormManagement\WorkingHourFormInput.cs" />
+    <Compile Include="MaintenanceFormManagement\WorkingHourModel.cs" />
+    <Compile Include="MaintenanceJobManagement\FeelOptionModel.cs" />
+    <Compile Include="MaintenanceJobManagement\MaterialModel.cs" />
+    <Compile Include="MaintenanceJobManagement\StandardModel.cs" />
+    <Compile Include="MaintenanceJobManagement\CreateFormModel.cs" />
+    <Compile Include="MaintenanceJobManagement\DetailViewModel.cs" />
+    <Compile Include="MaintenanceJobManagement\EditFormModel.cs" />
+    <Compile Include="MaintenanceJobManagement\EquipmentModel.cs" />
+    <Compile Include="MaintenanceJobManagement\FormInput.cs" />
+    <Compile Include="MaintenanceJobManagement\UserModel.cs" />
+    <Compile Include="MaintenanceJobManagement\QueryFormModel.cs" />
+    <Compile Include="MaintenanceJobManagement\QueryParameters.cs" />
+    <Compile Include="MaintenanceJobManagement\GridItem.cs" />
+    <Compile Include="MaintenanceJobManagement\GridViewModel.cs" />
+    <Compile Include="MaterialManagement\CreateFormModel.cs" />
+    <Compile Include="MaterialManagement\DetailViewModel.cs" />
+    <Compile Include="MaterialManagement\EditFormModel.cs" />
+    <Compile Include="MaterialManagement\EquipmentModel.cs" />
+    <Compile Include="MaterialManagement\FormInput.cs" />
+    <Compile Include="MaterialManagement\GridItem.cs" />
+    <Compile Include="MaterialManagement\GridViewModel.cs" />
+    <Compile Include="MaterialManagement\MaterialSpecOption.cs" />
+    <Compile Include="MaterialManagement\QueryFormModel.cs" />
+    <Compile Include="MaterialManagement\QueryParameters.cs" />
+    <Compile Include="MaterialManagement\SpecModel.cs" />
+    <Compile Include="MaterialSpecManagement\CreateFormModel.cs" />
+    <Compile Include="MaterialSpecManagement\DetailViewModel.cs" />
+    <Compile Include="MaterialSpecManagement\EditFormModel.cs" />
+    <Compile Include="MaterialSpecManagement\FormInput.cs" />
+    <Compile Include="MaterialSpecManagement\GridItem.cs" />
+    <Compile Include="MaterialSpecManagement\GridViewModel.cs" />
+    <Compile Include="MaterialSpecManagement\OptionModel.cs" />
+    <Compile Include="MaterialSpecManagement\QueryFormModel.cs" />
+    <Compile Include="MaterialSpecManagement\QueryParameters.cs" />
+    <Compile Include="MobileRelease\FileModel.cs" />
+    <Compile Include="MobileRelease\FormInput.cs" />
+    <Compile Include="MobileRelease\GridItem.cs" />
+    <Compile Include="MobileRelease\GridViewModel.cs" />
+    <Compile Include="MobileRelease\UploadFormModel.cs" />
+    <Compile Include="MonthlyReport\CheckItemModel.cs" />
+    <Compile Include="MonthlyReport\CheckResultModel.cs" />
+    <Compile Include="MonthlyReport\JobModel.cs" />
+    <Compile Include="MonthlyReport\QueryFormModel.cs" />
+    <Compile Include="MonthlyReport\QueryParameters.cs" />
+    <Compile Include="MonthlyReport\ReportModel.cs" />
+    <Compile Include="NoMJobManagement\CreateFormModel.cs" />
+    <Compile Include="NoMJobManagement\FormInput.cs" />
+    <Compile Include="NoMJobManagement\GridItem.cs" />
+    <Compile Include="NoMJobManagement\GridViewModel.cs" />
+    <Compile Include="NoMJobManagement\QueryFormModel.cs" />
+    <Compile Include="NoMJobManagement\QueryParameters.cs" />
+    <Compile Include="OverTimeReasonManagement\CreateFormModel.cs" />
+    <Compile Include="OverTimeReasonManagement\DetailViewModel.cs" />
+    <Compile Include="OverTimeReasonManagement\EditFormModel.cs" />
+    <Compile Include="OverTimeReasonManagement\FormInput.cs" />
+    <Compile Include="OverTimeReasonManagement\GridItem.cs" />
+    <Compile Include="OverTimeReasonManagement\GridViewModel.cs" />
+    <Compile Include="OverTimeReasonManagement\QueryFormModel.cs" />
+    <Compile Include="OverTimeReasonManagement\QueryParameters.cs" />
+    <Compile Include="ProgressQuery\SummaryItem.cs" />
+    <Compile Include="ProgressQuery\SummaryViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QFormManagement\CreateFormModel.cs" />
+    <Compile Include="QFormManagement\CreateRepairFormInput.cs" />
+    <Compile Include="QFormManagement\CreateRepairFormModel.cs" />
+    <Compile Include="QFormManagement\DetailViewModel.cs" />
+    <Compile Include="QFormManagement\FormInput.cs" />
+    <Compile Include="QFormManagement\GridItem.cs" />
+    <Compile Include="QFormManagement\QueryFormModel.cs" />
+    <Compile Include="QFormManagement\QueryParameters.cs" />
+    <Compile Include="QFormManagement\RepairFormModel.cs" />
+    <Compile Include="QFormManagement\RFormSubject.cs" />
+    <Compile Include="RepairFormColumnManagement\CreateFormModel.cs" />
+    <Compile Include="RepairFormColumnManagement\DetailViewModel.cs" />
+    <Compile Include="RepairFormColumnManagement\EditFormModel.cs" />
+    <Compile Include="RepairFormColumnManagement\FormInput.cs" />
+    <Compile Include="RepairFormColumnManagement\GridItem.cs" />
+    <Compile Include="RepairFormColumnManagement\GridViewModel.cs" />
+    <Compile Include="RepairFormColumnManagement\OptionModel.cs" />
+    <Compile Include="RepairFormColumnManagement\QueryFormModel.cs" />
+    <Compile Include="RepairFormColumnManagement\QueryParameters.cs" />
+    <Compile Include="RepairFormManagement\ColumnModel.cs" />
+    <Compile Include="RepairFormManagement\CreateFormModel.cs" />
+    <Compile Include="RepairFormManagement\CreateWorkingHourFormModel.cs" />
+    <Compile Include="RepairFormManagement\DetailViewModel.cs" />
+    <Compile Include="RepairFormManagement\EditFormModel.cs" />
+    <Compile Include="RepairFormManagement\CreateFormInput.cs" />
+    <Compile Include="RepairFormManagement\ExportModel.cs" />
+    <Compile Include="RepairFormManagement\FileDownloadModel.cs" />
+    <Compile Include="RepairFormManagement\FileModel.cs" />
+    <Compile Include="RepairFormManagement\FlowLogModel.cs" />
+    <Compile Include="RepairFormManagement\GridItem.cs" />
+    <Compile Include="RepairFormManagement\GridViewModel.cs" />
+    <Compile Include="RepairFormManagement\InitParameters.cs" />
+    <Compile Include="RepairFormManagement\MaterialModel.cs" />
+    <Compile Include="RepairFormManagement\QueryFormModel.cs" />
+    <Compile Include="RepairFormManagement\QueryParameters.cs" />
+    <Compile Include="RepairFormManagement\RFormColumnOption.cs" />
+    <Compile Include="RepairFormManagement\RFormSubject.cs" />
+    <Compile Include="RepairFormManagement\SummaryItem.cs" />
+    <Compile Include="RepairFormManagement\SummaryViewModel.cs" />
+    <Compile Include="RepairFormManagement\WorkingHourFormInput.cs" />
+    <Compile Include="RepairFormManagement\WorkingHourModel.cs" />
+    <Compile Include="RepairFormSubjectManagement\CreateFormModel.cs" />
+    <Compile Include="RepairFormSubjectManagement\DetailViewModel.cs" />
+    <Compile Include="RepairFormSubjectManagement\EditFormModel.cs" />
+    <Compile Include="RepairFormSubjectManagement\FormInput.cs" />
+    <Compile Include="RepairFormSubjectManagement\GridItem.cs" />
+    <Compile Include="RepairFormSubjectManagement\GridViewModel.cs" />
+    <Compile Include="RepairFormSubjectManagement\QueryFormModel.cs" />
+    <Compile Include="RepairFormSubjectManagement\QueryParameters.cs" />
+    <Compile Include="RepairFormTypeManagement\ColumnModel.cs" />
+    <Compile Include="RepairFormTypeManagement\CreateFormModel.cs" />
+    <Compile Include="RepairFormTypeManagement\DetailViewModel.cs" />
+    <Compile Include="RepairFormTypeManagement\EditFormModel.cs" />
+    <Compile Include="RepairFormTypeManagement\FormInput.cs" />
+    <Compile Include="RepairFormTypeManagement\GridItem.cs" />
+    <Compile Include="RepairFormTypeManagement\GridViewModel.cs" />
+    <Compile Include="RepairFormTypeManagement\QueryFormModel.cs" />
+    <Compile Include="RepairFormTypeManagement\QueryParameters.cs" />
+    <Compile Include="RepairFormTypeManagement\SubjectModel.cs" />
+    <Compile Include="ProgressQuery\AbnormalReasonModel.cs" />
+    <Compile Include="ProgressQuery\ArriveRecordModel.cs" />
+    <Compile Include="ProgressQuery\CheckItemExcelItem.cs" />
+    <Compile Include="ProgressQuery\CheckItemModel.cs" />
+    <Compile Include="ProgressQuery\CheckResultModel.cs" />
+    <Compile Include="ProgressQuery\ControlPointExcelItem.cs" />
+    <Compile Include="ProgressQuery\ControlPointModel.cs" />
+    <Compile Include="ProgressQuery\HandlingMethodModel.cs" />
+    <Compile Include="ProgressQuery\JobExcelItem.cs" />
+    <Compile Include="ProgressQuery\JobResultModel.cs" />
+    <Compile Include="ProgressQuery\QueryFormModel.cs" />
+    <Compile Include="ProgressQuery\QueryParameters.cs" />
+    <Compile Include="ResultQuery\AbnormalReasonModel.cs" />
+    <Compile Include="ResultQuery\ArriveRecordModel.cs" />
+    <Compile Include="ResultQuery\CheckResultExcelItem.cs" />
+    <Compile Include="ResultQuery\CheckResultModel.cs" />
+    <Compile Include="ResultQuery\HandlingMethodModel.cs" />
+    <Compile Include="ResultQuery\JobModel.cs" />
+    <Compile Include="ResultQuery\QueryFormModel.cs" />
+    <Compile Include="ResultQuery\QueryParameters.cs" />
+    <Compile Include="ResultVerify\AbnormalReasonModel.cs" />
+    <Compile Include="ResultVerify\ArriveRecordModel.cs" />
+    <Compile Include="ResultVerify\CheckItemModel.cs" />
+    <Compile Include="ResultVerify\CheckResultModel.cs" />
+    <Compile Include="ResultVerify\ControlPointModel.cs" />
+    <Compile Include="ResultVerify\DetailViewModel.cs" />
+    <Compile Include="ResultVerify\FlowLogModel.cs" />
+    <Compile Include="ResultVerify\GridItem.cs" />
+    <Compile Include="ResultVerify\HandlingMethodModel.cs" />
+    <Compile Include="ResultVerify\QueryFormModel.cs" />
+    <Compile Include="ResultVerify\QueryParameters.cs" />
+    <Compile Include="ResultVerify\VerifyFormInput.cs" />
+    <Compile Include="ResultVerify\VerifyFormModel.cs" />
+    <Compile Include="RouteManagement\CheckItemModel.cs" />
+    <Compile Include="RouteManagement\ControlPointModel.cs" />
+    <Compile Include="RouteManagement\CreateFormModel.cs" />
+    <Compile Include="RouteManagement\DetailViewModel.cs" />
+    <Compile Include="RouteManagement\EditFormModel.cs" />
+    <Compile Include="RouteManagement\EquipmentModel.cs" />
+    <Compile Include="RouteManagement\FormInput.cs" />
+    <Compile Include="RouteManagement\GridItem.cs" />
+    <Compile Include="RouteManagement\GridViewModel.cs" />
+    <Compile Include="RouteManagement\Job.cs" />
+    <Compile Include="RouteManagement\QueryFormModel.cs" />
+    <Compile Include="RouteManagement\QueryParameters.cs" />
+    <Compile Include="RouteManagement\ManagerModel.cs" />
+    <Compile Include="StandardManagement\AbnormalReasonModel.cs" />
+    <Compile Include="StandardManagement\CreateFormModel.cs" />
+    <Compile Include="StandardManagement\DetailViewModel.cs" />
+    <Compile Include="StandardManagement\EditFormModel.cs" />
+    <Compile Include="StandardManagement\FeelOptionModel.cs" />
+    <Compile Include="StandardManagement\FormInput.cs" />
+    <Compile Include="StandardManagement\GridItem.cs" />
+    <Compile Include="StandardManagement\GridViewModel.cs" />
+    <Compile Include="StandardManagement\QueryFormModel.cs" />
+    <Compile Include="StandardManagement\QueryParameters.cs" />
+    <Compile Include="TimeSpanAbnormalReasonManagement\CreateFormModel.cs" />
+    <Compile Include="TimeSpanAbnormalReasonManagement\DetailViewModel.cs" />
+    <Compile Include="TimeSpanAbnormalReasonManagement\EditFormModel.cs" />
+    <Compile Include="TimeSpanAbnormalReasonManagement\FormInput.cs" />
+    <Compile Include="TimeSpanAbnormalReasonManagement\GridItem.cs" />
+    <Compile Include="TimeSpanAbnormalReasonManagement\GridViewModel.cs" />
+    <Compile Include="TimeSpanAbnormalReasonManagement\QueryFormModel.cs" />
+    <Compile Include="TimeSpanAbnormalReasonManagement\QueryParameters.cs" />
+    <Compile Include="TrendQuery\ChartViewModel.cs" />
+    <Compile Include="TrendQuery\CheckResultModel.cs" />
+    <Compile Include="TrendQuery\QueryFormModel.cs" />
+    <Compile Include="TrendQuery\QueryParameters.cs" />
+    <Compile Include="TrendQuery_CheckItem\ChartViewModel.cs" />
+    <Compile Include="TrendQuery_CheckItem\CheckResultModel.cs" />
+    <Compile Include="TrendQuery_CheckItem\EquipmentModel.cs" />
+    <Compile Include="TrendQuery_CheckItem\GridItem.cs" />
+    <Compile Include="TrendQuery_CheckItem\GridViewModel.cs" />
+    <Compile Include="TrendQuery_CheckItem\QueryFormModel.cs" />
+    <Compile Include="TrendQuery_CheckItem\QueryParameters.cs" />
+    <Compile Include="UnPatrolReasonManagement\CreateFormModel.cs" />
+    <Compile Include="UnPatrolReasonManagement\DetailViewModel.cs" />
+    <Compile Include="UnPatrolReasonManagement\EditFormModel.cs" />
+    <Compile Include="UnPatrolReasonManagement\FormInput.cs" />
+    <Compile Include="UnPatrolReasonManagement\GridItem.cs" />
+    <Compile Include="UnPatrolReasonManagement\GridViewModel.cs" />
+    <Compile Include="UnPatrolReasonManagement\QueryFormModel.cs" />
+    <Compile Include="UnPatrolReasonManagement\QueryParameters.cs" />
+    <Compile Include="UnRFIDReasonManagement\CreateFormModel.cs" />
+    <Compile Include="UnRFIDReasonManagement\DetailViewModel.cs" />
+    <Compile Include="UnRFIDReasonManagement\EditFormModel.cs" />
+    <Compile Include="UnRFIDReasonManagement\FormInput.cs" />
+    <Compile Include="UnRFIDReasonManagement\GridItem.cs" />
+    <Compile Include="UnRFIDReasonManagement\GridViewModel.cs" />
+    <Compile Include="UnRFIDReasonManagement\QueryFormModel.cs" />
+    <Compile Include="UnRFIDReasonManagement\QueryParameters.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{98e5ac9f-5451-4ec8-b7ba-7bc9a076c74f}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Resources\Resources.csproj">
+      <Project>{5ec06c20-a23b-4617-88dd-0712d21ac987}</Project>
+      <Name>Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{6fcf0532-ca44-49b9-9d93-31f10a25b572}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>此專案參照此電腦中缺少的  NuGet 套件。啟用「NuGet 套件還原」以便下載。如需詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的檔案為 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

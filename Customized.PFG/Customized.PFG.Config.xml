@@ -1,0 +1,434 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CONFIG>
+  <DailyReportFolder>D:\FEM\DailyReport</DailyReportFolder>
+  <DailyReport RouteUniqueID="fb2950fa-68db-4068-aac2-2cddffd03650" _2003="E:\PFG\1.xls" _2007="E:\PFG\1.xlsx">
+    <ExcelDefine ControlPointRowIndex = "4" ControlPointCellIndex = "0" CheckItemBeginRowIndex = "4" CheckItemEndRowIndex = "32"></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "4" ControlPointCellIndex = "9" CheckItemBeginRowIndex = "4" CheckItemEndRowIndex = "23"></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "24" ControlPointCellIndex = "9" CheckItemBeginRowIndex = "24" CheckItemEndRowIndex = "27"></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "28" ControlPointCellIndex = "9"  CheckItemBeginRowIndex = "28" CheckItemEndRowIndex = "28"></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "30" ControlPointCellIndex = "9"  CheckItemBeginRowIndex = "30" CheckItemEndRowIndex = "31"></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "4" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "4" CheckItemEndRowIndex = "23" ></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "24" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "24" CheckItemEndRowIndex = "27" ></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "28" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "28" CheckItemEndRowIndex = "29"  ></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "30" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "30" CheckItemEndRowIndex = "30"  ></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "32" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "32" CheckItemEndRowIndex = "35" ></ExcelDefine>
+  </DailyReport>
+  <DailyReport RouteUniqueID="34370a36-b324-4a6d-9ede-9b0b10436b95" _2003="E:\PFG\2.xls" _2007="E:\PFG\2.xlsx">
+    <ExcelDefine ControlPointRowIndex = "4" ControlPointCellIndex = "0" CheckItemBeginRowIndex = "4" CheckItemEndRowIndex = "32"></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "33" ControlPointCellIndex = "0" CheckItemBeginRowIndex = "33" CheckItemEndRowIndex = "35"></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "37" ControlPointCellIndex = "0" CheckItemBeginRowIndex = "37" CheckItemEndRowIndex = "40"></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "4" ControlPointCellIndex = "9" CheckItemBeginRowIndex = "4" CheckItemEndRowIndex = "23" ></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "24" ControlPointCellIndex = "9" CheckItemBeginRowIndex = "24" CheckItemEndRowIndex = "26"   ></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "27" ControlPointCellIndex = "9"  CheckItemBeginRowIndex = "27" CheckItemEndRowIndex = "29"   ></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "31" ControlPointCellIndex = "9" CheckItemBeginRowIndex = "31" CheckItemEndRowIndex = "39"   ></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "4" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "4" CheckItemEndRowIndex = "23"   ></ExcelDefine>
+    <ExcelDefine ControlPointRowIndex = "24" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "24" CheckItemEndRowIndex = "27"   ></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "28" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "28" CheckItemEndRowIndex = "29"    ></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "31" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "31" CheckItemEndRowIndex = "32"></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "34" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "34" CheckItemEndRowIndex = "40"></ExcelDefine>
+  </DailyReport>
+  <DailyReport RouteUniqueID="2c8a980b-02f5-4b53-83bb-d66437d672e1" _2003="E:\PFG\3.xls" _2007="E:\PFG\3.xlsx">
+    <ExcelDefine  ControlPointRowIndex = "4" ControlPointCellIndex = "0" CheckItemBeginRowIndex = "4" CheckItemEndRowIndex = "32"></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "4" ControlPointCellIndex = "9" CheckItemBeginRowIndex = "4" CheckItemEndRowIndex = "23"></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "24" ControlPointCellIndex = "9" CheckItemBeginRowIndex = "24" CheckItemEndRowIndex = "27" ></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "29" ControlPointCellIndex = "9"  CheckItemBeginRowIndex = "29" CheckItemEndRowIndex = "31" ></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "33" ControlPointCellIndex = "9"  CheckItemBeginRowIndex = "33" CheckItemEndRowIndex = "34" ></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "36" ControlPointCellIndex = "9" CheckItemBeginRowIndex = "36" CheckItemEndRowIndex = "38"  ></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "4" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "4" CheckItemEndRowIndex = "23"  ></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "24" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "24" CheckItemEndRowIndex = "27"  ></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "28" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "28" CheckItemEndRowIndex = "29" ></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "31" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "31" CheckItemEndRowIndex = "32"></ExcelDefine>
+    <ExcelDefine  ControlPointRowIndex = "34" ControlPointCellIndex = "18"  CheckItemBeginRowIndex = "34" CheckItemEndRowIndex = "40"></ExcelDefine>
+  </DailyReport>
+  <EReport RouteUniqueID="25fce55c-d8dc-4834-a189-d5887fbe3047" _2003="E:\PFG\E.xls" _2007="E:\PFG\E.xlsx">
+    <Sheet Index="0" CheckUserRowIndex="18" CheckUserCellIndex="21">
+      <Row Index="5">
+        <Cell Index="1" ControlPoint="第一變電站" Equipment="A饋主受電盤" CheckItem="三相電壓A"></Cell>
+        <Cell Index="2" ControlPoint="第一變電站" Equipment="A饋主受電盤" CheckItem="三相電壓B"></Cell>
+        <Cell Index="3" ControlPoint="第一變電站" Equipment="A饋主受電盤" CheckItem="三相電壓C"></Cell>
+        <Cell Index="4" ControlPoint="第一變電站" Equipment="A饋主受電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="5" ControlPoint="第一變電站" Equipment="A饋主受電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="6" ControlPoint="第一變電站" Equipment="A饋主受電盤" CheckItem="三相電流C"></Cell>
+        <Cell Index="7" ControlPoint="第一變電站" Equipment="A饋主受電盤" CheckItem="功因"></Cell>
+        <Cell Index="8" ControlPoint="第一變電站" Equipment="A饋主受電盤" CheckItem="功率"></Cell>
+        <Cell Index="9" ControlPoint="第一變電站" Equipment="A饋主受電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="10" ControlPoint="第一變電站" Equipment="A饋主受電盤" CheckItem="瞬時功率"></Cell>
+        
+        <Cell Index="13" ControlPoint="第一變電站" Equipment="A1-1饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="14" ControlPoint="第一變電站" Equipment="A1-1饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="15" ControlPoint="第一變電站" Equipment="A1-1饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="16" ControlPoint="第一變電站" Equipment="A1-1饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="17" ControlPoint="第一變電站" Equipment="A1-1饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="18" ControlPoint="第一變電站" Equipment="A1-2饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="19" ControlPoint="第一變電站" Equipment="A1-2饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="20" ControlPoint="第一變電站" Equipment="A1-2饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="21" ControlPoint="第一變電站" Equipment="A1-2饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="22" ControlPoint="第一變電站" Equipment="A1-2饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+      <Row Index="9">
+        <Cell Index="1" ControlPoint="第一變電站" Equipment="A1-13饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="4" ControlPoint="第一變電站" Equipment="A1-13饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="5" ControlPoint="第一變電站" Equipment="A1-13饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="6" ControlPoint="第一變電站" Equipment="A1-13饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="7" ControlPoint="第一變電站" Equipment="A1-13饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="8" ControlPoint="第二變電站" Equipment="A1-3饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="9" ControlPoint="第二變電站" Equipment="A1-3饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="10" ControlPoint="第二變電站" Equipment="A1-3饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="11" ControlPoint="第二變電站" Equipment="A1-3饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="12" ControlPoint="第二變電站" Equipment="A1-3饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="13" ControlPoint="第二變電站" Equipment="A1-4饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="14" ControlPoint="第二變電站" Equipment="A1-4饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="15" ControlPoint="第二變電站" Equipment="A1-4饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="16" ControlPoint="第二變電站" Equipment="A1-4饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="17" ControlPoint="第二變電站" Equipment="A1-4饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="18" ControlPoint="第二變電站" Equipment="A1-5饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="19" ControlPoint="第二變電站" Equipment="A1-5饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="20" ControlPoint="第二變電站" Equipment="A1-5饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="21" ControlPoint="第二變電站" Equipment="A1-5饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="22" ControlPoint="第二變電站" Equipment="A1-5饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+      <Row Index="13">
+        <Cell Index="1" ControlPoint="第二變電站" Equipment="A1-6饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="4" ControlPoint="第二變電站" Equipment="A1-6饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="5" ControlPoint="第二變電站" Equipment="A1-6饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="6" ControlPoint="第二變電站" Equipment="A1-6饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="7" ControlPoint="第二變電站" Equipment="A1-6饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="8" ControlPoint="第三變電站" Equipment="A1-9饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="9" ControlPoint="第三變電站" Equipment="A1-9饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="10" ControlPoint="第三變電站" Equipment="A1-9饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="11" ControlPoint="第三變電站" Equipment="A1-9饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="12" ControlPoint="第三變電站" Equipment="A1-9饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="13" ControlPoint="第三變電站" Equipment="A1-10饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="14" ControlPoint="第三變電站" Equipment="A1-10饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="15" ControlPoint="第三變電站" Equipment="A1-10饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="16" ControlPoint="第三變電站" Equipment="A1-10饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="17" ControlPoint="第三變電站" Equipment="A1-10饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="18" ControlPoint="第三變電站" Equipment="A1-11饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="19" ControlPoint="第三變電站" Equipment="A1-11饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="20" ControlPoint="第三變電站" Equipment="A1-11饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="21" ControlPoint="第三變電站" Equipment="A1-11饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="22" ControlPoint="第三變電站" Equipment="A1-11饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+      <Row Index="17">
+        <Cell Index="1" ControlPoint="第四變電站" Equipment="A1-7饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="4" ControlPoint="第四變電站" Equipment="A1-7饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="5" ControlPoint="第四變電站" Equipment="A1-7饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="6" ControlPoint="第四變電站" Equipment="A1-7饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="7" ControlPoint="第四變電站" Equipment="A1-7饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="8" ControlPoint="第四變電站" Equipment="A1-8饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="9" ControlPoint="第四變電站" Equipment="A1-8饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="10" ControlPoint="第四變電站" Equipment="A1-8饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="11" ControlPoint="第四變電站" Equipment="A1-8饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="12" ControlPoint="第四變電站" Equipment="A1-8饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="13" ControlPoint="第四變電站" Equipment="A1-14饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="14" ControlPoint="第四變電站" Equipment="A1-14饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="15" ControlPoint="第四變電站" Equipment="A1-14饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="16" ControlPoint="第四變電站" Equipment="A1-14饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="17" ControlPoint="第四變電站" Equipment="A1-14饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="18" ControlPoint="第五變電站" Equipment="A1-12饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="19" ControlPoint="第五變電站" Equipment="A1-12饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="20" ControlPoint="第五變電站" Equipment="A1-12饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="21" ControlPoint="第五變電站" Equipment="A1-12饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="22" ControlPoint="第五變電站" Equipment="A1-12饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+    </Sheet>
+    <Sheet Index="1" CheckUserRowIndex="18" CheckUserCellIndex="21">
+      <Row Index="5">
+        <Cell Index="1" ControlPoint="第一變電站" Equipment="B饋主受電盤" CheckItem="三相電壓A"></Cell>
+        <Cell Index="2" ControlPoint="第一變電站" Equipment="B饋主受電盤" CheckItem="三相電壓B"></Cell>
+        <Cell Index="3" ControlPoint="第一變電站" Equipment="B饋主受電盤" CheckItem="三相電壓C"></Cell>
+        <Cell Index="4" ControlPoint="第一變電站" Equipment="B饋主受電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="5" ControlPoint="第一變電站" Equipment="B饋主受電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="6" ControlPoint="第一變電站" Equipment="B饋主受電盤" CheckItem="三相電流C"></Cell>
+        <Cell Index="7" ControlPoint="第一變電站" Equipment="B饋主受電盤" CheckItem="功因"></Cell>
+        <Cell Index="8" ControlPoint="第一變電站" Equipment="B饋主受電盤" CheckItem="功率"></Cell>
+        <Cell Index="9" ControlPoint="第一變電站" Equipment="B饋主受電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="10" ControlPoint="第一變電站" Equipment="B饋主受電盤" CheckItem="瞬時功率"></Cell>
+        
+        <Cell Index="13" ControlPoint="第六變電站" Equipment="B2-1饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="14" ControlPoint="第六變電站" Equipment="B2-1饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="15" ControlPoint="第六變電站" Equipment="B2-1饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="16" ControlPoint="第六變電站" Equipment="B2-1饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="17" ControlPoint="第六變電站" Equipment="B2-1饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="18" ControlPoint="第六變電站" Equipment="B2-2饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="19" ControlPoint="第六變電站" Equipment="B2-2饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="20" ControlPoint="第六變電站" Equipment="B2-2饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="21" ControlPoint="第六變電站" Equipment="B2-2饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="22" ControlPoint="第六變電站" Equipment="B2-2饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+      <Row Index="9">
+        <Cell Index="1" ControlPoint="第七變電站" Equipment="B2-3饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="4" ControlPoint="第七變電站" Equipment="B2-3饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="5" ControlPoint="第七變電站" Equipment="B2-3饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="6" ControlPoint="第七變電站" Equipment="B2-3饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="7" ControlPoint="第七變電站" Equipment="B2-3饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="8" ControlPoint="第七變電站" Equipment="B2-4饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="9" ControlPoint="第七變電站" Equipment="B2-4饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="10" ControlPoint="第七變電站" Equipment="B2-4饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="11" ControlPoint="第七變電站" Equipment="B2-4饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="12" ControlPoint="第七變電站" Equipment="B2-4饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="13" ControlPoint="第七變電站" Equipment="B2-5饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="14" ControlPoint="第七變電站" Equipment="B2-5饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="15" ControlPoint="第七變電站" Equipment="B2-5饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="16" ControlPoint="第七變電站" Equipment="B2-5饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="17" ControlPoint="第七變電站" Equipment="B2-5饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="18" ControlPoint="第七變電站" Equipment="B2-6饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="19" ControlPoint="第七變電站" Equipment="B2-6饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="20" ControlPoint="第七變電站" Equipment="B2-6饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="21" ControlPoint="第七變電站" Equipment="B2-6饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="22" ControlPoint="第七變電站" Equipment="B2-6饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+      <Row Index="13">
+        <Cell Index="1" ControlPoint="第三變電站" Equipment="B2-7饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="4" ControlPoint="第三變電站" Equipment="B2-7饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="5" ControlPoint="第三變電站" Equipment="B2-7饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="6" ControlPoint="第三變電站" Equipment="B2-7饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="7" ControlPoint="第三變電站" Equipment="B2-7饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="8" ControlPoint="二廠電助熔室" Equipment="B2-8饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="9" ControlPoint="二廠電助熔室" Equipment="B2-8饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="10" ControlPoint="二廠電助熔室" Equipment="B2-8饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="11" ControlPoint="二廠電助熔室" Equipment="B2-8饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="12" ControlPoint="二廠電助熔室" Equipment="B2-8饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+    </Sheet>
+    <Sheet Index="2" CheckUserRowIndex="18" CheckUserCellIndex="21">
+      <Row Index="5">
+        <Cell Index="1" ControlPoint="第十一變電站" Equipment="C饋主受電盤" CheckItem="三相電壓A"></Cell>
+        <Cell Index="2" ControlPoint="第十一變電站" Equipment="C饋主受電盤" CheckItem="三相電壓B"></Cell>
+        <Cell Index="3" ControlPoint="第十一變電站" Equipment="C饋主受電盤" CheckItem="三相電壓C"></Cell>
+        <Cell Index="4" ControlPoint="第十一變電站" Equipment="C饋主受電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="5" ControlPoint="第十一變電站" Equipment="C饋主受電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="6" ControlPoint="第十一變電站" Equipment="C饋主受電盤" CheckItem="三相電流C"></Cell>
+        <Cell Index="7" ControlPoint="第十一變電站" Equipment="C饋主受電盤" CheckItem="功因"></Cell>
+        <Cell Index="8" ControlPoint="第十一變電站" Equipment="C饋主受電盤" CheckItem="功率"></Cell>
+        <Cell Index="9" ControlPoint="第十一變電站" Equipment="C饋主受電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="10" ControlPoint="第十一變電站" Equipment="C饋主受電盤" CheckItem="瞬時功率"></Cell>
+        
+        <Cell Index="13" ControlPoint="第十一變電站" Equipment="C3-7饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="14" ControlPoint="第十一變電站" Equipment="C3-7饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="15" ControlPoint="第十一變電站" Equipment="C3-7饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="16" ControlPoint="第十一變電站" Equipment="C3-7饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="17" ControlPoint="第十一變電站" Equipment="C3-7饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="18" ControlPoint="第十一變電站" Equipment="C3-8饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="19" ControlPoint="第十一變電站" Equipment="C3-8饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="20" ControlPoint="第十一變電站" Equipment="C3-8饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="21" ControlPoint="第十一變電站" Equipment="C3-8饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="22" ControlPoint="第十一變電站" Equipment="C3-8饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+      <Row Index="9">
+        <Cell Index="1" ControlPoint="第十一變電站" Equipment="C3-12饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="4" ControlPoint="第十一變電站" Equipment="C3-12饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="5" ControlPoint="第十一變電站" Equipment="C3-12饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="6" ControlPoint="第十一變電站" Equipment="C3-12饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="7" ControlPoint="第十一變電站" Equipment="C3-12饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="8" ControlPoint="第八變電站" Equipment="C3-1饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="9" ControlPoint="第八變電站" Equipment="C3-1饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="10" ControlPoint="第八變電站" Equipment="C3-1饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="11" ControlPoint="第八變電站" Equipment="C3-1饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="12" ControlPoint="第八變電站" Equipment="C3-1饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="13" ControlPoint="第八變電站" Equipment="C3-2饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="14" ControlPoint="第八變電站" Equipment="C3-2饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="15" ControlPoint="第八變電站" Equipment="C3-2饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="16" ControlPoint="第八變電站" Equipment="C3-2饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="17" ControlPoint="第八變電站" Equipment="C3-2饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="18" ControlPoint="第九變電站" Equipment="C3-3饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="19" ControlPoint="第九變電站" Equipment="C3-3饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="20" ControlPoint="第九變電站" Equipment="C3-3饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="21" ControlPoint="第九變電站" Equipment="C3-3饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="22" ControlPoint="第九變電站" Equipment="C3-3饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+      <Row Index="13">
+        <Cell Index="1" ControlPoint="第九變電站" Equipment="C3-4饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="4" ControlPoint="第九變電站" Equipment="C3-4饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="5" ControlPoint="第九變電站" Equipment="C3-4饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="6" ControlPoint="第九變電站" Equipment="C3-4饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="7" ControlPoint="第九變電站" Equipment="C3-4饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="8" ControlPoint="第九變電站" Equipment="C3-5饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="9" ControlPoint="第九變電站" Equipment="C3-5饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="10" ControlPoint="第九變電站" Equipment="C3-5饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="11" ControlPoint="第九變電站" Equipment="C3-5饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="12" ControlPoint="第九變電站" Equipment="C3-5饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="13" ControlPoint="第五變電站" Equipment="C3-6-D TIE饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="14" ControlPoint="第五變電站" Equipment="C3-6-D TIE饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="15" ControlPoint="第五變電站" Equipment="C3-6-D TIE饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="16" ControlPoint="第五變電站" Equipment="C3-6-D TIE饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="17" ControlPoint="第五變電站" Equipment="C3-6-D TIE饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="18" ControlPoint="第十變電站" Equipment="C3-9饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="19" ControlPoint="第十變電站" Equipment="C3-9饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="20" ControlPoint="第十變電站" Equipment="C3-9饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="21" ControlPoint="第十變電站" Equipment="C3-9饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="22" ControlPoint="第十變電站" Equipment="C3-9饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+      <Row Index="17">
+        <Cell Index="1" ControlPoint="第十變電站" Equipment="C3-10饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="4" ControlPoint="第十變電站" Equipment="C3-10饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="5" ControlPoint="第十變電站" Equipment="C3-10饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="6" ControlPoint="第十變電站" Equipment="C3-10饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="7" ControlPoint="第十變電站" Equipment="C3-10饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="8" ControlPoint="第十變電站" Equipment="C3-11饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="9" ControlPoint="第十變電站" Equipment="C3-11饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="10" ControlPoint="第十變電站" Equipment="C3-11饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="11" ControlPoint="第十變電站" Equipment="C3-11饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="12" ControlPoint="第十變電站" Equipment="C3-11饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+    </Sheet>
+    <Sheet Index="3" CheckUserRowIndex="14" CheckUserCellIndex="27">
+      <Row Index="5">
+        <Cell Index="1" ControlPoint="第十一變電站" Equipment="D饋主受電盤" CheckItem="三相電壓A"></Cell>
+        <Cell Index="2" ControlPoint="第十一變電站" Equipment="D饋主受電盤" CheckItem="三相電壓B"></Cell>
+        <Cell Index="3" ControlPoint="第十一變電站" Equipment="D饋主受電盤" CheckItem="三相電壓C"></Cell>
+        <Cell Index="4" ControlPoint="第十一變電站" Equipment="D饋主受電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="5" ControlPoint="第十一變電站" Equipment="D饋主受電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="6" ControlPoint="第十一變電站" Equipment="D饋主受電盤" CheckItem="三相電流C"></Cell>
+        <Cell Index="7" ControlPoint="第十一變電站" Equipment="D饋主受電盤" CheckItem="功因"></Cell>
+        <Cell Index="8" ControlPoint="第十一變電站" Equipment="D饋主受電盤" CheckItem="功率"></Cell>
+        <Cell Index="11" ControlPoint="第十一變電站" Equipment="D饋主受電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="14" ControlPoint="第十一變電站" Equipment="D饋主受電盤" CheckItem="瞬時功率"></Cell>
+        
+        <Cell Index="15" ControlPoint="第十一變電站" Equipment="D13饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="18" ControlPoint="第十一變電站" Equipment="D13饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="21" ControlPoint="第十一變電站" Equipment="D13饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="22" ControlPoint="第十一變電站" Equipment="D13饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="23" ControlPoint="第十一變電站" Equipment="D13饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="24" ControlPoint="第十一變電站" Equipment="D14饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="25" ControlPoint="第十一變電站" Equipment="D14饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="26" ControlPoint="第十一變電站" Equipment="D14饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="27" ControlPoint="第十一變電站" Equipment="D14饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="28" ControlPoint="第十一變電站" Equipment="D14饋電盤" CheckItem="三相電流C"></Cell>
+      </Row>
+      <Row Index="9">
+        <Cell Index="1" ControlPoint="第十一變電站" Equipment="D15饋電盤" CheckItem="千瓦時"></Cell>
+        <Cell Index="4" ControlPoint="第十一變電站" Equipment="D15饋電盤" CheckItem="功因"></Cell>
+        <Cell Index="5" ControlPoint="第十一變電站" Equipment="D15饋電盤" CheckItem="三相電流A"></Cell>
+        <Cell Index="6" ControlPoint="第十一變電站" Equipment="D15饋電盤" CheckItem="三相電流B"></Cell>
+        <Cell Index="7" ControlPoint="第十一變電站" Equipment="D15饋電盤" CheckItem="三相電流C"></Cell>
+        
+        <Cell Index="8" ControlPoint="一廠電腦室UPS" Equipment="電腦室UPS" CheckItem="輸入電壓A"></Cell>
+        <Cell Index="9" ControlPoint="一廠電腦室UPS" Equipment="電腦室UPS" CheckItem="輸入電壓B"></Cell>
+        <Cell Index="10" ControlPoint="一廠電腦室UPS" Equipment="電腦室UPS" CheckItem="輸入電壓C"></Cell>
+        <Cell Index="11" ControlPoint="一廠電腦室UPS" Equipment="電腦室UPS" CheckItem="輸出電壓A"></Cell>
+        <Cell Index="12" ControlPoint="一廠電腦室UPS" Equipment="電腦室UPS" CheckItem="輸出電壓B"></Cell>
+        <Cell Index="13" ControlPoint="一廠電腦室UPS" Equipment="電腦室UPS" CheckItem="輸出電壓C"></Cell>
+        <Cell Index="14" ControlPoint="一廠電腦室UPS" Equipment="電腦室UPS" CheckItem="電瓶電壓"></Cell>
+
+        <Cell Index="15" ControlPoint="一廠UPS室" Equipment="一廠UPS" CheckItem="輸入電壓A"></Cell>
+        <Cell Index="16" ControlPoint="一廠UPS室" Equipment="一廠UPS" CheckItem="輸入電壓B"></Cell>
+        <Cell Index="17" ControlPoint="一廠UPS室" Equipment="一廠UPS" CheckItem="輸入電壓C"></Cell>
+        <Cell Index="18" ControlPoint="一廠UPS室" Equipment="一廠UPS" CheckItem="輸出電壓A"></Cell>
+        <Cell Index="19" ControlPoint="一廠UPS室" Equipment="一廠UPS" CheckItem="輸出電壓B"></Cell>
+        <Cell Index="20" ControlPoint="一廠UPS室" Equipment="一廠UPS" CheckItem="輸出電壓C"></Cell>
+        <Cell Index="21" ControlPoint="一廠UPS室" Equipment="一廠UPS" CheckItem="電瓶電壓"></Cell>
+
+        <Cell Index="22" ControlPoint="一廠UPS室" Equipment="二廠UPS" CheckItem="輸入電壓A"></Cell>
+        <Cell Index="23" ControlPoint="一廠UPS室" Equipment="二廠UPS" CheckItem="輸入電壓B"></Cell>
+        <Cell Index="24" ControlPoint="一廠UPS室" Equipment="二廠UPS" CheckItem="輸入電壓C"></Cell>
+        <Cell Index="25" ControlPoint="一廠UPS室" Equipment="二廠UPS" CheckItem="輸出電壓A"></Cell>
+        <Cell Index="26" ControlPoint="一廠UPS室" Equipment="二廠UPS" CheckItem="輸出電壓B"></Cell>
+        <Cell Index="27" ControlPoint="一廠UPS室" Equipment="二廠UPS" CheckItem="輸出電壓C"></Cell>
+        <Cell Index="28" ControlPoint="一廠UPS室" Equipment="二廠UPS" CheckItem="電瓶電壓"></Cell>
+      </Row>
+      <Row Index="13">
+        <Cell Index="1" ControlPoint="三廠UPS室" Equipment="三廠UPS" CheckItem="輸入電壓A"></Cell>
+        <Cell Index="2" ControlPoint="三廠UPS室" Equipment="三廠UPS" CheckItem="輸入電壓B"></Cell>
+        <Cell Index="3" ControlPoint="三廠UPS室" Equipment="三廠UPS" CheckItem="輸入電壓C"></Cell>
+        <Cell Index="4" ControlPoint="三廠UPS室" Equipment="三廠UPS" CheckItem="輸出電壓A"></Cell>
+        <Cell Index="5" ControlPoint="三廠UPS室" Equipment="三廠UPS" CheckItem="輸出電壓B"></Cell>
+        <Cell Index="6" ControlPoint="三廠UPS室" Equipment="三廠UPS" CheckItem="輸出電壓C"></Cell>
+        <Cell Index="7" ControlPoint="三廠UPS室" Equipment="三廠UPS" CheckItem="電瓶電壓"></Cell>
+
+        <Cell Index="8" ControlPoint="公用廠UPS室" Equipment="公用廠UPS" CheckItem="輸入電壓A"></Cell>
+        <Cell Index="9" ControlPoint="公用廠UPS室" Equipment="公用廠UPS" CheckItem="輸入電壓B"></Cell>
+        <Cell Index="10" ControlPoint="公用廠UPS室" Equipment="公用廠UPS" CheckItem="輸入電壓C"></Cell>
+        <Cell Index="11" ControlPoint="公用廠UPS室" Equipment="公用廠UPS" CheckItem="輸出電壓A"></Cell>
+        <Cell Index="12" ControlPoint="公用廠UPS室" Equipment="公用廠UPS" CheckItem="輸出電壓B"></Cell>
+        <Cell Index="13" ControlPoint="公用廠UPS室" Equipment="公用廠UPS" CheckItem="輸出電壓C"></Cell>
+        <Cell Index="14" ControlPoint="公用廠UPS室" Equipment="公用廠UPS" CheckItem="電瓶電壓"></Cell>
+
+        <Cell Index="15" ControlPoint="第一變電站" Equipment="第一變電站直流充電機控制電源" CheckItem="輸出電壓"></Cell>
+        
+        <Cell Index="18" ControlPoint="第三變電站" Equipment="第三變電站直流充電機控制電源" CheckItem="輸出電壓"></Cell>
+
+        <Cell Index="21" ControlPoint="第九變電站" Equipment="第九變電站直流充電機控制電源" CheckItem="輸出電壓"></Cell>
+
+        <Cell Index="24" ControlPoint="第十變電站" Equipment="第十變電站直流充電機控制電源" CheckItem="輸出電壓"></Cell>
+      </Row>
+    </Sheet>
+    <Sheet Index="4" CheckUserRowIndex="14" CheckUserCellIndex="13">
+      <Row Index="5">
+        <Cell Index="1" ControlPoint="第十一變電站" Equipment="空壓機#1(JOY 750HP)" CheckItem="電流"></Cell>
+        <Cell Index="2" ControlPoint="第十一變電站" Equipment="空壓機#1(JOY 750HP)" CheckItem="千瓦時"></Cell>
+
+        <Cell Index="3" ControlPoint="第十一變電站" Equipment="空壓機#2(JOY 750HP)" CheckItem="電流"></Cell>
+        <Cell Index="4" ControlPoint="第十一變電站" Equipment="空壓機#2(JOY 750HP)" CheckItem="千瓦時"></Cell>
+
+        <Cell Index="5" ControlPoint="第十一變電站" Equipment="空壓機#3(ATLAS 550HP)" CheckItem="電流"></Cell>
+        <Cell Index="6" ControlPoint="第十一變電站" Equipment="空壓機#3(ATLAS 550HP)" CheckItem="千瓦時"></Cell>
+
+        <Cell Index="7" ControlPoint="第十一變電站" Equipment="空壓機#4(JOY 450HP)" CheckItem="電流"></Cell>
+        <Cell Index="8" ControlPoint="第十一變電站" Equipment="空壓機#4(JOY 450HP)" CheckItem="千瓦時"></Cell>
+
+        <Cell Index="9" ControlPoint="第四變電站" Equipment="冷凍機#1(TRANE 700RT)" CheckItem="電流"></Cell>
+        <Cell Index="10" ControlPoint="第四變電站" Equipment="冷凍機#1(TRANE 700RT)" CheckItem="千瓦時"></Cell>
+
+        <Cell Index="11" ControlPoint="第四變電站" Equipment="冷凍機#2(TRANE 700RT)" CheckItem="電流"></Cell>
+        <Cell Index="12" ControlPoint="第四變電站" Equipment="冷凍機#2(TRANE 700RT)" CheckItem="千瓦時"></Cell>
+      </Row>
+      <Row Index="9">
+        <Cell Index="1" ControlPoint="第四變電站" Equipment="冷凍機#3(TRANE 1000RT)" CheckItem="電流"></Cell>
+        <Cell Index="2" ControlPoint="第四變電站" Equipment="冷凍機#3(TRANE 1000RT)" CheckItem="千瓦時"></Cell>
+
+        <Cell Index="3" ControlPoint="第四變電站" Equipment="冷凍機#5(TRANE 1200RT)" CheckItem="電流"></Cell>
+        <Cell Index="4" ControlPoint="第四變電站" Equipment="冷凍機#5(TRANE 1200RT)" CheckItem="千瓦時"></Cell>
+
+        <Cell Index="5" ControlPoint="第四變電站" Equipment="冷凍機#7(YORK 1300RT)" CheckItem="電流"></Cell>
+        <Cell Index="6" ControlPoint="第四變電站" Equipment="冷凍機#7(YORK 1300RT)" CheckItem="千瓦時"></Cell>
+
+        <Cell Index="7" ControlPoint="第四變電站" Equipment="冷凍機#8(YORK 1300RT)" CheckItem="電流"></Cell>
+        <Cell Index="8" ControlPoint="第四變電站" Equipment="冷凍機#8(YORK 1300RT)" CheckItem="千瓦時"></Cell>
+
+        <Cell Index="9" ControlPoint="第十一變電站" Equipment="冷凍機#9(YORK 1350RT)" CheckItem="電流"></Cell>
+        <Cell Index="10" ControlPoint="第十一變電站" Equipment="冷凍機#9(YORK 1350RT)" CheckItem="千瓦時"></Cell>
+
+        <Cell Index="11" ControlPoint="第十一變電站" Equipment="冷凍機#10(YORK 1350RT)" CheckItem="電流"></Cell>
+        <Cell Index="12" ControlPoint="第十一變電站" Equipment="冷凍機#10(YORK 1350RT)" CheckItem="千瓦時"></Cell>
+      </Row>
+      <Row Index="13">
+        <Cell Index="1" ControlPoint="第十一變電站" Equipment="冷凍機#11(YORK 1350RT)" CheckItem="電流"></Cell>
+        <Cell Index="2" ControlPoint="第十一變電站" Equipment="冷凍機#11(YORK 1350RT)" CheckItem="千瓦時"></Cell>
+
+        <Cell Index="3" ControlPoint="一期公用廠" Equipment="一廠發電機" CheckItem="直流電壓"></Cell>
+        <Cell Index="4" ControlPoint="一期公用廠" Equipment="一廠發電機" CheckItem="復歸按鈕"></Cell>
+
+        <Cell Index="5" ControlPoint="一期公用廠" Equipment="二廠發電機" CheckItem="直流電壓"></Cell>
+        <Cell Index="6" ControlPoint="一期公用廠" Equipment="二廠發電機" CheckItem="復歸按鈕"></Cell>
+
+        <Cell Index="7" ControlPoint="三期公用廠" Equipment="三廠發電機" CheckItem="直流電壓"></Cell>
+        <Cell Index="8" ControlPoint="三期公用廠" Equipment="三廠發電機" CheckItem="復歸按鈕"></Cell>
+      </Row>
+    </Sheet>
+  </EReport>
+</CONFIG>

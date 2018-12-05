@@ -1,0 +1,68 @@
+﻿@model Models.EquipmentMaintenance.EquipmentCheckItemManagement.CreatePartFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreatePartForm");
+    });
+
+    var CreatePart = function () {
+        var form = $('#CreatePartForm');
+
+        if (form.valid()) {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("CreatePart")',
+                data: form.serialize() + '&PageStates=' + PartPageState(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+                    
+                    if (data.IsSuccess) {
+                        CancelCreatePart();
+                        GetPartList(data.Data);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    var CancelCreatePart = function () {
+        $('#divPartListWidget').show();
+        $('#divCreatePartWidget').hide();
+    };
+</script>
+
+<div class="widget-main no-padding">
+    @using (Html.BeginForm("CreatePart", null, FormMethod.Post, new { @ID = "CreatePartForm" }))
+    {
+        <table class="table table-bordered table-input">
+            <tr>
+                <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Description)</th>
+                <td class="col-sm-11">
+                    @Html.TextBoxFor(x => x.FormInput.Description)
+                    <br />
+                    @Html.ValidationMessageFor(x => x.FormInput.Description)
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+<div class="widget-toolbox padding-8 clearfix">
+    <button class="btn btn-primary" onclick="CreatePart();">
+        <i class="ace-icon fa fa-save"></i>
+        @Resources.Resource.Save
+    </button>
+    <button class="btn btn-success" onclick="CancelCreatePart();">
+        <i class="ace-icon fa fa-ban"></i>
+        @Resources.Resource.Cancel
+    </button>
+</div>

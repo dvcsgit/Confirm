@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DailyReportDataSet" targetNamespace="http://tempuri.org/DailyReportDataSet.xsd" xmlns:mstns="http://tempuri.org/DailyReportDataSet.xsd" xmlns="http://tempuri.org/DailyReportDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DailyReportDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DailyReportDataSet" msprop:Generator_UserDSName="DailyReportDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DataTable" msprop:Generator_TableClassName="DataTableDataTable" msprop:Generator_TableVarName="tableDataTable" msprop:Generator_RowChangedName="DataTableRowChanged" msprop:Generator_TablePropName="DataTable" msprop:Generator_RowDeletingName="DataTableRowDeleting" msprop:Generator_RowChangingName="DataTableRowChanging" msprop:Generator_RowEvHandlerName="DataTableRowChangeEventHandler" msprop:Generator_RowDeletedName="DataTableRowDeleted" msprop:Generator_RowClassName="DataTableRow" msprop:Generator_UserTableName="DataTable" msprop:Generator_RowEvArgName="DataTableRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CheckDate" msprop:Generator_ColumnVarNameInTable="columnCheckDate" msprop:Generator_ColumnPropNameInRow="CheckDate" msprop:Generator_ColumnPropNameInTable="CheckDateColumn" msprop:Generator_UserColumnName="CheckDate" type="xs:string" minOccurs="0" />
+              <xs:element name="CheckUser" msprop:Generator_ColumnVarNameInTable="columnCheckUser" msprop:Generator_ColumnPropNameInRow="CheckUser" msprop:Generator_ColumnPropNameInTable="CheckUserColumn" msprop:Generator_UserColumnName="CheckUser" type="xs:string" minOccurs="0" />
+              <xs:element name="ID" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:string" minOccurs="0" />
+              <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" minOccurs="0" />
+              <xs:element name="CheckTime" msprop:Generator_ColumnVarNameInTable="columnCheckTime" msprop:Generator_ColumnPropNameInRow="CheckTime" msprop:Generator_ColumnPropNameInTable="CheckTimeColumn" msprop:Generator_UserColumnName="CheckTime" type="xs:string" minOccurs="0" />
+              <xs:element name="Remark" msprop:Generator_ColumnVarNameInTable="columnRemark" msprop:Generator_ColumnPropNameInRow="Remark" msprop:Generator_ColumnPropNameInTable="RemarkColumn" msprop:Generator_UserColumnName="Remark" type="xs:string" minOccurs="0" />
+              <xs:element name="OrganizationDescription" msprop:Generator_ColumnVarNameInTable="columnOrganizationDescription" msprop:Generator_ColumnPropNameInRow="OrganizationDescription" msprop:Generator_ColumnPropNameInTable="OrganizationDescriptionColumn" msprop:Generator_UserColumnName="OrganizationDescription" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Models.EquipmentMaintenance.MaintenanceFormManagement.ResultModel>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <div class="accordion-style1 panel-group">
+        <div class="panel panel-default">
+@foreach (var item in Model)
+{
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="@("#"+item.UniqueID)" aria-expanded="true">
+                <i class="bigger-110 ace-icon fa fa-angle-down" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
+                @item.DateTime
+            </a>
+        </h4>
+    </div>
+
+    <div class="panel-collapse collapse in" id="@(item.UniqueID)" aria-expanded="true">
+        <div class="panel-body">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1"></th>
+                        <th class="col-sm-8">@Resources.Resource.Standard</th>
+                        <th class="col-sm-3">@Resources.Resource.Result</th>
+                    </tr>
+                </thead>
+                @foreach (var r in item.ResultList)
+                {
+                    <tr>
+                        <td>
+                            @if (r.IsAbnormal)
+                            {
+                                <span class="label label-lg label-danger arrowed-right">@Resources.Resource.Abnormal</span>
+                            }
+                            else if (r.IsAlert)
+                            {
+                                <span class="label label-lg label-warning arrowed-right">@Resources.Resource.Warning</span>
+                            }
+                            else
+                            {
+                                <span class="label label-lg label-success arrowed-right">@Resources.Resource.Normal</span>
+                            }
+                        </td>
+                        <td>@r.Display</td>
+                        <td>@r.Result</td>
+                    </tr>
+                }
+            </table>
+
+        </div>
+    </div>
+}
+            
+        </div>
+    </div>
+}
+
+

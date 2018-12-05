@@ -1,0 +1,153 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedList();
+
+        InitSelectTree();
+
+        $('#divSelectTreeWidget').hide();
+    });
+
+    function GetSelectedList() {
+        var list = $('#divSelectedList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitSelectTree() {
+        var container = $('#divSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitSelectTree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var Select = function () {
+        $('#divSelectedListWidget').hide();
+        $('#divSelectTreeWidget').show();
+    };
+
+    var CancelSelect = function () {
+        $('#divSelectedListWidget').show();
+        $('#divSelectTreeWidget').hide();
+    };
+
+    var AddSelect = function () {
+        var data = [];
+
+        $("#divSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.HandlingMethodType") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.HandlingMethodUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddSelect")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divSelectTreeWidget').hide();
+                $('#divSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedList();
+                    $("#divSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteSelected = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteSelected")',
+            data: { HandlingMethodUniqueID: uniqueID, },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedList();
+                    $("#divSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.HandlingMethod</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddSelect(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelect(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.AbnormalReason @Resources.Resource.HandlingMethod</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="Select(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            <div id="divSelectedList" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

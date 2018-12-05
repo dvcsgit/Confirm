@@ -1,0 +1,236 @@
+﻿@model Models.EquipmentMaintenance.Import.ProgressFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+    <link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+
+<script type="text/javascript">
+
+    var total = parseInt('@Model.TotalCount');
+
+    var finished = 0;
+
+    var success=0;
+
+    var failed=0;
+
+    $(function () {
+        @foreach (var sheetIndex in Model.SheetDataCount.Keys)
+        {
+            <text>GetRowData(@sheetIndex, @Model.SheetDataCount[sheetIndex]);</text>
+        }
+
+        $('#btnImport, #btnCancel').hide();
+    });
+
+    function UpdateProgress() {
+        if (finished == total) {
+            $('#ProgressText').text(finished + '/' + total + '(100%)');
+            $("#ProgressBar").css('width', '100%').prop('aria-valuenow', 100).removeClass("active").removeClass("progress-bar-striped").removeClass('progress-bar-danger').addClass('progress-bar-success');
+
+            $('#ProgressResult').text('@Resources.Resource.Success'+success+'@Resources.Resource.Record'+'，'+'@Resources.Resource.Failed'+failed+'@Resources.Resource.Record');
+
+            if(failed>0)
+            {
+                $('#ProgressResultIcon').addClass('fa-times');
+                $('#divProgressResult').addClass('alert-danger').removeClass('hide');
+                $('#step1').removeClass('active').addClass('complete').addClass('error');
+            }
+            else
+            {
+                $('#ProgressResultIcon').addClass('fa-check');
+                $('#divProgressResult').addClass('alert-success').removeClass('hide');
+
+                $('#step1').removeClass('active').addClass('complete');
+                $('#step2').addClass('active');
+
+                Validate();
+            }
+        }
+        else {
+            var percent = Math.round(100 * finished / total);
+            $('#ProgressText').text(finished + '/' + total + '(' + percent + '%)');
+            $("#ProgressBar").css('width', percent + '%').prop('aria-valuenow', percent);
+        }
+    }
+
+    function GetRowData(sheetIndex, rowCount) {
+        for(var rowIndex=1;rowIndex<=rowCount;rowIndex++)
+        {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("GetRowData")',
+                dataType: "json",
+                data: { SheetIndex: sheetIndex, RowIndex: rowIndex },
+                success: function (data) {
+                    finished++;
+                    success++;
+                    UpdateProgress();
+                },
+                error: function (x, h, r) {
+                    debugger;
+                    finished++;
+                    failed++;
+                    UpdateProgress();
+                }
+            });
+        }
+    }
+
+    function Validate(){
+        var container = $('#divImport');
+
+        container.removeClass('hide');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Validate")',
+            dataType: "html",
+            beforeSend: function () {
+                container.Overlay('show');
+            },
+            success: function (data) {
+                container.Overlay('hide').html(data);
+            },
+            error: function (x, h, r) {
+                container.Overlay('hide').html(x.responseText);
+            }
+        });
+    }
+
+    function Import(){
+        $('#step3').removeClass('active').addClass('complete');
+        $('#step4').addClass('active');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Import")',
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $('#btnImport').hide();
+
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    $('#step4').removeClass('active').addClass('complete');
+
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $('#step4').removeClass('active').addClass('complete').addClass('error');
+
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#btnImport').hide();
+
+                $.Overlay('hide');
+
+                $('#step4').removeClass('active').addClass('complete').addClass('error');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    }
+</script>
+
+}
+
+<p>
+    <button id="btnImport" class="btn btn-app btn-primary btn-xs" onclick="Import();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Import
+    </button>
+
+    <a id="btnCancel" class="btn btn-app btn-success btn-xs" href="@Url.Action("Upload")" >
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </a>
+</p>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Upload @Resources.Resource.Progress</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-10">
+                    <div id="my-wizard" data-target="#step-container">
+                        <ul class="wizard-steps">
+                            <li id="step1" data-target="#step1" class="active">
+                                <span class="step">1</span>
+                                <span class="title">@Resources.Resource.Data @Resources.Resource.Load</span>
+                            </li>
+
+                            <li id="step2" data-target="#step2">
+                                <span class="step">2</span>
+                                <span class="title">@Resources.Resource.Data @Resources.Resource.Validate</span>
+                            </li>
+
+                            <li id="step3" data-target="#step3">
+                                <span class="step">3</span>
+                                <span class="title">@Resources.Resource.Confirm @Resources.Resource.Data</span>
+                            </li>
+
+                            <li id="step4" data-target="#step4">
+                                <span class="step">4</span>
+                                <span class="title">@Resources.Resource.Data @Resources.Resource.Upload</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Data @Resources.Resource.Loading ...(@Resources.Resource.DontCloseWindow)</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-8">
+                    <p><label id="ProgressText"></label></p>
+                    <div class="progress">
+                        <div id="ProgressBar" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0.1" aria-valuemin="0" aria-valuemax="100">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                    <div id="divProgressResult" class="alert hide">
+                        <strong>
+                            <i id="ProgressResultIcon" class="ace-icon fa"></i>
+                        </strong>
+                        <label id="ProgressResult"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 hide" id="divImport" style="min-height:200px;">
+
+    </div>
+</div>

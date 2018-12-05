@@ -1,0 +1,162 @@
+﻿@model Models.TankPatrol.PortManagement.EditFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#EditForm");
+    });
+
+    var Save = function () {
+        var form = $('#EditForm');
+
+        if (form.valid()) {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Edit")',
+                data: form.serialize() + '&LBPageState=' + LBPageState() + '&LPPageState=' + LPPageState() + '&LAPageState=' + LAPageState() + '&LDPageState=' + LDPageState() + '&UBPageState=' + UBPageState() + '&UPPageState=' + UPPageState() + '&UAPageState=' + UAPageState() + '&UDPageState=' + UDPageState(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Query();
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+@using (Html.BeginForm("Edit", null, FormMethod.Post, new { @ID = "EditForm" }))
+            {
+    
+    @Html.HiddenFor(x => x.OrganizationUniqueID)
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Edit 灌口</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            
+                
+                
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.StationDescription)</th>
+                        <td>@Html.DisplayFor(x => x.StationDescription)</td>
+                        <th>@Html.LabelFor(x => x.IslandDescription)</th>
+                        <td>@Html.DisplayFor(x => x.IslandDescription)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.ID)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.ID, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.ID)
+                        </td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.Description, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Description)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.TagID)</th>
+                        <td colspan="3">@Html.TextBoxFor(x => x.FormInput.TagID, new { @class = "col-sm-11" })</td>
+                    </tr>
+                </table>
+            
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="tabbable">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a data-toggle="tab" href="#Load">
+                裝料
+            </a>
+        </li>
+
+        <li>
+            <a data-toggle="tab" href="#UnLoad">
+                卸料
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="Load" class="tab-pane fade in active">
+            @Html.Partial("_LBSelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">裝料前至裝料中檢查需間隔 @Html.TextBoxFor(x => x.FormInput.LB2LPTimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_LPSelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">裝料中至裝料後檢查需間隔 @Html.TextBoxFor(x => x.FormInput.LP2LATimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_LASelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">裝料後至當日裝料完畢檢查需間隔 @Html.TextBoxFor(x => x.FormInput.LA2LDTimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_LDSelect")
+        </div>
+
+        <div id="UnLoad" class="tab-pane fade">
+            @Html.Partial("_UBSelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">卸料前至卸料中檢查需間隔 @Html.TextBoxFor(x => x.FormInput.UB2UPTimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_UPSelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">卸料中至卸料後檢查需間隔 @Html.TextBoxFor(x => x.FormInput.UP2UATimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_UASelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">卸料後至當日卸料完畢檢查需間隔 @Html.TextBoxFor(x => x.FormInput.UA2UDTimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_UDSelect")
+        </div>
+    </div>
+</div>
+            }

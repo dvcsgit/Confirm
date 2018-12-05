@@ -1,0 +1,34 @@
+﻿@model System.String
+
+@{
+    var tmp = Model.Split('_');
+    var CheckItemUniqueID = tmp[0];
+    var CheckItemSeq = int.Parse(tmp[1]);
+    var Unit = tmp[2];
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetPhotoList('@CheckItemUniqueID', '@CheckItemSeq');
+
+        //$('#divPhotoListWidget_' + '@CheckItemUniqueID' + '_' + '@CheckItemSeq').hide();
+        $('#divUploadPhotoWidget_' + '@CheckItemUniqueID' + '_' + '@CheckItemSeq').hide();
+    });
+</script>
+
+
+<div id="@string.Format("divPhotoListWidget_{0}_{1}", CheckItemUniqueID, CheckItemSeq)" class="alert alert-success" style="padding:0; margin-bottom:0;">
+    <h4 class="green smaller lighter" style="margin:20px;">第 @CheckItemSeq @Unit @Resources.Resource.Photo</h4>
+
+    <div id="@string.Format("divPhotoList_{0}_{1}", CheckItemUniqueID, CheckItemSeq)"></div>
+</div>
+
+    <div id="@string.Format("divUploadPhotoWidget_{0}_{1}", CheckItemUniqueID, CheckItemSeq)" class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.Upload @Resources.Resource.Photo</h5>
+        </div>
+
+        <div class="widget-body">
+            <div style="min-height:150px;" id="@string.Format("divUploadPhoto_{0}_{1}", CheckItemUniqueID, CheckItemSeq)"></div>
+        </div>
+    </div>

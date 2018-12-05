@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CONFIG>
+  <FEM>
+    <Organization></Organization>
+  </FEM>
+  <FEM_P>
+    <ArriveRecord></ArriveRecord>
+    <CheckResult></CheckResult>
+    <Construction></Construction>
+  </FEM_P>
+</CONFIG>

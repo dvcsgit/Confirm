@@ -1,0 +1,245 @@
+﻿@model Models.ASE.InventoryManagerManagement.CreateFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateForm");
+
+        $('.Manager').each(function () {
+            $(this).select2(select2GetUserOptions());
+        });
+
+        BindRemoveEvent();
+
+        $('#FormInput_OrganizationUniqueID').select2(select2GetOrganizationOptions());
+    });
+
+
+    function AddManager() {
+        $('#ManagerList tbody').append('<tr><td class="center col-sm-1"><div class="action-buttons"><a class="red Remove" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a></div></td><td class="col-sm-11"><input class="Manager" type="text" /></td></tr>');
+
+        $('.Manager').last().select2(select2GetUserOptions());
+
+        BindRemoveEvent();
+    }
+
+    function BindRemoveEvent() {
+        $('.Remove').click(function () {
+            $(this).closest('tr').remove();
+
+            return false;
+        });
+    }
+
+    function select2GetUserOptions() {
+        var url = '@Url.Action("GetUserOptions")';
+
+        var jsonOption = {
+            minimumInputLength: 0,
+            escapeMarkup: function (m) { return m; },
+            allowClear: true,
+            placeholder: '',
+            width: '90%',
+            ajax: {
+                url: url,
+                dataType: 'json',
+                quietMillis: 100,
+                data: function (term, page) {
+                    return {
+                        Term: term,
+                        PageSize: 10,
+                        PageIndex: page
+                    };
+                },
+                results: function (data, page) {
+                    var more = (page * 10) < data.Total;
+                    return { results: data.Data, more: more };
+                }
+            },
+            initSelection: function (element, callback) {
+                var id = $(element).val();
+                if (id !== "") {
+                    $.ajax(url, {
+                        data: {
+                            Term: id,
+                            IsInit: true
+                        },
+                        dataType: "json"
+                    }).done(function (data) {
+                        if (data.Data.length == 1) {
+                            callback(data.Data[0]);
+                        }
+                    });
+                }
+            }
+        };
+
+        return jsonOption;
+    }
+
+    function select2GetOrganizationOptions() {
+        var url = '@Url.Action("GetOrganizationOptions")';
+
+        var jsonOption = {
+            minimumInputLength: 0,
+            escapeMarkup: function (m) { return m; },
+            allowClear: true,
+            placeholder: '',
+            width: '90%',
+            ajax: {
+                url: url,
+                dataType: 'json',
+                quietMillis: 100,
+                data: function (term, page) {
+                    return {
+                        Term: term,
+                        PageSize: 10,
+                        PageIndex: page
+                    };
+                },
+                results: function (data, page) {
+                    var more = (page * 10) < data.Total;
+                    return { results: data.Data, more: more };
+                }
+            },
+            initSelection: function (element, callback) {
+                var id = $(element).val();
+                if (id !== "") {
+                    $.ajax(url, {
+                        data: {
+                            Term: id,
+                            IsInit: true
+                        },
+                        dataType: "json"
+                    }).done(function (data) {
+                        if (data.Data.length == 1) {
+                            callback(data.Data[0]);
+                        }
+                    });
+                }
+            }
+        };
+
+        return jsonOption;
+    }
+
+    var Save = function () {
+        var form = $('#CreateForm');
+
+        if(form.valid())
+        {
+            var managers = [];
+
+            $('.Manager').each(function () {
+                var val = $(this).val();
+
+                if (val != '') {
+                    managers.push(val);
+                }
+            });
+
+            if (managers.length == 0) {
+                $.InfoDialog('請選擇料庫負責人');
+            }
+            else {
+                $('#FormInput_Managers').val(JSON.stringify(managers));
+
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Create")',
+                    data: form.serialize(),
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+
+<div class="row">
+    <div class="col-xs-6">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Organization</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+@using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm" }))
+{
+
+                    @Html.HiddenFor(x => x.FormInput.Managers)
+
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <td class="col-sm-12">
+                                @Html.TextBoxFor(x => x.FormInput.OrganizationUniqueID)
+                                <br />
+                                @Html.ValidationMessageFor(x => x.FormInput.OrganizationUniqueID)
+                            </td>
+                        </tr>
+                    </table>
+}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-6">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">料庫負責人</h5>
+                <div class="widget-toolbar">
+                    <a href="#" onclick="AddManager(); return false;">
+                        <i class="ace-icon fa fa-plus white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding" style="min-height:30px;">
+                    <table id="ManagerList" class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="center col-sm-1">
+                                    <div class="action-buttons">
+                                        <a class="red Remove" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+                                    </div>
+                                </td>
+                                <td class="col-sm-11"><input class="Manager" type="text" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

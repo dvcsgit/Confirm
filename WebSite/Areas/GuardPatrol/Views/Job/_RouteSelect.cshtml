@@ -1,0 +1,235 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedRouteList('');
+
+        InitRouteSelectTree();
+
+        $('#divEditRouteWidget').hide();
+        $('#divRouteSelectTreeWidget').hide();
+    });
+
+    var RoutePageState = function () {
+        var pageState = [];
+
+        $('.IsOptional').each(function () {
+            var routeUniqueID = $(this).data('routeuniqueid');
+
+            var isOptional = $(this).prop('checked') ? 'Y' : 'N';
+
+            pageState.push(routeUniqueID + '@Utility.Define.Seperator' + isOptional);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    function GetSelectedRouteList(routeUniqueID) {
+        var list = $('#divSelectedRouteList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedRouteList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitRouteSelectTree() {
+        var container = $('#divRouteSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitRouteSelectTree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var RouteSelect = function () {
+        $('#divSelectedRouteWidget').hide();
+        $('#divEditRouteWidget').hide();
+        $('#divRouteSelectTreeWidget').show();
+    };
+
+    var CancelRouteSelect = function () {
+        $('#divSelectedRouteWidget').show();
+        $('#divEditRouteWidget').hide();
+        $('#divRouteSelectTreeWidget').hide();
+    };
+
+    var CancelEditRoute = function () {
+        $('#divSelectedRouteWidget').show();
+        $('#divEditRouteWidget').empty().hide();
+        $('#divRouteSelectTreeWidget').hide();
+    };
+
+    var AddRoute = function () {
+        var data = [];
+
+        $("#divRouteSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.RouteUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddRoute")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                RoutePageStates: RoutePageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divRouteSelectTreeWidget').hide();
+                $('#divSelectedRouteWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedRouteWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedRouteList('');
+                    $("#divRouteSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedRouteWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var EditRoute = function (uniqueID) {
+        $('#divSelectedRouteWidget').hide();
+        $('#divEditRouteWidget').show();
+        $('#divRouteSelectTreeWidget').hide();
+
+        var container = $('#divEditRouteWidget');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("EditRoute")',
+            data: { RouteUniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var SaveRoute = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("EditRoute")',
+            data: {
+                RouteUniqueID: uniqueID,
+                RoutePageStates: RoutePageState(),
+                ControlPointPageStates: ControlPointPageState(),
+                ControlPointCheckItemPageStates: ControlPointCheckItemPageState()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divEditRouteWidget').empty().hide();
+                $('#divSelectedRouteWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedRouteWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedRouteList('');
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedRouteWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteRoute = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteRoute")',
+            data: {
+                RouteUniqueID: uniqueID,
+                RoutePageStates: RoutePageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedRouteWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedRouteWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedRouteList('');
+                    $("#divRouteSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedRouteWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divEditRouteWidget"></div>
+
+<div id="divRouteSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Route</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divRouteSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddRoute(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelRouteSelect(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divSelectedRouteWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Route</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="RouteSelect(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divSelectedRouteList" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

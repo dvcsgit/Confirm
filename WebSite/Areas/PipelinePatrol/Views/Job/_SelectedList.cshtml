@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Models.PipelinePatrol.JobManagement.RouteModel>
+
+<table class="table table-striped table-bordered table-hover nowrap">
+    <thead class="thin-border-bottom">
+        <tr>
+            <th class="col-sm-1"></th>
+            <th>@Resources.Resource.RouteID</th>
+            <th>@Resources.Resource.RouteName</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="col-sm-1 center">
+                    <div class="action-buttons">
+                        <a class="red" href="#" onclick="DeleteSelected('@item.UniqueID'); return false;" title="@Resources.Resource.Delete">
+                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                        </a>
+                    </div>
+                </td>
+                <td>@item.ID</td>
+                <td>@item.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

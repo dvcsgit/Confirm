@@ -1,0 +1,185 @@
+﻿@model Models.PipelinePatrol.PipePointManagement.CreateFormModel
+
+<script type="text/javascript">
+    var map;
+    var maker;
+
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateForm");
+
+        $('#PipePointType').change(function () {
+            var val = $(this).val();
+
+            if (val == '') {
+                $('#FormInput_PipePointType').val('').prop('readonly', true);
+            }
+            else if (val == '@Utility.Define.NEW') {
+                $('#FormInput_PipePointType').val('').prop('readonly', false);
+            }
+            else {
+                $('#FormInput_PipePointType').val(val).prop('readonly', true);
+            }
+        });
+
+        InitGoogleMap();
+    });
+
+    function InitGoogleMap() {
+        var mapOptions = {
+            zoom: 15,
+            center: new google.maps.LatLng(22.726058189430297, 120.33998966217041),
+            mapTypeControl:false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        google.maps.event.addListener(map, 'click', function(event) {
+            addMarker(event.latLng);
+        });
+    }
+
+    var Save = function () {
+        var form = $('#CreateForm');
+
+        if (form.valid()) {
+            if ($('#FormInput_PipePointType').val() == '') {
+                $.InfoDialog('@Resources.Resource.PipePointTypeRequired');
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Create")',
+                    data: form.serialize(),
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        }
+    };
+
+    function addMarker(location) {
+        $('#FormInput_LNG').val(location.lng());
+        $('#FormInput_LAT').val(location.lat());
+
+        if (maker) {
+            maker.setMap(null);
+        }
+
+        maker = new google.maps.Marker({
+            position: location
+        });
+
+        maker.setMap(map);
+    }
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.PipePoint</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm" }))
+            {
+                @Html.HiddenFor(x => x.OrganizationUniqueID)
+                
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.PipePointType)</th>
+                        <td class="col-sm-5">@Html.DropDownList("PipePointType", Model.PipePointTypeSelectItemList)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.PipePointType)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.PipePointType, new { @class = "col-sm-11", @readonly = "readonly" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.PipePointType)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.ID)</th>
+                        <td>
+                            @Html.TextBoxFor(x => x.FormInput.ID, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.ID)
+                        </td>
+                        <th>@Html.LabelFor(x => x.FormInput.Name)</th>
+                        <td>
+                            @Html.TextBoxFor(x => x.FormInput.Name, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.LAT)</th>
+                        <td>
+                            @Html.TextBoxFor(x => x.FormInput.LAT, new { @class = "col-sm-3" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.LAT)
+                        </td>
+                        <th>@Html.LabelFor(x => x.FormInput.LNG)</th>
+                        <td>
+                            @Html.TextBoxFor(x => x.FormInput.LNG, new { @class = "col-sm-3" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.LNG)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Remark)</th>
+                        <td colspan="3">
+                            @Html.TextBoxFor(x => x.FormInput.Remark, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Remark)
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.PipePointLocation</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <div id="map-canvas" style="height:405px;"></div>
+        </div>
+    </div>
+</div>

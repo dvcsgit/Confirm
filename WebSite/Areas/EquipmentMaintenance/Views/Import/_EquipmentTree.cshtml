@@ -1,0 +1,67 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(function () {
+        $('#divEquipmentTree').jstree({
+            "core": { animation: 0 },
+            "json_data": {
+                "data": [@(Html.Raw(Model))],
+                "ajax": {
+                    "url": '@Url.Action("GetEquipmentTreeItem")',
+                    'cache': false,
+                    "data": function (n) {
+                        return {
+                            OrganizationUniqueID: n.attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID"),
+                            EquipmentUniqueID: n.attr("@Utility.Define.EnumTreeAttribute.EquipmentUniqueID")
+                        };
+                    }
+                }
+            },
+            "animation": 0,
+            "plugins": ["themes", "json_data", "ui"],
+            "themes": { "theme": "apple", "dots": true, "icons": true },
+            "ui": { "select_limit": 1 }
+        }).bind("select_node.jstree", function (e, data) {
+
+            e.preventDefault();
+        }).bind("hover_node.jstree", function (e, data) {
+            var tooltip = data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.ToolTip");
+
+            if (tooltip != '') {
+                var a = data.rslt.obj.find('a:first');
+
+                a.tooltip({
+                    'title': tooltip
+                });
+
+                a.tooltip('show');
+            }
+
+            e.preventDefault();
+        }).bind("load_node.jstree", function (e, data) {
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Organization"]').find('a:first ins').remove();
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Equipment"]').find('a:first ins').addClass('fa fa-cogs').removeClass('jstree-icon');
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.EquipmentPart"]').find('a:first ins').addClass('fa fa-cog').removeClass('jstree-icon');
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.CheckItem"]').find('a:first ins').addClass('fa fa-check-square-o').removeClass('jstree-icon');
+
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Organization"], .jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Equipment"], .jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.EquipmentPart"], .jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.CheckItem"]').each(function () {
+                if ($(this).attr('@Utility.Define.EnumTreeAttribute.IsNew') == 'Y') {
+                    if ($(this).attr('@Utility.Define.EnumTreeAttribute.IsError') == 'Y') {
+                        $(this).find('a').removeClass('green').addClass('red');
+                        $(this).find('a:first ins').removeClass('green').addClass('red');
+                    }
+                    else {
+                        $(this).find('a').removeClass('red').addClass('green');
+                        $(this).find('a:first ins').removeClass('red').addClass('green');
+                    }
+                }
+            });
+
+            e.preventDefault();
+        });
+    });
+</script>
+
+<div id="divEquipmentTree"></div>
+
+

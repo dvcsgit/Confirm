@@ -1,0 +1,38 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(function () {
+        $('#divColumnSelectTree').jstree({
+            "core": { animation: 0 },
+            "json_data": {
+                "data": [@(Html.Raw(Model))]
+            },
+            "animation": 0,
+            "plugins": ["themes", "json_data", "checkbox", "ui"],
+            "themes": { "theme": "apple", "dots": true, "icons": true },
+            "ui": { "select_limit": 1 }
+        }).bind("hover_node.jstree", function (e, data) {
+            var tooltip = data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.ToolTip");
+
+            if (tooltip != '') {
+                var a = data.rslt.obj.find('a:first');
+
+                a.tooltip({
+                    'title': tooltip
+                });
+
+                a.tooltip('show');
+            }
+
+            e.preventDefault();
+        }).bind("load_node.jstree", function (e, data) {
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.RepairFormColumn"]').find('a:first ins.jstree-icon').addClass('fa fa-newspaper-o red').removeClass('jstree-icon');
+
+            e.preventDefault();
+        });
+    });
+</script>
+
+<div id="divColumnSelectTree"></div>
+
+

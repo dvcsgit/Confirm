@@ -1,0 +1,62 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(function () {
+        $('#divTree').jstree({
+            "core": { animation: 0 },
+            "json_data": {
+                "data": [@(Html.Raw(Model))],
+                "ajax": {
+                    "url": '@Url.Action("GetTreeItem")',
+                    'cache': false,
+                    "data": function (n) {
+                        return {
+                            OrganizationUniqueID: n.attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID"),
+                            RouteUniqueID: n.attr("@Utility.Define.EnumTreeAttribute.RouteUniqueID")
+                        };
+                    }
+                }
+            },
+            "animation": 0,
+            "plugins": ["themes", "json_data", "ui"],
+            "themes": { "theme": "apple", "dots": true, "icons": false },
+            "ui": { "select_limit": 1 }
+        }).bind("select_node.jstree", function (e, data) {
+            switch (data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.NodeType")) {
+                case '@Utility.Define.EnumTreeNodeType.Organization':
+                    $('#Parameters_OrganizationUniqueID').val(data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID"));
+                    $('#Parameters_RouteUniqueID').val('');
+                    break;
+                case '@Utility.Define.EnumTreeNodeType.Route':
+                    $('#Parameters_OrganizationUniqueID').val(data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID"));
+                    $('#Parameters_RouteUniqueID').val(data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.RouteUniqueID"));
+                    break;
+            }
+
+            //Query();
+
+            e.preventDefault();
+        }).bind("hover_node.jstree", function (e, data) {
+            var tooltip = data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.ToolTip");
+
+            if (tooltip != '') {
+                var a = data.rslt.obj.find('a:first');
+
+                a.tooltip({
+                    'title': tooltip
+                });
+
+                a.tooltip('show');
+            }
+
+            e.preventDefault();
+        }).bind("load_node.jstree", function (e, data) {
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Organization"]').find('a:first ins').remove();
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Route"]').find('a:first ins').addClass('fa fa-clipboard red').removeClass('jstree-icon');
+
+            e.preventDefault();
+        });
+    });
+</script>
+
+<div id="divTree"></div>

@@ -1,0 +1,60 @@
+﻿@model Report.EquipmentMaintenance.Models.UnArriveRouteAnalyze.GridViewModel
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Resources.Resource.SearchResults
+        </h5>
+        <div class="widget-toolbar">
+            <div class="widget-menu">
+                <a href="#" data-toggle="dropdown">
+                    <i class="ace-icon fa fa-cloud-download white"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})">Excel 2003</a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007 })">Excel 2007</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                @foreach(var item in Model.ItemList)
+                {
+                    <tr>
+                        <th>@Resources.Resource.Route</th>
+                        <td colspan="4">@item.Route</td>
+                    </tr>
+                    <tr>
+                        <th>@Resources.Resource.UnArriveCount</th>
+                        <td colspan="4">@item.Count</td>
+                    </tr>
+                    <tr>
+                        <th>@Resources.Resource.Job</th>
+                        <th>@Resources.Resource.Route</th>
+                        <th>@Resources.Resource.ControlPoint</th>
+                        <th>@Resources.Resource.ArriveTime</th>
+                        <th>@Resources.Resource.CheckUser</th>
+                    </tr>
+                    foreach (var i in item.ArriveRecordModelList)
+                    { 
+                    <tr>
+                        <td>@i.JobDescription</td>
+                        <td>@i.Route</td>
+                        <td>@i.ControlPoint</td>
+                        <td>@i.ArriveDateTime</td>
+                        <td>@i.User</td>
+                    </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>

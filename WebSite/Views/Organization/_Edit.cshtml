@@ -1,0 +1,114 @@
+﻿@model Models.OrganizationManagement.EditFormModel
+
+@*@Html.Partial("_ManagerSelectScripts", Model.AncestorOrganizationUniqueID)*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#EditForm");
+
+        $("#Managers").select2(select2GetUserOptions());
+    });
+
+    var Save = function () {
+        var form = $('#EditForm');
+
+        if (form.valid()) {
+
+            $("#FormInput_Managers").val($("#Managers").val());
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Edit")',
+                data: form.serialize(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Detail('@Model.UniqueID');
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Edit @Resources.Resource.Organization</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Edit", null, FormMethod.Post, new { @ID = "EditForm" }))
+            {
+                @Html.HiddenFor(x => x.UniqueID)
+                @Html.HiddenFor(x => x.FormInput.Managers)
+                @*@Html.HiddenFor(x => x.FormInput.ManagerUserID)*@
+
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                        <td class="col-sm-11">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.ID)</th>
+                        <td>
+                            @Html.TextBoxFor(x => x.FormInput.ID, new { @class = "col-sm-3" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.ID)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td>
+                            @Html.TextBoxFor(x => x.FormInput.Description, new { @class = "col-sm-6" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Description)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Managers)</th>
+                        <td class="col-sm-11">
+                            <input id="Managers" type="text" value="@Model.Managers" />
+                            @*<div class="input-group">
+                                <input class="form-control" id="Manager" type="text" readonly="readonly" value="@Model.Manager">
+                                @Html.Partial("_ManagerSelect")
+                            </div>*@
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_EditableOrganizationSelect", Model.AncestorOrganizationUniqueID)
+
+<div class="space"></div>
+
+@Html.Partial("_QueryableOrganizationSelect", Model.AncestorOrganizationUniqueID)

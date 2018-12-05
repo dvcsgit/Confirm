@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Customized.CHIMEI.Models.AIMSJobQuery.AIMSJobModel>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title bigger lighter">
+                    @Resources.Resource.SearchResults
+                </h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                    <table class="table table-striped table-bordered table-hover nowrap">
+                        <thead class="thin-border-bottom">
+                            <tr>
+                                <th class="center">報表下載</th>
+                                <th class="center">@Resources.Resource.Detail</th>
+                                <th class="center">@Resources.Resource.Abnormal</th>
+                                <th class="center">工單號碼</th>
+                                <th class="center">工單日期</th>
+                                <th>@Resources.Resource.Organization</th>
+                                <th class="center">馬達類別</th>
+                                <th class="center">保養週期</th>
+                                <th>工單內容</th>
+                                <th class="center">@Resources.Resource.CompleteRate</th>
+                                <th>@Resources.Resource.JobUser</th>
+                                <th>@Resources.Resource.CheckUser</th>
+                            </tr>
+                        </thead>
+                        @if (Model != null && Model.Count() > 0)
+                        {
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="center">
+                                            <div class="action-buttons">
+                                                <a class="purple" href="@Url.Action("Export", new { VHNO=item.VHNO })" title="報表下載">
+                                                    <i class="ace-icon fa fa-cloud-download bigger-130"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td class="center">
+                                            <div class="action-buttons">
+                                                <a class="blue" href="#" onclick="GetEquipmentList('@item.VHNO');" title="@Resources.Resource.Detail">
+                                                    <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td class="center">
+                                            @if (item.HaveAbnormal)
+                                            {
+                                                <span class="label label-lg label-danger arrowed-right">@Resources.Resource.Abnormal</span>
+                                            }
+                                            else if (item.HaveAlert)
+                                            {
+                                                <span class="label label-lg label-warning arrowed-right">@Resources.Resource.Warning</span>
+                                            }
+                                        </td>
+                                        <td class="center">@item.VHNO</td>
+                                        <td class="center">@item.JobDateString</td>
+                                        <td>@item.OrganizationDescription</td>
+                                        <td class="center">@item.MotorType</td>
+                                        <td class="center">@item.Cycle</td>
+                                        <td>@item.Contents</td>
+                                        <td class="center">
+                                            @if (!string.IsNullOrEmpty(item.CompleteRateLabelClass))
+                                            {
+                                                <span class="label @item.CompleteRateLabelClass">@item.CompleteRate</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@item.CompleteRate</span>
+                                            }
+                                        </td>
+                                        <td>@item.JobUsers</td>
+                                        <td>@item.CheckUsers</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

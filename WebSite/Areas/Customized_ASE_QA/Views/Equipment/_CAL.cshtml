@@ -1,0 +1,88 @@
+﻿@model Models.ASE.QA.EquipmentManagement.CALFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CALForm");
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+    });
+
+    var Save = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("CAL")',
+            data: $('#CALForm').serialize(),
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-danger btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">預計校驗日期</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("CAL", null, FormMethod.Post, new { @ID = "CALForm" }))
+            {
+                @Html.HiddenFor(x => x.UniqueID)
+                
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1"><label>預計校驗日期</label></th>
+                        <td class="col-sm-11">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.FormInput.EstCalDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_Equipment", Model.Equipment)

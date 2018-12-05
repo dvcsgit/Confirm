@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Models.PipelinePatrol.Message.MessageModel>
+
+@if (Model.Count() > 0)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#CurrentSeq').val('@Model.Max(x => x.Seq)');
+        });
+    </script>
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        @foreach (var item in Model.Where(x=>x.IsPhoto))
+        {
+            <text>$(".@(string.Format("{0}_{1}", item.DialogUniqueID, item.Seq))").colorbox({ rel: '@(string.Format("{0}_{1}", item.DialogUniqueID, item.Seq))', maxWidth: '100%', maxHeight: '100%' });</text>
+        }
+    });
+    </script>
+
+    foreach (var message in Model)
+    {
+    <div class="itemdiv dialogdiv">
+        <div class="user">
+            <img alt="" src="@(message.User.HasPhoto ? Url.Content(message.User.Photo.FilePath) : Url.Content("~/Content/images/ic_chat_user.png"))" />
+        </div>
+
+        <div class="body">
+            <div class="time">
+                <i class="ace-icon fa fa-clock-o"></i>
+                <span class="green">@message.MessageTimeString</span>
+            </div>
+
+            <div class="name">
+                <a href="#">@message.User.OrganizationDescription @message.User.User</a>
+            </div>
+            @if (message.IsPhoto)
+            {
+                <div class="text">
+                    <a href="@Url.Content("~/ChatPhoto/" + message.Photo)" class="@(string.Format("{0}_{1}", message.DialogUniqueID, message.Seq))"><img alt="" style="width:150px;height:150px;" src="@Url.Content("~/ChatPhoto/" + message.Photo)" /></a>
+                </div>
+            }
+            else
+            {
+                <div class="text">@message.Message</div>
+            }
+        </div>
+    </div>
+}
+}
+
+

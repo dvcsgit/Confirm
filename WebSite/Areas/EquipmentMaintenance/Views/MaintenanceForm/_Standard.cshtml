@@ -1,0 +1,66 @@
+﻿<script type="text/javascript">
+
+    $(document).ready(function () {
+        GetStandardList();
+
+        $('#divCreateResultWidget').hide();
+    });
+
+    function GetStandardList() {
+        var list = $('#divStandardList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetStandardList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var CreateResultForm = function () {
+        $('#divStandardListWidget').hide();
+        $('#divCreateResultWidget').show();
+
+        var form = $('#divCreateResultForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("CreateResult")',
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+</script>
+
+<div id="divStandardListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">保養紀錄</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="CreateResultForm(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+            <div id="divStandardList"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divCreateResultWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create 保養紀錄</h5>
+    </div>
+
+    <div class="widget-body">
+        <div id="divCreateResultForm" class="widget-main no-padding"></div>
+    </div>
+</div>

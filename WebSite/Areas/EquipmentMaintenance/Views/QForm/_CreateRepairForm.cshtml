@@ -1,0 +1,197 @@
+﻿@model Models.EquipmentMaintenance.QFormManagement.CreateRepairFormModel
+
+@Html.Partial("_MaintenanceOrganizationSelectScripts", Model.AncestorOrganizationUniqueID)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateRepairForm");
+
+        $('#EquipmentMaintenanceOrganizationList').hide();
+        $('#RepairFormTypeSubjectList').hide();
+
+        $('#FormInput_RepairFormTypeUniqueID').change(function () {
+
+            var repairFormTypeUniqueID = $(this).val();
+
+            $('#FormInput_SubjectUniqueID').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>').prop('disabled', true);
+
+            if (repairFormTypeUniqueID != '') {
+                $('#RepairFormTypeSubjectList li').each(function () {
+                    if ($(this).data('repairformtypeuniqueid') == repairFormTypeUniqueID) {
+                        $('#FormInput_SubjectUniqueID').append('<option value="' + $(this).data('subjectuniqueid') + '">' + $(this).data('subjectid') + '/' + $(this).data('subjectdescription') + '</option>');
+                    }
+                });
+
+                $('#FormInput_SubjectUniqueID').append('<option value="@Utility.Define.OTHER">' + '@Resources.Resource.Other' + '</option>').prop('disabled', false);
+            }
+        }).trigger('change');
+
+        $('#FormInput_SubjectUniqueID').change(function () {
+
+            var val = $(this).val();
+
+            if (val == '') {
+                $('#FormInput_Subject').val('').prop("readonly", true);
+            }
+            else if (val == '@Utility.Define.OTHER') {
+                $('#FormInput_Subject').val('').prop("readonly", false);
+            }
+            else {
+                $('#FormInput_Subject').val($('#FormInput_SubjectUniqueID option:selected').text()).prop("readonly", true);
+            }
+        });
+
+        $('#FormInput_EquipmentUniqueID').change(function () {
+            $('#FormInput_MaintenanceOrganizationUniqueID').val('');
+            $('#MaintenanceOrganization').val('');
+
+            var equipmentUniqueID = $(this).val().split('@Utility.Define.Seperator')[0];
+
+            if (equipmentUniqueID != '') {
+                $('#EquipmentMaintenanceOrganizationList li').each(function () {
+                    if ($(this).data('equipmentuniqueid') == equipmentUniqueID) {
+                        var organizationUniqueID = $(this).data('organizationuniqueid');
+                        var organizationID = $(this).data('organizationid');
+                        var organizationDescription = $(this).data('organizationdescription');
+
+                        if (organizationUniqueID != '') {
+                            $('#FormInput_MaintenanceOrganizationUniqueID').val(organizationUniqueID);
+                            $('#MaintenanceOrganization').val(organizationID + '/' + organizationDescription);
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    var SaveRepairForm = function () {
+        var form = $('#CreateRepairForm');
+
+        if (form.valid()) {
+            if ($('#FormInput_MaintenanceOrganizationUniqueID').val() == '') {
+                $.InfoDialog('@Resources.Resource.MaintenanceOrganizationRequired');
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("CreateRepairForm")',
+                    data: form.serialize(),
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Detail('@Model.QFormUniqueID');
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="SaveRepairForm();">
+        <i class="ace-icon fa fa-save"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Model.QFormUniqueID');">
+        <i class="ace-icon fa fa-ban"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.RepairForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("CreateRepairForm", null, FormMethod.Post, new { @ID = "CreateRepairForm" }))
+            {
+                @Html.HiddenFor(x => x.OrganizationUniqueID)
+                @Html.HiddenFor(x => x.QFormUniqueID)
+
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FullOrganizationDescription)</th>
+                        <td class="col-sm-11">@Html.DisplayFor(x => x.FullOrganizationDescription)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.RepairFormTypeUniqueID)</th>
+                        <td>
+                            @Html.DropDownListFor(x => x.FormInput.RepairFormTypeUniqueID, Model.RepairFormTypeSelectItemList)
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.RepairFormTypeUniqueID)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.Equipment)</th>
+                        @if (string.IsNullOrEmpty(Model.Equipment))
+                        {
+                            <td>@Html.DropDownListFor(x => x.FormInput.EquipmentUniqueID, Model.EquipmentSelectItemList)</td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.DisplayFor(x => x.Equipment)
+                                @Html.HiddenFor(x => x.FormInput.EquipmentUniqueID)
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.MaintenanceOrganizationUniqueID)</th>
+                        <td>
+                            @Html.HiddenFor(x => x.FormInput.MaintenanceOrganizationUniqueID)
+                            <div class="input-group">
+                                <input class="form-control" id="MaintenanceOrganization" type="text" readonly="readonly" value="@Model.MaintenanceOrganization">
+                                @Html.Partial("_MaintenanceOrganizationSelect")
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Subject)</th>
+                        <td>
+                            @Html.TextBoxFor(x => x.FormInput.Subject, new { @class = "col-sm-11", @readonly = "readonly" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Subject)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td>@Html.TextAreaFor(x => x.FormInput.Description, new { @rows = "5", @class = "col-sm-11" })</td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<ul id="EquipmentMaintenanceOrganizationList">
+    @foreach (var item in Model.EquipmentMaintenanceOrganizationList)
+    {
+        <li data-equipmentuniqueid="@item.Key" data-organizationuniqueid="@(item.Value!=null?item.Value.UniqueID:"")" data-organizationid="@(item.Value != null ? item.Value.ID : "")" data-organizationdescription="@(item.Value != null ? item.Value.Description : "")"></li>
+    }
+</ul>
+
+<ul id="RepairFormTypeSubjectList">
+    @foreach (var item in Model.RepairFormTypeSubjectList)
+    {
+        foreach (var subject in item.Value)
+        {
+            <li data-repairformtypeuniqueid="@item.Key" data-subjectuniqueid="@subject.UniqueID" data-subjectid="@subject.ID" data-subjectdescription="@subject.Description"></li>
+        }
+    }
+</ul>

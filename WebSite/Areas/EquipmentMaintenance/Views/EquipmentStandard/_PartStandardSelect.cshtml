@@ -1,0 +1,207 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetPartList('');
+
+        InitPartStandardSelectTree();
+
+        $('#divPartStandardSelectTreeWidget').hide();
+    });
+
+    function GetPartList(partUniqueID) {
+        var list = $('#divPartList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetPartList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) {
+                list.Overlay('show').html(data);
+
+                if (partUniqueID != '') {
+                    $('#divTab li[data-uniqueid="' + partUniqueID + '"] a').tab('show');
+                }
+                else {
+                    $('#divTab li a:first').tab('show');
+                }
+            },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitPartStandardSelectTree() {
+        var container = $('#divPartStandardSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitPartStandardSelectTree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectPartStandard = function () {
+        if ($('.tabLink.active').length == 0) {
+            $.InfoDialog('@string.Format("{0} {1}", Resources.Resource.SelectOne, Resources.Resource.EquipmentPart)');
+        }
+        else {
+            $('#divPartListWidget').hide();
+            $('#divPartStandardSelectTreeWidget').show();
+        }
+    };
+
+    var CancelSelectPartStandard = function () {
+        $('#divPartListWidget').show();
+        $('#divPartStandardSelectTreeWidget').hide();
+    };
+
+    var PartPageState = function () {
+        var pageState = [];
+
+        $('.PartStandard').each(function () {
+            var isInherit = $(this).prop('checked') ? 'Y' : 'N';
+            var partUniqueID = $(this).data('partuniqueid');
+            var standardUniqueID = $(this).data('standarduniqueid');
+
+            var l = '';
+            var la = '';
+            var ua = '';
+            var u = '';
+            var a = '';
+            var unit = '';
+            var remark = '';
+
+            if (isInherit == 'N') {
+                l = $(this).closest('tr').find('.LowerLimit').val();
+                la = $(this).closest('tr').find('.LowerAlertLimit').val();
+                ua = $(this).closest('tr').find('.UpperAlertLimit').val();
+                u = $(this).closest('tr').find('.UpperLimit').val();
+                a = $(this).closest('tr').find('.AccumulationBase').val();
+                unit = $(this).closest('tr').find('.Unit').val();
+                remark = $(this).closest('tr').find('.Remark').val();
+            }
+
+            pageState.push(isInherit + '@Utility.Define.Seperator' + partUniqueID + '@Utility.Define.Seperator' + standardUniqueID + '@Utility.Define.Seperator' + l + '@Utility.Define.Seperator' + la + '@Utility.Define.Seperator' + ua + '@Utility.Define.Seperator' + u + '@Utility.Define.Seperator' + a + '@Utility.Define.Seperator' + unit + '@Utility.Define.Seperator' + remark);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddPartStandard = function () {
+        var data = [];
+
+        $("#divPartStandardSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.MaintenanceType") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.StandardUniqueID"));
+        });
+
+        var partUniqueID = $('.tabLink.active').data('uniqueid');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddPartStandard")',
+            data: {
+                PartUniqueID: partUniqueID,
+                Selecteds: JSON.stringify(data),
+                PageStates: PartPageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divPartStandardSelectTreeWidget').hide();
+                $('#divPartListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divPartListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetPartList(partUniqueID);
+                    $("#divPartStandardSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divPartListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeletePartStandard = function (partUniqueID, standardUniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeletePartStandard")',
+            data: {
+                'PartUniqueID': partUniqueID,
+                'StandardUniqueID': standardUniqueID,
+                'PageStates': PartPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divPartListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divPartListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetPartList(partUniqueID);
+                    $("#divPartStandardSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divPartListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divPartStandardSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.EquipmentPart @Resources.Resource.Standard</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divPartStandardSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddPartStandard(); return false;">
+                <i class="ace-icon fa fa-check-circle-o"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectPartStandard(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divPartListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.EquipmentPart @Resources.Resource.And @Resources.Resource.Standard</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="SelectPartStandard(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-8" style="overflow-x:scroll; min-height:50px;">
+            <div id="divPartList"></div>
+        </div>
+    </div>
+</div>

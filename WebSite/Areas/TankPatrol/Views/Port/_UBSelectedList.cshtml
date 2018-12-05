@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Models.TankPatrol.PortManagement.CheckItemModel>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.IsInherit').each(function () {
+            var checked = $(this).data('checked');
+
+            if (checked == 'Y') {
+                $(this).prop('checked', true);
+            }
+
+            if ($(this).data('isfeelitem') == 'Y') {
+                $(this).prop('disabled', true);
+            }
+            else {
+                if (checked == 'Y') {
+                    $(this).closest('tr').find('.LowerLimit, .LowerAlertLimit, .UpperAlertLimit, .UpperLimit, .AccumulationBase, .Unit, .Remark').addClass('uneditable-input').prop('disabled', true);
+                }
+                else {
+                    if (!($(this).data('isaccumulation') == 'Y')) {
+                        $(this).closest('tr').find('.AccumulationBase').addClass('uneditable-input').prop('disabled', true);
+                    }
+                }
+            }
+        });
+
+        $('.IsInherit').click(function () {
+            if ($(this).prop('checked')) {
+                $(this).closest('tr').find('.LowerLimit').val($(this).closest('tr').find('.LowerLimit').data('ori'));
+                $(this).closest('tr').find('.LowerAlertLimit').val($(this).closest('tr').find('.LowerAlertLimit').data('ori'));
+                $(this).closest('tr').find('.UpperAlertLimit').val($(this).closest('tr').find('.UpperAlertLimit').data('ori'));
+                $(this).closest('tr').find('.UpperLimit').val($(this).closest('tr').find('.UpperLimit').data('ori'));
+                $(this).closest('tr').find('.AccumulationBase').val($(this).closest('tr').find('.AccumulationBase').data('ori'));
+                $(this).closest('tr').find('.Unit').val($(this).closest('tr').find('.Unit').data('ori'));
+                $(this).closest('tr').find('.Remark').val($(this).closest('tr').find('.Remark').data('ori'));
+                $(this).closest('tr').find('.LowerLimit, .LowerAlertLimit, .UpperAlertLimit, .UpperLimit, .AccumulationBase, .Unit, .Remark').addClass('uneditable-input').prop('disabled', true);
+            }
+            else {
+                $(this).closest('tr').find('.LowerLimit, .LowerAlertLimit, .UpperAlertLimit, .UpperLimit, .Unit, .Remark').removeClass('uneditable-input').prop('disabled', false);
+
+                if ($(this).data('isaccumulation') == 'Y') {
+                    $(this).closest('tr').find('.AccumulationBase').removeClass('uneditable-input').prop('disabled', false);
+                }
+            }
+        });
+    });
+</script>
+
+<table class="table table-striped table-bordered table-hover nowrap">
+    <thead class="thin-border-bottom">
+        <tr>
+            <th class="col-sm-1"></th>
+            <th class="col-sm-1 center">@Resources.Resource.Inherit</th>
+            <th>@Resources.Resource.CheckType</th>
+            <th>@Resources.Resource.CheckItemID</th>
+            <th>@Resources.Resource.CheckItemDescription</th>
+            <th class="col-sm-3">@Resources.Resource.TagID</th>
+            <th>@Resources.Resource.LowerLimit</th>
+            <th>@Resources.Resource.LowerAlertLimit</th>
+            <th>@Resources.Resource.UpperAlertLimit</th>
+            <th>@Resources.Resource.UpperLimit</th>
+            <th>@Resources.Resource.AccumulationBase</th>
+            <th>@Resources.Resource.Unit</th>
+            <th>@Resources.Resource.Remark</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="center">
+                    <div class="action-buttons">
+                        <a class="red" href="#" onclick="DeleteSelectedUB('@item.UniqueID'); return false;" title="@Resources.Resource.Delete">
+                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                        </a>
+                    </div>
+                </td>
+                <td class="center">
+                    <label>
+                        <input class="ace ace-checkbox-2 IsInherit UB" type="checkbox" value="true" data-isfeelitem="@(item.IsFeelItem ? "Y" : "N")" data-isaccumulation="@(item.IsAccumulation ? "Y" : "N")" data-checked="@(item.IsInherit ? "Y" : "N")" data-checkitemuniqueid="@item.UniqueID">
+                        <span class="lbl"></span>
+                    </label>
+                </td>
+                <td>@item.CheckType</td>
+                <td>@item.ID</td>
+                <td>@item.Description</td>
+                <td><input type="text" class="TagID col-sm-12" value="@item.TagID" /></td>
+                @if (item.IsFeelItem)
+                {
+                    <td colspan="7">@Resources.Resource.IsFeelItem</td>
+                }
+                else
+                {
+                    <td><input type="text" class="LowerLimit col-sm-12" value="@(item.IsInherit ? item.OriLowerLimit : item.LowerLimit)" data-ori="@item.OriLowerLimit" /></td>
+                    <td><input type="text" class="LowerAlertLimit col-sm-12" value="@(item.IsInherit ? item.OriLowerAlertLimit : item.LowerAlertLimit)" data-ori="@item.OriLowerAlertLimit" /></td>
+                    <td><input type="text" class="UpperAlertLimit col-sm-12" value="@(item.IsInherit ? item.OriUpperAlertLimit : item.UpperAlertLimit)" data-ori="@item.OriUpperAlertLimit" /></td>
+                    <td><input type="text" class="UpperLimit col-sm-12" value="@(item.IsInherit ? item.OriUpperLimit : item.UpperLimit)" data-ori="@item.OriUpperLimit" /></td>
+                    <td><input type="text" class="AccumulationBase col-sm-12" value="@(item.IsInherit ? item.OriAccumulationBase : item.AccumulationBase)" data-ori="@item.OriAccumulationBase" /></td>
+                    <td><input type="text" class="Unit col-sm-12" value="@(item.IsInherit ? item.OriUnit : item.Unit)" data-ori="@item.OriUnit" /></td>
+                    <td><input type="text" class="Remark col-sm-12" value="@(item.IsInherit ? item.OriRemark : item.Remark)" data-ori="@item.OriRemark" /></td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+

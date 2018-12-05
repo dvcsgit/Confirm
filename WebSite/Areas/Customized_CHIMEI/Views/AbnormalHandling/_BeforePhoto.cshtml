@@ -1,0 +1,97 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetBeforePhotoList();
+
+        $('#divUploadBeforePhotoWidget').hide();
+    });
+
+    function GetBeforePhotoList() {
+        var list = $('#divBeforePhotoList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetBeforePhotoList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var UploadBeforePhoto = function () {
+        $('#divBeforePhotoListWidget').hide();
+        $('#divUploadBeforePhotoWidget').show();
+
+        var form = $('#divUploadBeforePhoto');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("BeforePhotoUpload")',
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var CanelUploadBeforePhoto = function () {
+        $('#divBeforePhotoListWidget').show();
+        $('#divUploadBeforePhoto').empty();
+        $('#divUploadBeforePhotoWidget').hide();
+    };
+
+    var DeleteBeforePhoto = function (abnormalUniqueID, seq) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteBeforePhoto")',
+            data: { AbnormalUniqueID: abnormalUniqueID, Seq: seq },
+            dataType: "json",
+            beforeSend: function () { $('#divBeforePhotoListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divBeforePhotoListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetBeforePhotoList();
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divBeforePhotoListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divBeforePhotoListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.BeforeHandling @Resources.Resource.Photo</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="UploadBeforePhoto(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-8" style="min-height:150px;">
+            <div id="divBeforePhotoList"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divUploadBeforePhotoWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Upload @Resources.Resource.BeforeHandling @Resources.Resource.Photo</h5>
+    </div>
+
+    <div class="widget-body">
+        <div id="divUploadBeforePhoto"></div>
+    </div>
+</div>

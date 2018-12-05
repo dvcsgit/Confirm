@@ -1,0 +1,191 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedLPList();
+
+        InitSelectLPTree();
+
+        $('#divSelectLPTreeWidget').hide();
+    });
+
+    function GetSelectedLPList() {
+        var list = $('#divSelectedLPList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedLPList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitSelectLPTree() {
+        var container = $('#divSelectLPTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitSelectLPTree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectLP = function () {
+        $('#divSelectedLPListWidget').hide();
+        $('#divSelectLPTreeWidget').show();
+    };
+
+    var CancelSelectLP = function () {
+        $('#divSelectedLPListWidget').show();
+        $('#divSelectLPTreeWidget').hide();
+    };
+
+    var LPPageState = function () {
+        var pageState = [];
+
+        $('.IsInherit.LP').each(function () {
+            var isInherit = $(this).prop('checked') ? 'Y' : 'N';
+            var checkItemUniqueID = $(this).data('checkitemuniqueid');
+
+            var tagID = '';
+            var l = '';
+            var la = '';
+            var ua = '';
+            var u = '';
+            var a = '';
+            var unit = '';
+            var remark = '';
+
+            tagID = $(this).closest('tr').find('.TagID').val();
+
+            if (isInherit == 'N') {
+                l = $(this).closest('tr').find('.LowerLimit').val();
+                la = $(this).closest('tr').find('.LowerAlertLimit').val();
+                ua = $(this).closest('tr').find('.UpperAlertLimit').val();
+                u = $(this).closest('tr').find('.UpperLimit').val();
+                a = $(this).closest('tr').find('.AccumulationBase').val();
+                unit = $(this).closest('tr').find('.Unit').val();
+                remark = $(this).closest('tr').find('.Remark').val();
+            }
+
+            pageState.push(isInherit + '@Utility.Define.Seperator' + checkItemUniqueID + '@Utility.Define.Seperator' + tagID + '@Utility.Define.Seperator' + l + '@Utility.Define.Seperator' + la + '@Utility.Define.Seperator' + ua + '@Utility.Define.Seperator' + u + '@Utility.Define.Seperator' + a + '@Utility.Define.Seperator' + unit + '@Utility.Define.Seperator' + remark);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddLP = function () {
+        var data = [];
+
+        $("#divSelectLPTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.CheckType") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.CheckItemUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddLP")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                PageStates: LPPageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divSelectLPTreeWidget').hide();
+                $('#divSelectedLPListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedLPListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedLPList();
+                    $("#divSelectLPTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedLPListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteSelectedLP = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteSelectedLP")',
+            data: {
+                CheckItemUniqueID: uniqueID,
+                PageStates: LPPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedLPListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedLPListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedLPList();
+                    $("#divSelectLPTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedLPListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divSelectLPTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">裝料中 @Resources.Resource.CheckItem</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divSelectLPTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddLP(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectLP(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divSelectedLPListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">裝料中 @Resources.Resource.CheckItem</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="SelectLP(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            <div id="divSelectedLPList" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,805 @@
+﻿@model Models.ASE.QA.CalibrationApply.PEFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#PEForm");
+
+        $('.Reject, .ChangePE').hide();
+
+        $('#FormInput_Comment').hide();
+
+        $('#CommentList').change(function () {
+            var val = $(this).val();
+
+            $('#FormInput_Comment').val('').hide();
+
+            if (val != '') {
+                if (val == '@Utility.Define.OTHER') {
+                    $('#FormInput_Comment').show();
+                }
+                else {
+                    $('#FormInput_Comment').val(val);
+                }
+            }
+        });
+
+        $("#FormInput_PEID").select2(select2GetUserOptions());
+        $("#FormInput_PEManagerID").select2(select2GetUserOptions());
+
+        $("#FormInput_PEID").change(function () {
+            if ($("#FormInput_PEID").val() != '') {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetManagerID")',
+                    data: { UserID: $("#FormInput_PEID").val() },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            $("#FormInput_PEManagerID").val(data.Data);
+                            $("#FormInput_PEManagerID").select2(select2GetUserOptions());
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+
+        $('.MSASubType').hide();
+
+        if ($('.MSAType:checked').val() == '1') {
+            $('.MSASubType').show();
+        }
+
+        $('.MSAType').click(function () {
+            var val = $(this).val();
+
+            if (val == '1')
+            {
+                $('.MSASubType').show();
+            }
+
+            if (val == '2')
+            {
+                $('.MSASubType').hide();
+            }
+        });
+    });
+
+    var ChangePE = function () {
+        if ($('#FormInput_PEID').val() == '') {
+            $.InfoDialog('@Resources.Resource.PERequired');
+        }
+        else if ($('#FormInput_PEManagerID').val() == '')
+        {
+            $.InfoDialog('@Resources.Resource.PEManagerRequired');
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("ChangePE")',
+                data: $('#PEForm').serialize(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Query();
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    var Reject = function (seq) {
+        var comment = $('#FormInput_Comment').val();
+
+        if (comment == '') {
+            $.InfoDialog('@Resources.Resource.VerifyCommentRequired');
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("PEReject")',
+                data: $('#PEForm').serialize(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Query();
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    function select2GetUserOptions() {
+        var url = '@Url.Action("GetUserOptions")';
+
+        var jsonOption = {
+            minimumInputLength: 0,
+            escapeMarkup: function (m) { return m; },
+            allowClear: true,
+            placeholder: '= @Resources.Resource.SelectOne =',
+            width: '90%',
+            ajax: {
+                url: url,
+                dataType: 'json',
+                quietMillis: 100,
+                data: function (term, page) {
+                    return {
+                        Term: term,
+                        PageSize: 10,
+                        PageIndex: page
+                    };
+                },
+                results: function (data, page) {
+                    var more = (page * 10) < data.Total;
+                    return { results: data.Data, more: more };
+                }
+            },
+            initSelection: function (element, callback) {
+                var id = $(element).val();
+                if (id !== "") {
+                    $.ajax(url, {
+                        data: {
+                            Term: id,
+                            IsInit: true
+                        },
+                        dataType: "json"
+                    }).done(function (data) {
+                        if (data.Data.length == 1) {
+                            callback(data.Data[0]);
+                        }
+                    });
+                }
+            }
+        };
+
+        return jsonOption;
+    }
+
+    var RejectForm = function () {
+        $('.Initial').hide();
+        $('.Reject').show();
+    };
+
+    var CancelReject = function () {
+        $('.Initial').show();
+        $('.Reject').hide();
+    };
+
+    var ChangePEForm = function () {
+        $('.Initial').hide();
+        $('.ChangePE').show();
+    };
+
+    var CancelChangePE = function () {
+        $('.Initial').show();
+        $('.ChangePE').hide();
+    };
+</script>
+
+@if (Model.FormViewModel.MSA)
+{ 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#IchiList').hide();
+
+        if ($("#FormInput_MSAStationUniqueID") == '@Utility.Define.OTHER') {
+            $("#FormInput_MSAStationRemark").show();
+        }
+        else {
+            $("#FormInput_MSAStationRemark").val('').hide();
+        }
+
+        $("#FormInput_MSAStationUniqueID").change(function () {
+            var stationUniqueID = $(this).val();
+
+            if (stationUniqueID == '@Utility.Define.OTHER') {
+                $("#FormInput_MSAStationRemark").show();
+            }
+            else {
+                $("#FormInput_MSAStationRemark").val('').hide();
+            }
+
+            $('#FormInput_MSAIchiUniqueID').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+            $('#FormInput_MSAIchiUniqueID').prop('disabled', true);
+            $("#FormInput_MSAIchiRemark").val('').hide();
+
+            $('#MSACharacteristic').empty();
+
+            if (stationUniqueID != '') {
+                $('#IchiList li').each(function () {
+                    if ($(this).data('stationuniqueid') == stationUniqueID) {
+                        $('#FormInput_MSAIchiUniqueID').append('<option value="' + $(this).data('uniqueid') + '">' + $(this).data('id') + '/' + $(this).data('name') + '</option>');
+                    }
+                });
+
+                $('#FormInput_MSAIchiUniqueID').append('<option value="@Utility.Define.OTHER">' + '@Resources.Resource.Other' + '</option>');
+                $('#FormInput_MSAIchiUniqueID').prop('disabled', false);
+            }
+        });
+
+        if ($('#FormInput_MSAIchiUniqueID') == '@Utility.Define.OTHER') {
+            $("#FormInput_MSAIchiRemark").show();
+        }
+        else {
+            $("#FormInput_MSAIchiRemark").val('').hide();
+        }
+
+        $('#FormInput_MSAIchiUniqueID').change(function () {
+            var ichiUniqueID = $(this).val();
+
+            if (ichiUniqueID == '@Utility.Define.OTHER') {
+                $("#FormInput_MSAIchiRemark").show();
+            }
+            else {
+                $("#FormInput_MSAIchiRemark").val('').hide();
+            }
+
+            var form = $('#MSACharacteristic');
+
+            form.empty();
+
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: '@Url.Action("MSACharacteristic")',
+                data: { MSAIchiUniqueID: ichiUniqueID },
+                dataType: "html",
+                beforeSend: function () { form.Overlay('show'); },
+                success: function (data) { form.Overlay('show').html(data); },
+                error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+            });
+        });
+    });
+
+    var Approve = function () {
+        if ($('#FormInput_MSAStationUniqueID').val() == '' || ($('#FormInput_MSAStationUniqueID').val() == '@Utility.Define.OTHER' && $('#FormInput_MSAStationRemark').val() == '')) {
+            $.InfoDialog('@Resources.Resource.StationRequired');
+        }
+        else if ($('#FormInput_MSAIchiUniqueID').val() == '' || ($('#FormInput_MSAIchiUniqueID').val() == '@Utility.Define.OTHER' && $('#FormInput_MSAIchiRemark').val() == '')) {
+            $.InfoDialog('@Resources.Resource.MSAIchiRequired');
+        }
+        else {
+            var valid = true;
+
+            var errMessage = '';
+
+            var data = [];
+
+            $('.MSACharacteristic').each(function () {
+                var isChecked = $(this).find('.IsCharacteristicChecked');
+
+                if (isChecked.prop('checked')) {
+                    var characteristicUniqueID = isChecked.val();
+                    var unitUniqueID = $(this).find('.UnitUniqueID').val();
+                    var unitRemark = $(this).find('.UnitRemark').val();
+                    var lowerRange = $(this).find('.LowerRange').val();
+                    var upperRange = $(this).find('.UpperRange').val();
+
+                    if (unitUniqueID == '' || (unitUniqueID == '@Utility.Define.OTHER' && unitRemark == '')) {
+                        valid = false;
+                        errMessage = '@Resources.Resource.MSACharacteristicUnitRequired';
+                    }
+                    else if (lowerRange == '' && upperRange == '') {
+                        valid = false;
+                        errMessage = '@Resources.Resource.MSARangeRequired';
+                    }
+                    else {
+                        data.push(characteristicUniqueID + '@Utility.Define.Seperator' + '' + '@Utility.Define.Seperator' + unitUniqueID + '@Utility.Define.Seperator' + unitRemark + '@Utility.Define.Seperator' + lowerRange + '@Utility.Define.Seperator' + upperRange);
+                    }
+                }
+            });
+
+            $('.OtherMSACharacteristic').each(function () {
+                var characteristicRemark = $(this).find('.CharacteristicRemark').val();
+                var unitRemark = $(this).find('.UnitRemark').val();
+                var lowerRange = $(this).find('.LowerRange').val();
+                var upperRange = $(this).find('.UpperRange').val();
+
+                if (characteristicRemark == '') {
+                    valid = false;
+                    errMessage = '請輸入量測特性';
+                }
+                else if (unitRemark == '') {
+                    valid = false;
+                    errMessage = '請輸入量測特性單位';
+                }
+                else if (lowerRange == '' && upperRange == '') {
+                    valid = false;
+                    errMessage = '@Resources.Resource.MSARangeRequired';
+                }
+                else {
+                    data.push('@Utility.Define.OTHER' + '@Utility.Define.Seperator' + characteristicRemark + '@Utility.Define.Seperator' + '@Utility.Define.OTHER' + '@Utility.Define.Seperator' + unitRemark + '@Utility.Define.Seperator' + lowerRange + '@Utility.Define.Seperator' + upperRange);
+                }
+            });
+
+            if (!valid) {
+                $.InfoDialog(errMessage);
+            }
+            else {
+                $('#FormInput_MSACharacteristic').val(JSON.stringify(data));
+
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("PEApprove")',
+                    data: $('#PEForm').serialize(),
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        }
+    };
+</script>
+}
+else
+{ 
+<script type="text/javascript">
+    var Approve = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("PEApprove")',
+            data: $('#PEForm').serialize(),
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Query();
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+}
+
+<p>
+@if (Model.FormViewModel.MSA)
+{ 
+    <button class="btn btn-app btn-primary btn-xs Initial" onclick="Approve();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Submit
+    </button>
+}
+else
+{
+    <button class="btn btn-app btn-primary btn-xs Initial" onclick="Approve();" type="button">
+        <i class="ace-icon fa fa-check-circle-o bigger-160"></i>
+        @Resources.Resource.Approve
+    </button>
+}
+    <button class="btn btn-app btn-danger btn-xs Initial" onclick="RejectForm();" type="button">
+        <i class="ace-icon fa fa-times-circle-o bigger-160"></i>
+        @Resources.Resource.Reject
+    </button>
+
+    <button class="btn btn-app btn-primary btn-xs Initial" onclick="ChangePEForm();" type="button">
+        <i class="ace-icon fa fa-user-plus bigger-160"></i>
+        @Resources.Resource.Change
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs Initial" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        返回
+    </button>
+
+    <button class="btn btn-app btn-danger btn-xs Reject" onclick="Reject();" type="button">
+        <i class="ace-icon fa fa-times-circle-o bigger-160"></i>
+        @Resources.Resource.Reject
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs Reject" onclick="CancelReject();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+
+    <button class="btn btn-app btn-primary btn-xs ChangePE" onclick="ChangePE();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Submit
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs ChangePE" onclick="CancelChangePE();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+@using (Html.BeginForm("PE", null, FormMethod.Post, new { @ID = "PEForm" }))
+{
+    @Html.HiddenFor(x => x.UniqueID)
+    @Html.HiddenFor(x => x.FormInput.MSACharacteristic)
+    
+    <div class="Reject">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.VerifyComment</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Comment)</th>
+                            <td colspan="3" class="col-sm-11">
+                                <select id="CommentList">
+                                    <option value="">= @Resources.Resource.SelectOne =</option>
+                                    @foreach (var comment in Model.VerifyCommentList)
+                                    {
+                                        <option value="@comment.Description">@comment.Description</option>
+                                    }
+                                    <option value="@Utility.Define.OTHER">@Resources.Resource.Other</option>
+                                </select>
+                                @Html.TextBoxFor(x => x.FormInput.Comment, new { @class = "col-sm-5" })
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+    </div>
+
+    <div class="ChangePE">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">重新指定製程負責人</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.PEID)</th>
+                            <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.PEID)</td>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.PEManagerID)</th>
+                            <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.PEManagerID)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+    </div>
+
+    if (Model.FormViewModel.MSA)
+    {
+        <div class="Initial">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.MSA @Resources.Resource.Information</h5>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding">
+                        <table class="table table-bordered table-input">
+                            <tr>
+                                <th class="col-sm-1"><label>類別</label></th>
+                                <td class="col-sm-11">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(x => x.FormInput.MSAType, "1", new { @class = "ace MSAType" })
+                                            <span class="lbl"> 計量</span>
+                                        </label>
+                                        <label>
+                                            @Html.RadioButtonFor(x => x.FormInput.MSAType, "2", new { @class = "ace MSAType" })
+                                            <span class="lbl"> 計數</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="MSASubType">
+                                <th class="col-sm-1"><label>計量類別</label></th>
+                                <td class="col-sm-11">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButtonFor(x => x.FormInput.MSASubType, "1", new { @class = "ace" })
+                                            <span class="lbl"> 全距平均法</span>
+                                        </label>
+                                        <label>
+                                            @Html.RadioButtonFor(x => x.FormInput.MSASubType, "2", new { @class = "ace" })
+                                            <span class="lbl"> ANOVA</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.MSAStationUniqueID)</th>
+                                <td class="col-sm-11">
+                                    @Html.DropDownListFor(x => x.FormInput.MSAStationUniqueID, Model.MSAStationSelectItemList)
+                                    @Html.TextBoxFor(x => x.FormInput.MSAStationRemark)
+                                </td>
+                        </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.MSAIchiUniqueID)</th>
+                                <td class="col-sm-11">
+                                    @Html.DropDownListFor(x => x.FormInput.MSAIchiUniqueID, Model.MSAIchiSelectItemList)
+                                    @Html.TextBoxFor(x => x.FormInput.MSAIchiRemark)
+                                </td>
+                            </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+            <div id="MSACharacteristic"></div>
+
+        <div class="space"></div>
+        </div>
+    
+    <ul id="IchiList">
+        @foreach (var ichi in Model.MSAIchiList)
+        {
+            <li data-stationuniqueid="@ichi.StationUniqueID" data-uniqueid="@ichi.UniqueID" data-id="@ichi.ID" data-name="@ichi.Name"></li>
+        }
+    </ul>
+    }
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.CalibrationApply</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.VHNO)</th>
+                    <td>@Html.DisplayFor(x => x.FormViewModel.VHNO)</td>
+                    <th class="col-sm-1"><label>狀態</label></th>
+                    <td class="col-sm-5"><span class="label label-lg @Model.FormViewModel.Status.LabelClass">@Model.FormViewModel.Status.Display</span></td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.Creator)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.Creator)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CreateTimeString)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.CreateTimeString)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.Factory)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FormViewModel.Factory)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.Department)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FormViewModel.Department)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.IchiTypeDisplay)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FormViewModel.IchiTypeDisplay)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.Ichi)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FormViewModel.Ichi)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CharacteristicType)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.CharacteristicType)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.Spec)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.Spec)</td>
+                    
+                </tr>
+                <tr>
+                    
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.MachineNo)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.MachineNo)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.SerialNo)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.SerialNo)</td>
+                    
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.Brand)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.Brand)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.Model)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.Model)</td>
+                </tr>
+                @if (!Model.FormViewModel.CAL && !Model.FormViewModel.MSA)
+                {
+                    <tr>
+                        <th class="col-sm-1"><label>免校驗</label></th>
+                        <td colspan="3">
+                            <i class="ace-icon fa fa-check bigger-110 red"></i>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CAL)</th>
+                        <td class="col-sm-5">
+                            @if (Model.FormViewModel.CAL)
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.MSA)</th>
+                        <td class="col-sm-5">
+                            @if (Model.FormViewModel.MSA)
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CalCycle)</th>
+                        <td>@Html.DisplayFor(x => x.FormViewModel.CalCycle)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.MSACycle)</th>
+                        <td>@Html.DisplayFor(x => x.FormViewModel.MSACycle)</td>
+                    </tr>
+                }
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.Owner)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.Owner)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.PE)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.PE)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.OwnerManager)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.OwnerManager)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.PEManager)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.PEManager)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.Remark)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FormViewModel.Remark)</td>
+                </tr>
+                @if (!string.IsNullOrEmpty(Model.FormViewModel.FormVHNO))
+                {
+                    <tr>
+                        <th><label>執行單號</label></th>
+                        <td colspan="3">
+                            <a class="blue" onclick="CalibrationForm('@Model.FormViewModel.FormUniqueID')" title="@Resources.Resource.Detail">
+                                @Model.FormViewModel.FormVHNO
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.FormViewModel.ItemList != null && Model.FormViewModel.ItemList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">校驗資訊</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Characteristic</th>
+                            <th>@Resources.Resource.Unit</th>
+                            <th>@Resources.Resource.UsingRange</th>
+                            <th>@Resources.Resource.UsingRangeTolerance</th>
+                            <th>校驗點</th>
+                            <th>@Resources.Resource.Tolerance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FormViewModel.ItemList)
+                        {
+                            foreach (var subitem in item.ItemList)
+                            {
+                                <tr>
+                                    <td>@item.Characteristic</td>
+                                    <td>@item.Unit</td>
+                                    <td>@item.UsingRange</td>
+                                    <td>@item.UsingRangeToleranceDisplay</td>
+                                    <td>@subitem.CalibrationPointDisplay</td>
+                                    <td>@subitem.ToleranceDisplay</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.FormViewModel.LogList != null && Model.FormViewModel.LogList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">簽核流程</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Role</th>
+                            <th>@Resources.Resource.VerifyUser</th>
+                            <th>@Resources.Resource.NotifyTime</th>
+                            <th>@Resources.Resource.VerifyTime</th>
+                            <th>@Resources.Resource.VerifyResult</th>
+                            <th>@Resources.Resource.VerifyComment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FormViewModel.LogList)
+                        {
+                            <tr>
+                                <td>@item.Role</td>
+                                <td>@item.User</td>
+                                <td>@item.NotifyTimeString</td>
+                                <td>@item.VerifyTimeString</td>
+                                <td>@item.VerifyResultDescription</td>
+                                <td>@item.VerifyComment</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+

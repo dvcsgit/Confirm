@@ -1,0 +1,252 @@
+﻿@model Models.PipelinePatrol.ResultQuery.JobModel
+
+    @*<script type="text/javascript">
+        $(document).ready(function () {
+            @foreach (var item in Model.ControlPointList)
+            {
+                foreach (var recrod in item.ArriveRecordList.Where(x => x.HavePhoto))
+                {
+                    <text>$(".@recrod.UniqueID").colorbox({ rel: '@recrod.UniqueID', maxWidth: '100%', maxHeight: '100%' });</text>
+                }
+            }
+        });
+    </script>*@
+
+@if (Model.PipelineList.Count > 0)
+{
+    <script type="text/javascript">
+    var map;
+    var pipelines = {};
+    var userLocations = {};
+
+    $(document).ready(function () {
+        InitGoogleMap();
+    });
+
+    function InitGoogleMap() {
+        var bounds = new google.maps.LatLngBounds();
+
+        bounds.extend(new google.maps.LatLng(@Model.Max.LAT, @Model.Max.LNG));
+        bounds.extend(new google.maps.LatLng(@Model.Min.LAT, @Model.Min.LNG));
+
+        var mapOptions = {
+            zoom: 15,
+            center: bounds.getCenter(),
+            mapTypeControl:false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        map.fitBounds(bounds);
+
+        @if (Model.PipelineList.Count > 0)
+        {
+            foreach (var item in Model.PipelineList)
+            {
+                <text>
+
+        var locus  = [
+            @foreach (var l in item.Locus)
+				    {
+						<text>new google.maps.LatLng(@l.LAT, @l.LNG),</text>
+                    }
+        ];
+
+        pipelines['@item.UniqueID'] =  new google.maps.Polyline({
+            path: locus ,
+            geodesic: true,
+            strokeColor: '#'+'@item.Color',
+            strokeOpacity: 1.0,
+            strokeWeight: 5
+        });
+
+        pipelines['@item.UniqueID'].setMap(map);
+
+        </text>
+            }
+        }
+
+        @if (Model.UserLocusList.Count > 0)
+        {
+            int seq=1;
+
+            foreach (var userLocus in Model.UserLocusList)
+            {
+                foreach (var locus in userLocus.Locus)
+                { 
+                <text>
+        userLocations['@seq'] =  new google.maps.Marker({
+            position: new google.maps.LatLng(@locus.LAT,@locus.LNG)
+        });
+
+        userLocations['@seq'].setMap(map);
+        </text>
+            
+                    seq++;
+            
+                }
+                
+
+                
+
+                <text>
+
+        var locus  = [
+            @foreach (var l in Model.UserLocusList)
+				    {
+                        foreach (var locus in l.Locus)
+                        { 
+                        <text>new google.maps.LatLng(@locus.LAT, @locus.LNG),</text>
+                        }
+                    }
+        ];
+
+       var userLocus  =  new google.maps.Polyline({
+            path: locus ,
+            geodesic: true,
+            strokeColor: '#d53f40',
+            strokeOpacity: 1.0,
+            strokeWeight: 7
+        });
+
+       userLocus.setMap(map);
+
+        </text>
+            }
+        }
+    }
+</script>
+}
+
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Model.Display
+        </h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="Detail('', '', '', '');">
+                <i class="ace-icon fa fa-times white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="center">@Resources.Resource.Detail</th>
+                        <th class="center">@Resources.Resource.Abnormal</th>
+                        <th>@Resources.Resource.Route</th>
+                        <th>@Resources.Resource.ControlPoint</th>
+                        <th class="center">@Resources.Resource.CompleteRate</th>
+                        <th class="center">@Resources.Resource.ArriveDate</th>
+                        <th class="center">@Resources.Resource.ArriveTime</th>
+                        <th>@Resources.Resource.ArriveUser</th>
+                        <th class="center">@Resources.Resource.TimeSpan</th>
+                        <th class="center">@Resources.Resource.MinTimeSpan</th>
+                        <th class="center">@Resources.Resource.TimeSpanAbnormal</th>
+                        <th class="center">@Resources.Resource.TimeSpanAbnormalReason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var route in Model.RouteList)
+                    {
+                        foreach (var pipePoint in route.PipePointList)
+                        {
+                            if (pipePoint.ArriveRecordList.Count > 0)
+                            {
+                                <tr>
+                                    <td rowspan="@pipePoint.ArriveRecordList.Count" class="center">
+                                        @if (pipePoint.CheckItemList.Count > 0)
+                                        {
+                                            <div class="action-buttons">
+                                                <a class="blue" href="#" onclick="Detail('@Model.UniqueID', '@Model.CheckDate', '@route.UniqueID', '@pipePoint.UniqueID');" title="@Resources.Resource.Detail">
+                                                    <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                                </a>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td rowspan="@pipePoint.ArriveRecordList.Count" class="center">
+                                        @if (pipePoint.HaveAbnormal)
+                                        {
+                                            <span class="label label-lg label-danger arrowed-right">@Resources.Resource.Abnormal</span>
+                                        }
+                                        else if (pipePoint.HaveAlert)
+                                        {
+                                            <span class="label label-lg label-warning arrowed-right">@Resources.Resource.Warning</span>
+                                        }
+                                    </td>
+                                    <td rowspan="@pipePoint.ArriveRecordList.Count">@route.Display</td>
+                                    <td rowspan="@pipePoint.ArriveRecordList.Count">@pipePoint.Display</td>
+                                    <td rowspan="@pipePoint.ArriveRecordList.Count" class="center">@pipePoint.CompleteRate</td>
+                                    <td class="center">@pipePoint.ArriveRecordList[0].ArriveDate</td>
+                                    <td class="center">@pipePoint.ArriveRecordList[0].ArriveTime</td>
+                                    <td>@pipePoint.ArriveRecordList[0].User</td>
+                                    <td rowspan="@pipePoint.ArriveRecordList.Count" class="center">@pipePoint.TimeSpan</td>
+                                    <td rowspan="@pipePoint.ArriveRecordList.Count" class="center">@pipePoint.MinTimeSpan</td>
+                                    <td rowspan="@pipePoint.ArriveRecordList.Count" class="center">
+                                        @if (pipePoint.IsTimeSpanAbnormal)
+                                        {
+                                            <span class="label label-lg label-danger arrowed-right">@Resources.Resource.Abnormal</span>
+                                        }
+                                    </td>
+                                    <td>@pipePoint.ArriveRecordList[0].TimeSpanAbnormalReason</td>
+                                </tr>
+
+                                for (int i = 1; i < pipePoint.ArriveRecordList.Count; i++)
+                                {
+                                    <tr>
+                                        <td class="center">@pipePoint.ArriveRecordList[i].ArriveDate</td>
+                                        <td class="center">@pipePoint.ArriveRecordList[i].ArriveTime</td>
+                                        <td>@pipePoint.ArriveRecordList[i].User</td>
+                                        <td>@pipePoint.ArriveRecordList[i].TimeSpanAbnormalReason</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="center">
+                                        @if (pipePoint.CheckItemList.Count > 0)
+                                        {
+                                            <div class="action-buttons">
+                                                <a class="blue" href="#" onclick="Detail('@Model.UniqueID', '@Model.CheckDate', '@route.UniqueID', '@pipePoint.UniqueID');" title="@Resources.Resource.Detail">
+                                                    <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                                </a>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td></td>
+                                    <td>@route.Display</td>
+                                    <td>@pipePoint.Display</td>
+                                    <td class="center">@pipePoint.CompleteRate</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="center">@pipePoint.MinTimeSpan</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@if (Model.PipelineList.Count > 0)
+{
+    <div style="height:500px;"><div id="map-canvas" style="width:100%; height:100%;"></div></div>
+}
+
+
+
+

@@ -1,0 +1,233 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+<link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+<link href="@Url.Content("~/assets/css/select2.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/select2.min.js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        InitTree();
+
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+
+        $('#ExpandTree').click(function () {
+            debugger;
+            var i = $(this).find('i');
+
+            if (i.hasClass('fa-chevron-down')) {
+                i.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                $('#divTree').jstree("open_all");
+            }
+            else
+            {
+                i.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                $('#divTree').jstree("close_all");
+            }
+        });
+    });
+
+    var InitTree = function () {
+        var container = $('#divTreeContainer');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("InitTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Form = function (url, data) {
+        $('#divQueryFormContainer').hide();
+        $('#divFormContainer').show();
+
+        var form = $('#divForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            data: data,
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('hide').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Detail = function (uniqueID) {
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+
+        var div = $('#divDetailForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Detail")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { div.Overlay('show'); },
+            success: function (data) { div.Overlay('show').html(data); },
+            error: function (x, h, r) { div.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var Create = function (parentOrganizationUniqueID) {
+        Form('@Url.Action("Create")', { ParentOrganizationUniqueID: parentOrganizationUniqueID });
+    };
+
+    var Edit = function (uniqueID) {
+        Form('@Url.Action("Edit")', { UniqueID: uniqueID });
+    }
+
+    var Cancel = function () {
+        $('#divForm').empty();
+        $('#divDetailForm').empty();
+
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+    };
+
+    var Delete = function (uniqueID) {
+        $.ConfirmDialog('@string.Format("{0} {1} ?", Resources.Resource.Confirm, Resources.Resource.Delete)', function (confirmed) {
+            if (confirmed) {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Delete")',
+                    data: { UniqueID : uniqueID },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            InitTree();
+                            Cancel();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+    };
+
+    function select2GetUserOptions() {
+        var url = '@Url.Action("GetUserOptions_Multi", "Shared")';
+
+        var jsonOption = {
+            minimumInputLength: 0,
+            multiple: true,
+            escapeMarkup: function (m) { return m; },
+            allowClear: true,
+            placeholder: '= @Resources.Resource.SelectOne =',
+            width: '90%',
+            ajax: {
+                url: url,
+                dataType: 'json',
+                quietMillis: 100,
+                data: function (term, page) {
+                    return {
+                        Term: term,
+                        PageSize: 10,
+                        PageIndex: page
+                    };
+                },
+                results: function (data, page) {
+                    var more = (page * 10) < data.Total;
+                    return { results: data.Data, more: more };
+                }
+            },
+            initSelection: function (element, callback) {
+                var id = $(element).val();
+                if (id !== "") {
+                    $.ajax(url, {
+                        data: {
+                            Term: id,
+                            IsInit: true
+                        },
+                        dataType: "json"
+                    }).done(function (data) {
+                        
+                        if (data.Data.length > 0) {
+                            callback(data.Data);
+                        }
+                    });
+                }
+            }
+        };
+
+        return jsonOption;
+    }
+</script>
+}
+
+<div class="row" id="divQueryFormContainer">
+    <div class="col-xs-3">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Organization @Resources.Resource.Data @Resources.Resource.Management</h5>
+                <div class="widget-toolbar">
+                    <a href="#" id="ExpandTree" title="">
+                        <i class="ace-icon fa fa-chevron-down white"></i>
+                    </a>
+                </div>
+                <div class="widget-toolbar">
+                    <a href="#" onclick="InitTree();" title="@Resources.Resource.Refresh">
+                        <i class="ace-icon fa fa-refresh white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4" style="overflow-x:scroll;">
+                    <div id="divTreeContainer" style="min-height:200px;"></div>
+                </div>
+                @if ((Session["Account"] as Models.Authenticated.Account).OrganizationUniqueID == "*")
+                {
+                    <div class="widget-toolbox padding-8 clearfix">
+                        <button class="btn btn-primary" onclick="Create('*'); return false;">
+                            <i class="ace-icon fa fa-plus"></i>
+                            @Resources.Resource.Create
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-9">
+        <div id="divDetailForm" style="min-height:200px;"></div>
+    </div>
+</div>
+
+<div class="row" id="divFormContainer">
+    <div class="col-xs-12">
+        <div id="divForm" style="min-height:200px;"></div>
+    </div>
+</div>

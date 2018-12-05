@@ -1,0 +1,159 @@
+﻿@model IEnumerable<Models.Home.MaintenanceFormVerifyItem>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Modal').hide();
+    });
+
+    var Verify = function () {
+        var data = [];
+
+        $('.VerifyAction:checked').each(function () {
+            var uniqueID = $(this).data('uniqueid');
+            var val = $(this).val();
+
+            if (val == '1' || val == '2') {
+                var remark = $('.VerifyComment[data-uniqueid="' + uniqueID + '"]').val();
+
+                data.push(uniqueID + '@Utility.Define.Seperator' + val + '@Utility.Define.Seperator' + remark);
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Verify")',
+            data: { VerifyResults: JSON.stringify(data) },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Query();
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var Detail = function (uniqueID) {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Detail")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                $('#ModalContent').html(data);
+                $('#Modal').show().modal('show');
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+</script>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <p>
+        <button class="btn btn-app btn-primary btn-xs" onclick="Verify();" type="button">
+            <i class="ace-icon fa fa-legal bigger-160"></i>
+            確認
+        </button>
+    </p>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">待核簽預防保養作業單</h5>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th class="center">簽核</th>
+                            <th class="center">核簽意見</th>
+                            <th class="center">@Resources.Resource.VHNO</th>
+                            <th>@Resources.Resource.Organization</th>
+                            <th>@Resources.Resource.Subject</th>
+                            <th>@Resources.Resource.Equipment</th>
+                            <th class="center">@Resources.Resource.CycleBeginDate</th>
+                            <th class="center">@Resources.Resource.CycleEndDate</th>
+                            <th class="center">@Resources.Resource.EstMaintenanceBeginDate</th>
+                            <th class="center">@Resources.Resource.EstMaintenanceEndDate</th>
+                            <th class="center">@Resources.Resource.MaintenanceBeginDate</th>
+                            <th class="center">@Resources.Resource.MaintenanceEndDate</th>
+                            <th>@Resources.Resource.MaintenanceUser</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="center">
+                                    <label>
+                                        <input type="radio" name="@string.Format("VerifyAction{0}", item.UniqueID)" data-uniqueid="@item.UniqueID" class="ace VerifyAction" value="1" checked="checked" />
+                                        <span class="lbl"> @Resources.Resource.Approve</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="@string.Format("VerifyAction{0}", item.UniqueID)" data-uniqueid="@item.UniqueID" class="ace VerifyAction" value="2" />
+                                        <span class="lbl"> @Resources.Resource.Reject</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="@string.Format("VerifyAction{0}", item.UniqueID)" data-uniqueid="@item.UniqueID" class="ace VerifyAction" value="0" />
+                                        <span class="lbl"> 不核簽</span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <input type="text" class="VerifyComment" data-uniqueid="@item.UniqueID" />
+                                </td>
+                                <td class="center"><a href="#" onclick="Detail('@item.UniqueID')">@item.VHNO</a></td>
+                                <td>@item.OrganizationDescription</td>
+                                <td>@item.Subject</td>
+                                <td>@item.Equipment</td>
+                                <td class="center">@item.CycleBeginDateString</td>
+                                <td class="center">@item.CycleEndDateString</td>
+                                <td class="center">@item.EstBeginDateString</td>
+                                <td class="center">@item.EstEndDateString</td>
+                                <td class="center">@item.BeginDateString</td>
+                                <td class="center">@item.EndDateString</td>
+                                <td>@item.MaintenanceUser</td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        無待核簽預防保養作業單
+        <br>
+    </div>
+}
+
+<div class="modal" id="Modal">
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-body" id="ModalContent"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>

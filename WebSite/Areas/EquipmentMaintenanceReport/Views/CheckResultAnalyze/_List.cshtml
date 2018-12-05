@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Report.EquipmentMaintenance.Models.CheckResultAnalyze.GridItem>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Resources.Resource.SearchResults
+        </h5>
+        <div class="widget-toolbar">
+            <div class="widget-menu">
+                <a href="#" data-toggle="dropdown">
+                    <i class="ace-icon fa fa-cloud-download white"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})">Excel 2003</a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007 })">Excel 2007</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th>@Resources.Resource.Route</th>
+                        <th>@Resources.Resource.ControlPoint</th>
+                        <th>@Resources.Resource.Equipment</th>
+                        <th>@Resources.Resource.CheckItem</th>
+                        <th>@Resources.Resource.LowerLimit</th>
+                        <th>@Resources.Resource.LowerAlertLimit</th>
+                        <th>@Resources.Resource.UpperAlertLimit</th>
+                        <th>@Resources.Resource.UpperLimit</th>
+                        <th>@Resources.Resource.CheckResult</th>
+                        <th>@Resources.Resource.Status</th>
+                        <th>@Resources.Resource.AbnormalReason</th>
+                        <th>@Resources.Resource.User</th>
+                        <th>@Resources.Resource.CheckDate</th>
+                        <th>@Resources.Resource.CheckTime</th>
+                        <th>@Resources.Resource.VHNO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Route</td>
+                            <td>@item.ControlPoint</td>
+                            <td>@item.Equipment</td>
+                            <td>@item.CheckItem</td>
+                            <td>@item.LowerLimit</td>
+                            <td>@item.LowerAlertLimit</td>
+                            <td>@item.UpperAlertLimit</td>
+                            <td>@item.UpperLimit</td>
+                            <td>@item.Result</td>
+                            <td>@(item.IsAbnormal?Resources.Resource.Abnormal:Resources.Resource.Normal)</td>
+                            <td>@item.AbnormalReasons</td>
+                            <td>@item.User</td>
+                            <td>@item.CheckDate</td>
+                            <td>@item.CheckTime</td>
+                            <td>@item.VHNO</td>
+                        </tr>
+                    }
+            </table>
+        </div>
+    </div>
+</div>

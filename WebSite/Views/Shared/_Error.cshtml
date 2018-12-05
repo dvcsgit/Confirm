@@ -1,0 +1,43 @@
+﻿@model Utility.Models.Error
+
+<div class="error-container">
+    <div class="well">
+        <h1 class="grey lighter smaller">
+            <span class="blue bigger-125">
+                <i class="icon-exclamation"></i>
+                Error
+            </span>
+            @Model.MethodName
+        </h1>
+
+        <hr>
+
+        <div>
+            <h4 class="smaller">Occur Time:</h4>
+
+            <ul class="list-unstyled spaced inline bigger-110 margin-15">
+                <li>
+                    <i class="icon-hand-right blue"></i>
+                    @Model.OccurTime
+                </li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <div>
+            <h4 class="smaller">Exception:</h4>
+
+            <ul class="list-unstyled spaced inline bigger-110 margin-15">
+                @foreach (var item in Model.ErrorMessageList)
+                {
+                    <li>
+                        <i class="icon-hand-right blue"></i>
+                        @item
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+

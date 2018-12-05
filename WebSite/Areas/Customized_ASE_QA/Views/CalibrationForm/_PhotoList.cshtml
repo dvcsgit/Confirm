@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Models.ASE.QA.CalibrationForm.PhotoModel>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+        @foreach (var item in Model)
+{
+   <text>$(".@string.Format("{0}_{1}", item.CheckItemSeq, item.Seq)").colorbox({ rel: '@string.Format("{0}_{1}", item.CheckItemSeq, item.Seq)', maxWidth: '100%', maxHeight: '100%' });</text>
+    }
+    });
+
+</script>
+
+    <ul class="ace-thumbnails clearfix">
+        @foreach (var photo in Model)
+        {
+            <li>
+                <a href="@Url.Content("~/QAPhoto/" + photo.FileName)" title="Photo Title" data-rel="colorbox" class="cboxElement @string.Format("{0}_{1}", photo.CheckItemSeq, photo.Seq)">
+                    <img width="150" height="150" alt="150x150" src="@Url.Content("~/QAPhoto/" + photo.FileName)">
+                </a>
+                <div class="tools">
+                    <a href="#" onclick="DeletePhoto('@photo.CheckItemSeq', '@photo.Seq'); return false;">
+                        <i class="ace-icon fa fa-times red"></i>
+                    </a>
+                </div>
+            </li>
+        }
+    </ul>
+}
+
+
+
+

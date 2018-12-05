@@ -1,0 +1,117 @@
+﻿@model Models.OrganizationManagement.DetailViewModel
+
+@if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+{
+    <p>
+        @if (ViewBag.CanCreate)
+        {
+            <button class="btn btn-primary" onclick="Create('@Model.UniqueID')">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Create @Resources.Resource.Organization @Resources.Resource.At @Model.Description
+            </button>
+        }
+
+        @if (ViewBag.CanEdit)
+        {
+            <button class="btn btn-primary" onclick="Edit('@Model.UniqueID')">
+                <i class="ace-icon fa fa-pencil"></i>
+                @Resources.Resource.Edit
+            </button>
+        }
+
+        @if (ViewBag.CanDelete)
+        {
+            <button class="btn btn-danger" onclick="Delete('@Model.UniqueID')">
+                <i class="ace-icon fa fa-trash-o"></i>
+                @Resources.Resource.Delete
+            </button>
+        }
+    </p>
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Organization</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.ID)</th>
+                    <td>@Html.DisplayFor(x => x.ID)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Description)</th>
+                    <td>@Html.DisplayFor(x => x.Description)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Managers)</th>
+                    <td>@Html.DisplayFor(x => x.Managers)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.EditableOrganizationList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">
+                @Resources.Resource.EditableOrganization
+            </h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:200px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr><th>@Resources.Resource.OrganizationDescription</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.EditableOrganizationList)
+                        {
+                            <tr><td>@item</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.QueryableOrganizationList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">
+                @Resources.Resource.QueryableOrganization
+            </h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:200px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr><th>@Resources.Resource.OrganizationDescription</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.QueryableOrganizationList)
+                        {
+                            <tr><td>@item</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

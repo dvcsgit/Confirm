@@ -1,0 +1,969 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A25E7E9F-A7F4-4439-93F0-59CB88C493C5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Models.ASE</RootNamespace>
+    <AssemblyName>Models.ASE</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28ASE.UAT%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28ASE.UAT%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28ASE.Production%29|AnyCPU'">
+    <OutputPath>bin\Release%28ASE.Production%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28CHIMEI%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28CHIMEI%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28CHIMEI%29|AnyCPU'">
+    <OutputPath>bin\Release%28CHIMEI%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28GuardPatrol%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28GuardPatrol%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28GuardPatrol%29|AnyCPU'">
+    <OutputPath>bin\Release%28GuardPatrol%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28PipelinePatrol%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28PipelinePatrol%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28PipelinePatrol%29|AnyCPU'">
+    <OutputPath>bin\Release%28PipelinePatrol%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28EquipmentPatrol%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28EquipmentPatrol%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28EquipmentPatrol%29|AnyCPU'">
+    <OutputPath>bin\Release%28EquipmentPatrol%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28EquipmentMaintenance%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28EquipmentMaintenance%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28EquipmentMaintenance%29|AnyCPU'">
+    <OutputPath>bin\Release%28EquipmentMaintenance%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28TruckPatrol%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28TruckPatrol%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28LCY%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28LCY%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28LCY%29|AnyCPU'">
+    <OutputPath>bin\Release%28LCY%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28CPDC%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28CPDC%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28CPDC%29|AnyCPU'">
+    <OutputPath>bin\Release%28CPDC%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28FPG.Guard%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28FPG.Guard%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28FPG.Guard%29|AnyCPU'">
+    <OutputPath>bin\Release%28FPG.Guard%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28FPTC%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28FPTC%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28FPTC%29|AnyCPU'">
+    <OutputPath>bin\Release%28FPTC%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28PFG%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28PFG%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28PFG%29|AnyCPU'">
+    <OutputPath>bin\Release%28PFG%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28PSI%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28PSI%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28PSI%29|AnyCPU'">
+    <OutputPath>bin\Release%28PSI%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28RENDA%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28RENDA%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28RENDA%29|AnyCPU'">
+    <OutputPath>bin\Release%28RENDA%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28TAIWAY%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28TAIWAY%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28TAIWAY%29|AnyCPU'">
+    <OutputPath>bin\Release%28TAIWAY%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28PFG.CN%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28PFG.CN%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28PFG.CN%29|AnyCPU'">
+    <OutputPath>bin\Release%28PFG.CN%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28SESC%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28SESC%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28SESC%29|AnyCPU'">
+    <OutputPath>bin\Release%28SESC%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28ASE.QAS%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28ASE.QAS%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28ASE.QAS%29|AnyCPU'">
+    <OutputPath>bin\Release%28ASE.QAS%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28NMP%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28NMP%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28NMP%29|AnyCPU'">
+    <OutputPath>bin\Release%28NMP%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28ECOVE%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28ECOVE%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28ECOVE%29|AnyCPU'">
+    <OutputPath>bin\Release%28ECOVE%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release%28EVERLIGHT%29|AnyCPU'">
+    <OutputPath>bin\Release%28EVERLIGHT%29\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug%28EVERLIGHT%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug%28EVERLIGHT%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.6\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.6\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Webdiyer.MvcPager">
+      <HintPath>..\packages\Webdiyer.MvcPager.3.0.1.1\lib\Webdiyer.MvcPager.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbnormalNotifyGroup\CreateFormModel.cs" />
+    <Compile Include="AbnormalNotifyGroup\DetailViewModel.cs" />
+    <Compile Include="AbnormalNotifyGroup\EditFormModel.cs" />
+    <Compile Include="AbnormalNotifyGroup\FormInput.cs" />
+    <Compile Include="AbnormalNotifyGroup\GridItem.cs" />
+    <Compile Include="AbnormalNotifyGroup\GridViewModel.cs" />
+    <Compile Include="AbnormalNotifyGroup\QueryFormModel.cs" />
+    <Compile Include="AbnormalNotifyGroup\QueryParameters.cs" />
+    <Compile Include="AbnormalNotify\EditFormModel.cs" />
+    <Compile Include="AbnormalNotify\FileDownloadModel.cs" />
+    <Compile Include="AbnormalNotify\FileUploadFormModel.cs" />
+    <Compile Include="AbnormalNotify\ClosedFormInput.cs" />
+    <Compile Include="AbnormalNotify\LogModel.cs" />
+    <Compile Include="AbnormalNotify\SummaryItem.cs" />
+    <Compile Include="AbnormalNotify\SummaryViewModel.cs" />
+    <Compile Include="AbnormalNotify_v2\ClosedFormInput.cs" />
+    <Compile Include="AbnormalNotify_v2\ClosedFormModel.cs" />
+    <Compile Include="AbnormalNotify_v2\CreateFormModel.cs" />
+    <Compile Include="AbnormalNotify_v2\ReplyFormInput.cs" />
+    <Compile Include="AbnormalNotify_v2\ReplyFormModel.cs" />
+    <Compile Include="AbnormalNotify_v2\DetailViewModel.cs" />
+    <Compile Include="AbnormalNotify_v2\EditFormModel.cs" />
+    <Compile Include="AbnormalNotify_v2\FileDownloadModel.cs" />
+    <Compile Include="AbnormalNotify_v2\FileModel.cs" />
+    <Compile Include="AbnormalNotify_v2\FileUploadFormModel.cs" />
+    <Compile Include="AbnormalNotify_v2\FormInput.cs" />
+    <Compile Include="AbnormalNotify_v2\GridItem.cs" />
+    <Compile Include="AbnormalNotify_v2\GridViewModel.cs" />
+    <Compile Include="AbnormalNotify_v2\LogModel.cs" />
+    <Compile Include="AbnormalNotify_v2\QueryFormModel.cs" />
+    <Compile Include="AbnormalNotify_v2\QueryParameters.cs" />
+    <Compile Include="AbnormalNotify_v2\RepairFormCreateFormInput.cs" />
+    <Compile Include="AbnormalNotify_v2\RepairFormCreateFormModel.cs" />
+    <Compile Include="AbnormalNotify_v2\RepairFormModel.cs" />
+    <Compile Include="AbnormalNotify_v2\RFormSubject.cs" />
+    <Compile Include="AbnormalNotify_v2\SummaryItem.cs" />
+    <Compile Include="AbnormalNotify_v2\SummaryViewModel.cs" />
+    <Compile Include="Inventory\MaterialSpecOption.cs" />
+    <Compile Include="Inventory\SpecModel.cs" />
+    <Compile Include="QA\AbnormalForm\ChangeFormModel.cs" />
+    <Compile Include="QA\AbnormalForm\CreateFormModel.cs" />
+    <Compile Include="QA\AbnormalForm\DetailItem.cs" />
+    <Compile Include="QA\AbnormalForm\DetailViewModel.cs" />
+    <Compile Include="QA\AbnormalForm\FileDownloadModel.cs" />
+    <Compile Include="QA\AbnormalForm\FileModel.cs" />
+    <Compile Include="QA\AbnormalForm\FormInput.cs" />
+    <Compile Include="QA\AbnormalForm\GridItem.cs" />
+    <Compile Include="QA\AbnormalForm\GridViewModel.cs" />
+    <Compile Include="QA\AbnormalForm\LogModel.cs" />
+    <Compile Include="QA\AbnormalForm\QueryFormModel.cs" />
+    <Compile Include="QA\AbnormalForm\QueryParameters.cs" />
+    <Compile Include="AbnormalNotify\CreateFormModel.cs" />
+    <Compile Include="AbnormalNotify\DetailViewModel.cs" />
+    <Compile Include="AbnormalNotify\ClosedFormModel.cs" />
+    <Compile Include="AbnormalNotify\FileModel.cs" />
+    <Compile Include="AbnormalNotify\FormInput.cs" />
+    <Compile Include="AbnormalNotify\GridItem.cs" />
+    <Compile Include="AbnormalNotify\GridViewModel.cs" />
+    <Compile Include="AbnormalNotify\QueryFormModel.cs" />
+    <Compile Include="AbnormalNotify\QueryParameters.cs" />
+    <Compile Include="AbnormalNotify\RepairFormCreateFormInput.cs" />
+    <Compile Include="AbnormalNotify\RepairFormCreateFormModel.cs" />
+    <Compile Include="AbnormalNotify\RepairFormModel.cs" />
+    <Compile Include="AbnormalNotify\RFormSubject.cs" />
+    <Compile Include="QA\AbnormalForm\STDUSEModel.cs" />
+    <Compile Include="QA\CalibrationApply\ApplyStatus.cs" />
+    <Compile Include="QA\CalibrationApply\CharacteristicTypeModel.cs" />
+    <Compile Include="QA\CalibrationApply\CharacteristicUnitModel.cs" />
+    <Compile Include="QA\CalibrationApply\CreateFormModel.cs" />
+    <Compile Include="QA\CalibrationApply\DetailItem.cs" />
+    <Compile Include="QA\CalibrationApply\DetailItemEditFormModel.cs" />
+    <Compile Include="QA\CalibrationApply\DetailItemFormInput.cs" />
+    <Compile Include="QA\CalibrationApply\DetailItemCreateFormModel.cs" />
+    <Compile Include="QA\CalibrationApply\DetailViewModel.cs" />
+    <Compile Include="QA\CalibrationApply\EditFormModel.cs" />
+    <Compile Include="QA\CalibrationApply\FormInput.cs" />
+    <Compile Include="QA\CalibrationApply\FormViewModel.cs" />
+    <Compile Include="QA\CalibrationApply\GridItem.cs" />
+    <Compile Include="QA\CalibrationApply\GridViewModel.cs" />
+    <Compile Include="QA\CalibrationApply\IchiModel.cs" />
+    <Compile Include="QA\CalibrationApply\LogModel.cs" />
+    <Compile Include="QA\CalibrationApply\OwnerFormInput.cs" />
+    <Compile Include="QA\CalibrationApply\OwnerFormModel.cs" />
+    <Compile Include="QA\CalibrationApply\MSACharacteristicFormModel.cs" />
+    <Compile Include="QA\CalibrationApply\MSACharacteristicModel.cs" />
+    <Compile Include="QA\CalibrationApply\MSAIchiModel.cs" />
+    <Compile Include="QA\CalibrationApply\PEFormInput.cs" />
+    <Compile Include="QA\CalibrationApply\PEFormModel.cs" />
+    <Compile Include="QA\CalibrationApply\QAFormInput.cs" />
+    <Compile Include="QA\CalibrationApply\QAFormModel.cs" />
+    <Compile Include="QA\CalibrationApply\QueryFormModel.cs" />
+    <Compile Include="QA\CalibrationApply\QueryParameters.cs" />
+    <Compile Include="QA\CalibrationApply\SubDetailItem.cs" />
+    <Compile Include="QA\CalibrationApply\ToleranceUnitModel.cs" />
+    <Compile Include="QA\CalibrationApply\UnitModel.cs" />
+    <Compile Include="QA\CalibrationApply\VerifyCommentModel.cs" />
+    <Compile Include="QA\CalibrationApply\ManagerFormInput.cs" />
+    <Compile Include="QA\CalibrationApply\ManagerFormModel.cs" />
+    <Compile Include="QA\CalibrationForm\AbnormalFormModel.cs" />
+    <Compile Include="QA\CalibrationForm\DetailItem.cs" />
+    <Compile Include="QA\CalibrationForm\DetailItemEditFormModel.cs" />
+    <Compile Include="QA\CalibrationForm\DetailItemFormInput.cs" />
+    <Compile Include="QA\CalibrationForm\DetailViewModel.cs" />
+    <Compile Include="QA\CalibrationForm\EditFormModel.cs" />
+    <Compile Include="QA\CalibrationForm\FileDownloadModel.cs" />
+    <Compile Include="QA\CalibrationForm\FileModel.cs" />
+    <Compile Include="QA\CalibrationForm\FormInput.cs" />
+    <Compile Include="QA\CalibrationForm\FormStatus.cs" />
+    <Compile Include="QA\CalibrationForm\FormViewModel.cs" />
+    <Compile Include="QA\CalibrationForm\GridItem.cs" />
+    <Compile Include="QA\CalibrationForm\GridViewModel.cs" />
+    <Compile Include="QA\CalibrationForm\LogModel.cs" />
+    <Compile Include="QA\CalibrationForm\PhotoModel.cs" />
+    <Compile Include="QA\CalibrationForm\QRCodeItem.cs" />
+    <Compile Include="QA\CalibrationForm\QueryFormModel.cs" />
+    <Compile Include="QA\CalibrationForm\QueryParameters.cs" />
+    <Compile Include="QA\CalibrationForm\SQLQueryItem.cs" />
+    <Compile Include="QA\CalibrationForm\STDUSEModel.cs" />
+    <Compile Include="QA\CalibrationForm\StepLogCreateFormModel.cs" />
+    <Compile Include="QA\CalibrationForm\StepLogFormInput.cs" />
+    <Compile Include="QA\CalibrationForm\StepLogModel.cs" />
+    <Compile Include="QA\CalibrationForm\SummaryViewModel.cs" />
+    <Compile Include="QA\CalibrationForm\SummaryItem.cs" />
+    <Compile Include="QA\CalibrationForm\TakeJobLogModel.cs" />
+    <Compile Include="QA\CalibrationForm\VerifyFormInput.cs" />
+    <Compile Include="QA\CalibrationForm\VerifyFormModel.cs" />
+    <Compile Include="QA\CalibrationNotify\CharacteristicTypeModel.cs" />
+    <Compile Include="QA\CalibrationNotify\CharacteristicUnitModel.cs" />
+    <Compile Include="QA\CalibrationNotify\DetailItem.cs" />
+    <Compile Include="QA\CalibrationNotify\DetailItemCreateFormModel.cs" />
+    <Compile Include="QA\CalibrationNotify\DetailItemEditFormModel.cs" />
+    <Compile Include="QA\CalibrationNotify\DetailItemFormInput.cs" />
+    <Compile Include="QA\CalibrationNotify\DetailViewModel.cs" />
+    <Compile Include="QA\CalibrationNotify\EditFormModel.cs" />
+    <Compile Include="QA\CalibrationNotify\FormInput.cs" />
+    <Compile Include="QA\CalibrationNotify\FormViewModel.cs" />
+    <Compile Include="QA\CalibrationNotify\GridItem.cs" />
+    <Compile Include="QA\CalibrationNotify\GridViewModel.cs" />
+    <Compile Include="QA\CalibrationNotify\LogModel.cs" />
+    <Compile Include="QA\CalibrationNotify\ManagerFormInput.cs" />
+    <Compile Include="QA\CalibrationNotify\ManagerFormModel.cs" />
+    <Compile Include="QA\CalibrationNotify\NotifyStatus.cs" />
+    <Compile Include="QA\CalibrationNotify\QAFormInput.cs" />
+    <Compile Include="QA\CalibrationNotify\QAFormModel.cs" />
+    <Compile Include="QA\CalibrationNotify\QueryFormModel.cs" />
+    <Compile Include="QA\CalibrationNotify\QueryParameters.cs" />
+    <Compile Include="QA\CalibrationNotify\SubDetailItem.cs" />
+    <Compile Include="QA\CalibrationNotify\ToleranceUnitModel.cs" />
+    <Compile Include="QA\CalibrationNotify\UnitModel.cs" />
+    <Compile Include="QA\CalibrationNotify\VerifyCommentModel.cs" />
+    <Compile Include="QA\CALnMSAReport\CalFormStatus.cs" />
+    <Compile Include="QA\CALnMSAReport\CalGridItem.cs" />
+    <Compile Include="QA\CALnMSAReport\MSAFormStatus.cs" />
+    <Compile Include="QA\CALnMSAReport\MSAGridItem.cs" />
+    <Compile Include="QA\ChangeForm\CreateFormModel.cs" />
+    <Compile Include="QA\ChangeForm\DetailViewModel.cs" />
+    <Compile Include="QA\ChangeForm\FormInput.cs" />
+    <Compile Include="QA\ChangeForm\GridItem.cs" />
+    <Compile Include="QA\ChangeForm\GridViewModel.cs" />
+    <Compile Include="QA\ChangeForm\LogModel.cs" />
+    <Compile Include="QA\ChangeForm\QueryFormModel.cs" />
+    <Compile Include="QA\ChangeForm\QueryParameters.cs" />
+    <Compile Include="DataSync\AbnormalReasonModel.cs" />
+    <Compile Include="DataSync\ApiFormInput.cs" />
+    <Compile Include="DataSync\CheckItemModel.cs" />
+    <Compile Include="DataSync\ControlPointModel.cs" />
+    <Compile Include="DataSync\DownloadDataModel.cs" />
+    <Compile Include="DataSync\DownloadFormModel.cs" />
+    <Compile Include="DataSync\DownloadParameters.cs" />
+    <Compile Include="DataSync\EmgContactModel.cs" />
+    <Compile Include="DataSync\EmgContactTelModel.cs" />
+    <Compile Include="DataSync\EquipmentModel.cs" />
+    <Compile Include="DataSync\EquipmentSpecModel.cs" />
+    <Compile Include="DataSync\FeelOptionModel.cs" />
+    <Compile Include="DataSync\FileModel.cs" />
+    <Compile Include="DataSync\HandlingMethodModel.cs" />
+    <Compile Include="DataSync\JobItem.cs" />
+    <Compile Include="DataSync\JobModel.cs" />
+    <Compile Include="DataSync\MaintenanceFormModel.cs" />
+    <Compile Include="DataSync\MaterialModel.cs" />
+    <Compile Include="DataSync\MaterialSpecModel.cs" />
+    <Compile Include="DataSync\MFormMaterialModel.cs" />
+    <Compile Include="DataSync\OverTimeReason.cs" />
+    <Compile Include="DataSync\PartModel.cs" />
+    <Compile Include="DataSync\PrevCheckResultAbnormalReasonModel.cs" />
+    <Compile Include="DataSync\PrevCheckResultHandlingMethodModel.cs" />
+    <Compile Include="DataSync\PrevCheckResultModel.cs" />
+    <Compile Include="DataSync\RepairFormModel.cs" />
+    <Compile Include="DataSync\StandardModel.cs" />
+    <Compile Include="DataSync\TimeSpanAbnormalReason.cs" />
+    <Compile Include="DataSync\UnPatrolReason.cs" />
+    <Compile Include="DataSync\UnRFIDReason.cs" />
+    <Compile Include="DataSync\UserModel.cs" />
+    <Compile Include="InventoryManagerManagement\CreateFormModel.cs" />
+    <Compile Include="InventoryManagerManagement\DetailViewModel.cs" />
+    <Compile Include="InventoryManagerManagement\EditFormModel.cs" />
+    <Compile Include="InventoryManagerManagement\FormInput.cs" />
+    <Compile Include="InventoryManagerManagement\GridItem.cs" />
+    <Compile Include="Inventory\DetailViewModel.cs" />
+    <Compile Include="Inventory\EditFormModel.cs" />
+    <Compile Include="Inventory\FormInput.cs" />
+    <Compile Include="Inventory\GridItem.cs" />
+    <Compile Include="Inventory\GridViewModel.cs" />
+    <Compile Include="Inventory\InventoryModel.cs" />
+    <Compile Include="Inventory\QueryFormModel.cs" />
+    <Compile Include="Inventory\QueryParameters.cs" />
+    <Compile Include="Inventory\UploadFormInput.cs" />
+    <Compile Include="Inventory\UploadFormModel.cs" />
+    <Compile Include="Inventory\UploadItem.cs" />
+    <Compile Include="Inventory\UploadResultModel.cs" />
+    <Compile Include="QA\CharacteristicManagement\CreateFormModel.cs" />
+    <Compile Include="QA\CharacteristicManagement\DetailViewModel.cs" />
+    <Compile Include="QA\CharacteristicManagement\EditFormModel.cs" />
+    <Compile Include="QA\CharacteristicManagement\FormInput.cs" />
+    <Compile Include="QA\CharacteristicManagement\GridItem.cs" />
+    <Compile Include="QA\CharacteristicManagement\GridViewModel.cs" />
+    <Compile Include="QA\CharacteristicManagement\QueryFormModel.cs" />
+    <Compile Include="QA\CharacteristicManagement\QueryParameters.cs" />
+    <Compile Include="QA\CharacteristicManagement\UnitModel.cs" />
+    <Compile Include="QA\DailyReport\DateKey.cs" />
+    <Compile Include="QA\DailyReport\GridViewModel.cs" />
+    <Compile Include="QA\DailyReport\QueryFormModel.cs" />
+    <Compile Include="QA\DailyReport\QueryParameters.cs" />
+    <Compile Include="QA\DataSync\AbnormalFormItem.cs" />
+    <Compile Include="QA\DataSync\AbnormalFormModel.cs" />
+    <Compile Include="QA\DataSync\CheckItemModel.cs" />
+    <Compile Include="QA\DataSync\ControlPointModel.cs" />
+    <Compile Include="QA\DataSync\DownloadDataModel.cs" />
+    <Compile Include="QA\DataSync\DownloadFormModel.cs" />
+    <Compile Include="QA\DataSync\DownloadParameters.cs" />
+    <Compile Include="QA\DataSync\EquipmentPhotoFormInput.cs" />
+    <Compile Include="QA\DataSync\JobModel.cs" />
+    <Compile Include="QA\DataSync\PhotoModel.cs" />
+    <Compile Include="QA\DataSync\UserModel.cs" />
+    <Compile Include="QA\EquipmentManagement\CALFormInput.cs" />
+    <Compile Include="QA\EquipmentManagement\CALFormModel.cs" />
+    <Compile Include="QA\EquipmentManagement\DetailViewModel.cs" />
+    <Compile Include="QA\EquipmentManagement\EditFormModel.cs" />
+    <Compile Include="QA\EquipmentManagement\FormInput.cs" />
+    <Compile Include="QA\EquipmentManagement\GridItem.cs" />
+    <Compile Include="QA\EquipmentManagement\GridViewModel.cs" />
+    <Compile Include="QA\EquipmentManagement\MSAFormInput.cs" />
+    <Compile Include="QA\EquipmentManagement\MSAFormModel.cs" />
+    <Compile Include="QA\EquipmentManagement\QueryFormModel.cs" />
+    <Compile Include="QA\EquipmentManagement\QueryParameters.cs" />
+    <Compile Include="QA\IchiManagement\CreateFormModel.cs" />
+    <Compile Include="QA\IchiManagement\DetailViewModel.cs" />
+    <Compile Include="QA\IchiManagement\EditFormModel.cs" />
+    <Compile Include="QA\IchiManagement\FormInput.cs" />
+    <Compile Include="QA\IchiManagement\GridItem.cs" />
+    <Compile Include="QA\IchiManagement\GridViewModel.cs" />
+    <Compile Include="QA\IchiManagement\QueryFormModel.cs" />
+    <Compile Include="QA\IchiManagement\QueryParameters.cs" />
+    <Compile Include="QA\IchiManagement\CharacteristicModel.cs" />
+    <Compile Include="QA\LabManagement\CreateFormModel.cs" />
+    <Compile Include="QA\LabManagement\DetailViewModel.cs" />
+    <Compile Include="QA\LabManagement\EditFormModel.cs" />
+    <Compile Include="QA\LabManagement\FormInput.cs" />
+    <Compile Include="QA\LabManagement\GridItem.cs" />
+    <Compile Include="QA\LabManagement\GridViewModel.cs" />
+    <Compile Include="QA\LabManagement\QueryFormModel.cs" />
+    <Compile Include="QA\LabManagement\QueryParameters.cs" />
+    <Compile Include="QA\MobileRelease\FileModel.cs" />
+    <Compile Include="QA\MonthlyReport\DateKey.cs" />
+    <Compile Include="QA\MonthlyReport\GridViewModel.cs" />
+    <Compile Include="QA\MSACharacteristicManagement\CreateFormModel.cs" />
+    <Compile Include="QA\MSACharacteristicManagement\DetailViewModel.cs" />
+    <Compile Include="QA\MSACharacteristicManagement\EditFormModel.cs" />
+    <Compile Include="QA\MSACharacteristicManagement\FormInput.cs" />
+    <Compile Include="QA\MSACharacteristicManagement\GridItem.cs" />
+    <Compile Include="QA\MSACharacteristicManagement\GridViewModel.cs" />
+    <Compile Include="QA\MSACharacteristicManagement\QueryFormModel.cs" />
+    <Compile Include="QA\MSACharacteristicManagement\QueryParameters.cs" />
+    <Compile Include="QA\MSACharacteristicManagement\UnitModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QA\Calendar\Item.cs" />
+    <Compile Include="QA\MSAForm_v2\AnovaResult.cs" />
+    <Compile Include="QA\MSAForm_v2\BiasItem.cs" />
+    <Compile Include="QA\MSAForm_v2\BiasResult.cs" />
+    <Compile Include="QA\MSAForm_v2\CountItem.cs" />
+    <Compile Include="QA\MSAForm_v2\CountReferenceValue.cs" />
+    <Compile Include="QA\MSAForm_v2\CountResult.cs" />
+    <Compile Include="QA\MSAForm_v2\CountValue.cs" />
+    <Compile Include="QA\MSAForm_v2\DetailViewModel.cs" />
+    <Compile Include="QA\MSAForm_v2\EditFormModel.cs" />
+    <Compile Include="QA\MSAForm_v2\FormInput.cs" />
+    <Compile Include="QA\MSAForm_v2\FormStatus.cs" />
+    <Compile Include="QA\MSAForm_v2\GridItem.cs" />
+    <Compile Include="QA\MSAForm_v2\GridViewModel.cs" />
+    <Compile Include="QA\MSAForm_v2\GRRAppraiser.cs" />
+    <Compile Include="QA\MSAForm_v2\GRRItem.cs" />
+    <Compile Include="QA\MSAForm_v2\GRRResult.cs" />
+    <Compile Include="QA\MSAForm_v2\GRRValue.cs" />
+    <Compile Include="QA\MSAForm_v2\LinearityItem.cs" />
+    <Compile Include="QA\MSAForm_v2\LinearityResult.cs" />
+    <Compile Include="QA\MSAForm_v2\LinearityValue.cs" />
+    <Compile Include="QA\MSAForm_v2\LogModel.cs" />
+    <Compile Include="QA\MSAForm_v2\QueryFormModel.cs" />
+    <Compile Include="QA\MSAForm_v2\QueryParameters.cs" />
+    <Compile Include="QA\MSAForm_v2\StabilityItem.cs" />
+    <Compile Include="QA\MSAForm_v2\StabilityResult.cs" />
+    <Compile Include="QA\MSAForm_v2\StabilityValue.cs" />
+    <Compile Include="QA\MSAForm_v2\VerifyFormInput.cs" />
+    <Compile Include="QA\MSAForm_v2\VerifyFormModel.cs" />
+    <Compile Include="QA\MSAIchiManagement\CreateFormModel.cs" />
+    <Compile Include="QA\MSAIchiManagement\DetailViewModel.cs" />
+    <Compile Include="QA\MSAIchiManagement\EditFormModel.cs" />
+    <Compile Include="QA\MSAIchiManagement\FormInput.cs" />
+    <Compile Include="QA\MSAIchiManagement\GridItem.cs" />
+    <Compile Include="QA\MSAIchiManagement\GridViewModel.cs" />
+    <Compile Include="QA\MSAIchiManagement\QueryFormModel.cs" />
+    <Compile Include="QA\MSAIchiManagement\QueryParameters.cs" />
+    <Compile Include="QA\MSANotify\DetailViewModel.cs" />
+    <Compile Include="QA\MSANotify\FormViewModel.cs" />
+    <Compile Include="QA\MSANotify\GridItem.cs" />
+    <Compile Include="QA\MSANotify\GridViewModel.cs" />
+    <Compile Include="QA\MSANotify\LogModel.cs" />
+    <Compile Include="QA\MSANotify\ManagerFormInput.cs" />
+    <Compile Include="QA\MSANotify\ManagerFormModel.cs" />
+    <Compile Include="QA\MSANotify\MSACharacteristicFormModel.cs" />
+    <Compile Include="QA\MSANotify\MSACharacteristicModel.cs" />
+    <Compile Include="QA\MSANotify\MSAIchiModel.cs" />
+    <Compile Include="QA\MSANotify\NotifyStatus.cs" />
+    <Compile Include="QA\MSANotify\PEFormInput.cs" />
+    <Compile Include="QA\MSANotify\PEFormModel.cs" />
+    <Compile Include="QA\MSANotify\QAFormInput.cs" />
+    <Compile Include="QA\MSANotify\QAFormModel.cs" />
+    <Compile Include="QA\MSANotify\QueryFormModel.cs" />
+    <Compile Include="QA\MSANotify\QueryParameters.cs" />
+    <Compile Include="QA\MSANotify\VerifyCommentModel.cs" />
+    <Compile Include="QA\MSAReport\AnovaGridItem.cs" />
+    <Compile Include="QA\MSAReport\AnovaResult.cs" />
+    <Compile Include="QA\MSAReport\AvgAndRGridItem.cs" />
+    <Compile Include="QA\MSAReport\BiasResult.cs" />
+    <Compile Include="QA\MSAReport\CountResult.cs" />
+    <Compile Include="QA\MSAReport\GoOnGoGridItem.cs" />
+    <Compile Include="QA\MSAReport\GridViewModel.cs" />
+    <Compile Include="QA\MSAReport\GRRResult.cs" />
+    <Compile Include="QA\MSAReport\LinearityResult.cs" />
+    <Compile Include="QA\MSAReport\QueryFormModel.cs" />
+    <Compile Include="QA\MSAReport\QueryParameters.cs" />
+    <Compile Include="QA\MSAReport\StabilityResult.cs" />
+    <Compile Include="QA\MSAStationManagement\CreateFormModel.cs" />
+    <Compile Include="QA\MSAStationManagement\DetailViewModel.cs" />
+    <Compile Include="QA\MSAStationManagement\EditFormModel.cs" />
+    <Compile Include="QA\MSAStationManagement\FormInput.cs" />
+    <Compile Include="QA\MSAStationManagement\GridItem.cs" />
+    <Compile Include="QA\MSAStationManagement\GridViewModel.cs" />
+    <Compile Include="QA\MSAStationManagement\QueryFormModel.cs" />
+    <Compile Include="QA\MSAStationManagement\QueryParameters.cs" />
+    <Compile Include="QA\MonthlyReport\QueryFormModel.cs" />
+    <Compile Include="QA\MonthlyReport\QueryParameters.cs" />
+    <Compile Include="QA\QAPerformance\GridItem.cs" />
+    <Compile Include="QA\QAPerformance\QueryFormModel.cs" />
+    <Compile Include="QA\QAPerformance\QueryParameters.cs" />
+    <Compile Include="QA\Shared\EquipmentModel.cs" />
+    <Compile Include="QA\UnitManagement\CreateFormModel.cs" />
+    <Compile Include="QA\UnitManagement\DetailViewModel.cs" />
+    <Compile Include="QA\UnitManagement\EditFormModel.cs" />
+    <Compile Include="QA\UnitManagement\FormInput.cs" />
+    <Compile Include="QA\UnitManagement\GridItem.cs" />
+    <Compile Include="QA\UnitManagement\GridViewModel.cs" />
+    <Compile Include="QA\UnitManagement\QueryFormModel.cs" />
+    <Compile Include="QA\UnitManagement\QueryParameters.cs" />
+    <Compile Include="QA\UnitManagement\ToleranceUnitModel.cs" />
+    <Compile Include="QA\WeeklyReport\DateKey.cs" />
+    <Compile Include="QA\WeeklyReport\GridViewModel.cs" />
+    <Compile Include="QA\WeeklyReport\QueryFormModel.cs" />
+    <Compile Include="QA\WeeklyReport\QueryParameters.cs" />
+    <Compile Include="QS\CheckItemManagement\CheckItemModel.cs" />
+    <Compile Include="QS\CheckItemManagement\CreateFormModel.cs" />
+    <Compile Include="QS\CheckItemManagement\DetailViewModel.cs" />
+    <Compile Include="QS\CheckItemManagement\EditFormModel.cs" />
+    <Compile Include="QS\CheckItemManagement\FormInput.cs" />
+    <Compile Include="QS\CheckItemManagement\GridItem.cs" />
+    <Compile Include="QS\CheckItemManagement\GridViewModel.cs" />
+    <Compile Include="QS\CheckItemManagement\QueryFormModel.cs" />
+    <Compile Include="QS\CheckItemManagement\QueryParameters.cs" />
+    <Compile Include="QS\CheckItemRemarkManagement\DetailViewModel.cs" />
+    <Compile Include="QS\CheckItemRemarkManagement\EditFormModel.cs" />
+    <Compile Include="QS\CheckItemRemarkManagement\FormInput.cs" />
+    <Compile Include="QS\CheckItemRemarkManagement\GridItem.cs" />
+    <Compile Include="QS\CheckItemRemarkManagement\GridViewModel.cs" />
+    <Compile Include="QS\CheckItemRemarkManagement\QueryFormModel.cs" />
+    <Compile Include="QS\CheckItemRemarkManagement\QueryParameters.cs" />
+    <Compile Include="QS\CheckItemRemarkManagement\RemarkModel.cs" />
+    <Compile Include="QS\CheckListManagement\AuditTypeModel.cs" />
+    <Compile Include="QS\CheckListManagement\CheckItemModel.cs" />
+    <Compile Include="QS\CheckListManagement\CheckResultModel.cs" />
+    <Compile Include="QS\CheckListManagement\CheckTypeModel.cs" />
+    <Compile Include="QS\CheckListManagement\CreateFormModel.cs" />
+    <Compile Include="QS\CheckListManagement\DetailViewModel.cs" />
+    <Compile Include="QS\CheckListManagement\EditFormModel.cs" />
+    <Compile Include="QS\CheckListManagement\FactoryModel.cs" />
+    <Compile Include="QS\CheckListManagement\FormInput.cs" />
+    <Compile Include="QS\CheckListManagement\GradeModel.cs" />
+    <Compile Include="QS\CheckListManagement\GridItem.cs" />
+    <Compile Include="QS\CheckListManagement\GridViewModel.cs" />
+    <Compile Include="QS\CheckListManagement\MonthlyReportItem.cs" />
+    <Compile Include="QS\CheckListManagement\PhotoModel.cs" />
+    <Compile Include="QS\CheckListManagement\QueryFormModel.cs" />
+    <Compile Include="QS\CheckListManagement\QueryParameters.cs" />
+    <Compile Include="QS\CheckListManagement\RemarkModel.cs" />
+    <Compile Include="QS\CheckListManagement\ResDepartmentModel.cs" />
+    <Compile Include="QS\CheckListManagement\RiskModel.cs" />
+    <Compile Include="QS\CheckListManagement\ShiftModel.cs" />
+    <Compile Include="QS\CheckListManagement\StationModel.cs" />
+    <Compile Include="QS\DataSync\CheckItemModel.cs" />
+    <Compile Include="QS\DataSync\CheckTypeModel.cs" />
+    <Compile Include="QS\DataSync\DownloadDataModel.cs" />
+    <Compile Include="QS\DataSync\FactoryModel.cs" />
+    <Compile Include="QS\DataSync\RemarkModel.cs" />
+    <Compile Include="QS\DataSync\ResDepartmentModel.cs" />
+    <Compile Include="QS\DataSync\ShiftModel.cs" />
+    <Compile Include="QS\DataSync\StationModel.cs" />
+    <Compile Include="QS\DataSync\UserModel.cs" />
+    <Compile Include="QS\FactoryCheckItemManagement\CheckItemModel.cs" />
+    <Compile Include="QS\FactoryCheckItemManagement\DetailViewModel.cs" />
+    <Compile Include="QS\FactoryCheckItemManagement\EditFormModel.cs" />
+    <Compile Include="QS\FactoryCheckItemManagement\FormInput.cs" />
+    <Compile Include="QS\FactoryCheckItemManagement\GridItem.cs" />
+    <Compile Include="QS\FactoryCheckItemManagement\GridViewModel.cs" />
+    <Compile Include="QS\FactoryCheckItemManagement\QueryFormModel.cs" />
+    <Compile Include="QS\FactoryCheckItemManagement\QueryParameters.cs" />
+    <Compile Include="QS\FactoryManagement\CreateFormModel.cs" />
+    <Compile Include="QS\FactoryManagement\DetailViewModel.cs" />
+    <Compile Include="QS\FactoryManagement\EditFormModel.cs" />
+    <Compile Include="QS\FactoryManagement\FormInput.cs" />
+    <Compile Include="QS\FactoryManagement\GridItem.cs" />
+    <Compile Include="QS\FactoryManagement\GridViewModel.cs" />
+    <Compile Include="QS\FactoryManagement\QueryFormModel.cs" />
+    <Compile Include="QS\FactoryManagement\QueryParameters.cs" />
+    <Compile Include="QS\FactoryStationManagement\StationModel.cs" />
+    <Compile Include="QS\FactoryStationManagement\DetailViewModel.cs" />
+    <Compile Include="QS\FactoryStationManagement\EditFormModel.cs" />
+    <Compile Include="QS\FactoryStationManagement\FormInput.cs" />
+    <Compile Include="QS\FactoryStationManagement\GridItem.cs" />
+    <Compile Include="QS\FactoryStationManagement\GridViewModel.cs" />
+    <Compile Include="QS\FactoryStationManagement\QueryFormModel.cs" />
+    <Compile Include="QS\FactoryStationManagement\QueryParameters.cs" />
+    <Compile Include="QS\MobileRelease\FileModel.cs" />
+    <Compile Include="QS\PhotoManagement\GridItem.cs" />
+    <Compile Include="QS\PhotoManagement\GridViewModel.cs" />
+    <Compile Include="QS\RemarkManagement\CreateFormModel.cs" />
+    <Compile Include="QS\RemarkManagement\DetailViewModel.cs" />
+    <Compile Include="QS\RemarkManagement\EditFormModel.cs" />
+    <Compile Include="QS\RemarkManagement\FormInput.cs" />
+    <Compile Include="QS\RemarkManagement\GridItem.cs" />
+    <Compile Include="QS\RemarkManagement\GridViewModel.cs" />
+    <Compile Include="QS\RemarkManagement\QueryFormModel.cs" />
+    <Compile Include="QS\RemarkManagement\QueryParameters.cs" />
+    <Compile Include="QS\ResDepartmentManagement\CreateFormModel.cs" />
+    <Compile Include="QS\ResDepartmentManagement\DetailViewModel.cs" />
+    <Compile Include="QS\ResDepartmentManagement\EditFormModel.cs" />
+    <Compile Include="QS\ResDepartmentManagement\FormInput.cs" />
+    <Compile Include="QS\ResDepartmentManagement\GridItem.cs" />
+    <Compile Include="QS\ResDepartmentManagement\GridViewModel.cs" />
+    <Compile Include="QS\ResDepartmentManagement\QueryFormModel.cs" />
+    <Compile Include="QS\ResDepartmentManagement\QueryParameters.cs" />
+    <Compile Include="QS\ShiftManagement\CreateFormModel.cs" />
+    <Compile Include="QS\ShiftManagement\DetailViewModel.cs" />
+    <Compile Include="QS\ShiftManagement\EditFormModel.cs" />
+    <Compile Include="QS\ShiftManagement\FormInput.cs" />
+    <Compile Include="QS\ShiftManagement\GridItem.cs" />
+    <Compile Include="QS\ShiftManagement\GridViewModel.cs" />
+    <Compile Include="QS\ShiftManagement\QueryFormModel.cs" />
+    <Compile Include="QS\ShiftManagement\QueryParameters.cs" />
+    <Compile Include="QS\StationManagement\CreateFormModel.cs" />
+    <Compile Include="QS\StationManagement\DetailViewModel.cs" />
+    <Compile Include="QS\StationManagement\EditFormModel.cs" />
+    <Compile Include="QS\StationManagement\FormInput.cs" />
+    <Compile Include="QS\StationManagement\GridItem.cs" />
+    <Compile Include="QS\StationManagement\GridViewModel.cs" />
+    <Compile Include="QS\StationManagement\QueryFormModel.cs" />
+    <Compile Include="QS\StationManagement\QueryParameters.cs" />
+    <Compile Include="Shared\ASEUserModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{98e5ac9f-5451-4ec8-b7ba-7bc9a076c74f}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Resources\Resources.csproj">
+      <Project>{5ec06c20-a23b-4617-88dd-0712d21ac987}</Project>
+      <Name>Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{6fcf0532-ca44-49b9-9d93-31f10a25b572}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\PagedList.css" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>此專案參照此電腦中缺少的  NuGet 套件。啟用「NuGet 套件還原」以便下載。如需詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的檔案為 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

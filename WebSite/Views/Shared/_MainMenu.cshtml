@@ -1,0 +1,120 @@
+﻿@model Models.Authenticated.Account
+
+@*@{
+    var color = new Dictionary<string, string>()
+    {
+        { "A", "#5A5A5A" },
+        { "B", "#DA5430" },
+        { "C", "#FEE074" },
+        { "F", "#68BC31" },
+        { "G", "#2091CF" },
+        { "H", "#AF4E96" }
+    };
+}*@
+
+@{
+    
+}
+
+@if (Model != null)
+{
+    <ul class="nav nav-list">
+        <li>
+            <a href="@Url.Action("Index", "Home", new { area = "" })">
+                <i class="menu-icon fa fa-home"></i>
+                <span class="menu-text">
+                    @if (ViewBag.Lang == "en-us")
+                    {
+                        <text>Home</text>
+                    }
+                    else if (ViewBag.Lang == "zh-cn")
+                    {
+                        <text>首页</text>
+                    }
+                    else
+                    {
+                        <text>首頁</text>
+                    } 
+                </span>
+            </a>
+        </li>
+
+        @foreach (var ancestor in Model.MenuItemList)
+        {
+            <li data-id="@ancestor.ID" class="Level1Menu">
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa @ancestor.Icon"></i>
+                    <span class="menu-text"> @ancestor.Description[ViewBag.Lang] </span>
+                    @*<span style="color:@color[ancestor.ID]" class="menu-text"> @ancestor.Description[ViewBag.Lang] </span>*@
+
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                    @foreach (var parent in ancestor.SubItemList)
+                    {
+                        <li data-id="@parent.ID" class="hsub Level2Menu">
+                            @if (!string.IsNullOrEmpty(parent.Controller))
+                            {
+                                <a href="@Url.Action(parent.Action, parent.Controller, new { area = parent.Area })">
+                                    <i class="fa @parent.Icon" style="margin-right:3px;"></i>
+
+                                    <span class="menu-text">
+                                        @parent.Description[ViewBag.Lang]
+                                    </span>
+
+                                    @if (parent.SubItemList != null && parent.SubItemList.Count > 0)
+                                    {
+                                        <b class="arrow fa fa-angle-down"></b>
+                                    }
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="#" class="dropdown-toggle">
+                                    <i class="fa @parent.Icon" style="margin-right:3px;"></i>
+
+                                    @parent.Description[ViewBag.Lang]
+
+                                    @if (parent.SubItemList != null && parent.SubItemList.Count > 0)
+                                    {
+                                        <b class="arrow fa fa-angle-down"></b>
+                                    }
+                                </a>
+                            }
+
+                            @if (parent.SubItemList != null && parent.SubItemList.Count > 0)
+                            {
+                                <b class="arrow"></b>
+
+                                <ul class="submenu">
+                                    @foreach (var item in parent.SubItemList)
+                                    {
+                                        <li data-id="@item.ID" class="Level3Menu">
+                                            @if (item.Description[ViewBag.Lang].Length >= 10)
+                                            {
+                                                <a href="@Url.Action(item.Action, item.Controller, new { area = item.Area })" style="font-size:12px;">
+                                                    <i class="menu-icon fa @item.Icon"></i>
+                                                    @item.Description[ViewBag.Lang]
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action(item.Action, item.Controller, new { area = item.Area })">
+                                                    <i class="menu-icon fa @item.Icon"></i>
+                                                    @item.Description[ViewBag.Lang]
+                                                </a>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+    </ul>
+}

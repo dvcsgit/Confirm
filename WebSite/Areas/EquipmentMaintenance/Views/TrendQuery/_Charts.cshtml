@@ -1,0 +1,73 @@
+﻿@model Utility.Models.RequestResult
+
+@if (!Model.IsSuccess)
+{ 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.InfoDialog('@Model.Message');
+        });
+    </script>
+}
+else
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#TrendChartFilterP').click(function () {
+                var checked = $(this).prop('checked');
+
+                if (checked) {
+                    $('.TrendChart').each(function () {
+                        if ($(this).data('type') == 'P') {
+                            $(this).show();
+                        }
+                    });
+                }
+                else {
+                    $('.TrendChart').each(function () {
+                        if ($(this).data('type') == 'P') {
+                            $(this).hide();
+                        }
+                    });
+                }
+            });
+
+            $('#TrendChartFilterM').click(function () {
+                var checked = $(this).prop('checked');
+
+                if (checked) {
+                    $('.TrendChart').each(function () {
+                        if ($(this).data('type') == 'M') {
+                            $(this).show();
+                        }
+                    });
+                }
+                else {
+                    $('.TrendChart').each(function () {
+                        if ($(this).data('type') == 'M') {
+                            $(this).hide();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    
+    var viewModels = Model.Data as List<Models.EquipmentMaintenance.TrendQuery.ChartViewModel>;
+
+    <p>
+        <label>
+            <input id="TrendChartFilterP" class="ace ace-checkbox-2" type="checkbox" value="P" checked="checked">
+            <span class="lbl"> 巡檢</span>
+        </label>
+        <label>
+            <input id="TrendChartFilterM" class="ace ace-checkbox-2" type="checkbox" value="M" checked="checked">
+            <span class="lbl"> 保養</span>
+        </label>
+    </p>
+    
+    foreach (var viewModel in viewModels)
+    {
+    @Html.Partial("_Chart", viewModel)
+    <div class="space"></div>
+    }
+}

@@ -1,0 +1,198 @@
+﻿@model Models.ASE.QA.ChangeForm.DetailViewModel
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Verify @Resources.Resource.Flow</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th>@Resources.Resource.Role</th>
+                        <th>@Resources.Resource.VerifyUser</th>
+                        <th>@Resources.Resource.NotifyTime</th>
+                        <th>@Resources.Resource.VerifyTime</th>
+                        <th>@Resources.Resource.VerifyResult</th>
+                        <th>@Resources.Resource.VerifyComment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.LogList)
+                    {
+                        <tr>
+                            <td>@item.Role</td>
+                            <td>@item.User</td>
+                            <td>@item.NotifyTimeString</td>
+                            <td>@item.VerifyTimeString</td>
+                            <td>@item.VerifyResultDescription</td>
+                            <td>@item.VerifyComment</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.CalibrationChangeForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th><label>單號</label></th>
+                    <td>@Html.DisplayFor(x => x.VHNO)</td>
+                    <th><label>狀態</label></th>
+                    <td>
+                        @if (Model.Status == "1")
+                        {
+                            <span class="label label-lg label-primary arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.Status == "2")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.Status == "3")
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else
+                        {
+                            <span>@Model.StatusDescription</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Factory)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Factory)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.OrganizationDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.OrganizationDescription)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.CreateTimeString)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.CreateTimeString)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ChangeReason)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.ChangeReason)</td>
+                </tr>
+                @if (Model.ChangeType == "4")
+                {
+                    <tr>
+                        <th><label>預計維修完成日</label></th>
+                        <td colspan="3">@Html.DisplayFor(x => x.FixFinishedDateString)</td>
+                    </tr>
+                }
+                @if (Model.ChangeType == "9")
+                {
+                    <tr>
+                        <th><label>新校正週期</label></th>
+                        <td colspan="3">@Html.DisplayFor(x => x.NewCALCycle)</td>
+                    </tr>
+                }
+                @if (Model.ChangeType == "9")
+                {
+                    <tr>
+                        <th><label>新MSA週期</label></th>
+                        <td colspan="3">@Html.DisplayFor(x => x.NewMSACycle)</td>
+                    </tr>
+                }
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.StatusDescription)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.StatusDescription)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ChangeTypeDescription)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.ChangeTypeDescription)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Owner)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Owner)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.PE)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.PE)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.OwnerManager)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.OwnerManager)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.PEManager)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.PEManager)</td>
+                </tr>
+                @if (Model.ChangeType == "5")
+                {
+                    <tr>
+                        <th class="col-sm-1"><label>移轉後設備負責人</label></th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.NewOwner)</td>
+                        <th class="col-sm-1"><label>移轉後製程負責人</label></th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.NewPE)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1"><label>移轉後設備負責主管</label></th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.NewOwnerManager)</td>
+                        <th class="col-sm-1"><label>移轉後製程負責人主管</label></th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.NewPEManager)</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.ItemList != null && Model.ItemList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">異動設備</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>廠別</th>
+                            <th>@Resources.Resource.Department</th>
+                            <th>@Resources.Resource.CalNo</th>
+                            <th>@Resources.Resource.Status</th>
+                            <th>@Resources.Resource.SerialNo</th>
+                            <th>@Resources.Resource.IchiName</th>
+                            <th>@Resources.Resource.Brand</th>
+                            <th>@Resources.Resource.Model</th>
+                            <th>@Resources.Resource.EquipmentOwner</th>
+                            <th>@Resources.Resource.EquipmentOwnerManager</th>
+                            <th>@Resources.Resource.PE</th>
+                            <th>@Resources.Resource.PEManager</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ItemList)
+                        {
+                            <tr>
+                                <td>@item.Factory</td>
+                            <td>@item.OrganizationDescription</td>
+                            <td>@item.CalNo</td>
+                            <td>@item.StatusDescription</td>
+                            <td>@item.SerialNo</td>
+                            <td>@item.IchiDisplay</td>
+                            <td>@item.Brand</td>
+                            <td>@item.Model</td>
+                            <td>@item.Owner</td>
+                            <td>@item.OwnerManager</td>
+                            <td>@item.PE</td>
+                            <td>@item.PEManager</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

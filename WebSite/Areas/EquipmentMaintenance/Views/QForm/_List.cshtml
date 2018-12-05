@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Models.EquipmentMaintenance.QFormManagement.GridItem>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Resources.Resource.SearchResults
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1"></th>
+                        <th>@Resources.Resource.Status</th>
+                        <th>@Resources.Resource.VHNO</th>
+                        <th>@Resources.Resource.Subject</th>
+                        <th>@Resources.Resource.Contact</th>
+                        <th>@Resources.Resource.CreateTime</th>
+                        <th>@Resources.Resource.TakeJobUser</th>
+                        <th>@Resources.Resource.TakeJobTime</th>
+                        <th>@Resources.Resource.ClosedTime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="col-sm-1 center">
+                                <div class="action-buttons">
+                                    <a class="blue" href="#" onclick="Detail('@item.UniqueID');" title="@Resources.Resource.Detail">
+                                        <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                    </a>
+
+                                    @if (item.Status == 2 && (item.JobUserID == (Session["Account"] as Models.Authenticated.Account).ID || (Session["Account"] as Models.Authenticated.Account).OrganizationUniqueID=="*"))
+                                    {
+                                        <a class="green" href="#" onclick="Edit('@item.UniqueID');" title="@Resources.Resource.Edit">
+                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                @if (item.Status == 1)
+                                {
+                                    <span class="label label-lg label-warning arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.Status == 2)
+                                {
+                                    <span class="label label-lg label-info arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.Status == 3)
+                                {
+                                    <span class="label label-lg label-success arrowed-right">@item.StatusDescription</span>
+                                }
+                                else
+                                {
+                                    <span>@item.StatusDescription</span>
+                                }
+                            </td>
+                            <td>@item.VHNO</td>
+                            <td>@item.Subject</td>
+                            <td>@item.ContactName</td>
+                            <td>@item.CreateTimeString</td>
+                            <td>@item.JobUser</td>
+                            <td>@item.TakeJobTimeString</td>
+                            <td>@item.ClosedTimeString</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

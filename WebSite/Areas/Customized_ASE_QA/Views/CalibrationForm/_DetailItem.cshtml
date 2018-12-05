@@ -1,0 +1,67 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetDetailItemList();
+
+        $('#divEditDetailItemWidget').hide();
+    });
+
+    function GetDetailItemList() {
+        var list = $('#divDetailItemList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetDetailItemList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var EditDetailItem = function (seq) {
+        $('#divDetailItemListWidget').hide();
+        $('#divEditDetailItemWidget').show();
+
+        var form = $('#divEditDetailItem');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("EditDetailItem")',
+            data: { Seq: seq },
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var CanelEditDetailItem = function () {
+        $('#divDetailItemListWidget').show();
+        $('#divEditDetailItem').empty();
+        $('#divEditDetailItemWidget').hide();
+    };
+</script>
+
+<div id="divDetailItemListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Calibration @Resources.Resource.Information</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+            <div id="divDetailItemList"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divEditDetailItemWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Edit @Resources.Resource.Calibration @Resources.Resource.Information</h5>
+    </div>
+
+    <div class="widget-body">
+        <div id="divEditDetailItem"></div>
+    </div>
+</div>

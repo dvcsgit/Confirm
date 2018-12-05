@@ -1,0 +1,113 @@
+﻿@model Models.FlowManagement.CreateFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateForm");
+
+        $('.Form').each(function () {
+            if ($(this).data('checked') == 'Y') {
+                $(this).prop('checked', true);
+            }
+        });
+    });
+
+    var Save = function () {
+        var form = $('#CreateForm');
+
+        if (form.valid()) {
+
+            var data = [];
+
+            $('.Form').each(function () {
+                if ($(this).prop('checked')) {
+                    data.push($(this).data('form') + '@Utility.Define.Seperator' + $(this).data('repairformtypeuniqueid'));
+                }
+            });
+
+            $('#FormInput_Forms').val(JSON.stringify(data));
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Create")',
+                data: form.serialize() + '&PageStates=' + PageState(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Query();
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.Flow</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm" }))
+            {
+                @Html.HiddenFor(x => x.OrganizationUniqueID)
+                @Html.HiddenFor(x => x.FormInput.Forms)
+                
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                        <td class="col-sm-11">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td class="col-sm-11">
+                            @Html.TextBoxFor(x => x.FormInput.Description, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Description)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Forms)</th>
+                        <td>
+                            @foreach (var item in Model.FormList)
+                            {
+                                <label>
+                                    <input class="ace ace-checkbox-2 Form" type="checkbox" value="true" data-form="@item.Form" data-repairformtypeuniqueid="@item.RepairFormTypeUniqueID" data-checked="@(Model.FlowFormList.Any(x=>x.Form==item.Form.ToString()&&x.RFormTypeUniqueID==item.RepairFormTypeUniqueID) ? "Y" : "N")">
+                                    <span class="lbl"> @item.Description</span>
+                                </label>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_Select", Model.AncestorOrganizationUniqueID)

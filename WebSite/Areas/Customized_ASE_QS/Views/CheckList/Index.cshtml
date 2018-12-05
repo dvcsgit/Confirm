@@ -1,0 +1,354 @@
+﻿@model Models.ASE.QS.CheckListManagement.QueryFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+    <link href="@Url.Content("~/assets/css/datepicker.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/css/select2.css")" rel="stylesheet" />
+<link href="@Url.Content("~/assets/css/colorbox.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.maskedinput.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-datepicker.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/locales/bootstrap-datepicker."+ViewBag.Lang+".js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/select2.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.colorbox-min.js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+
+        $('.Factory').hide();
+        $('.Shift').hide();
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        $('#AllFactory').click(function () {
+            if ($(this).prop('checked')) {
+                $('.FactoryCheckBox').prop('checked', false);
+                $('.Factory').hide();
+            }
+            else {
+                $('.Factory').show();
+            }
+        });
+
+        $('#AllShift').click(function () {
+            if ($(this).prop('checked')) {
+                $('.ShiftCheckBox').prop('checked', false);
+                $('.Shift').hide();
+            }
+            else {
+                $('.Shift').show();
+            }
+        });
+
+        Query();
+    });
+
+    var Form = function (url, data) {
+        $('#divQueryFormContainer').hide();
+        $('#divFormContainer').show();
+
+        var form = $('#divForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            data: data,
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    function Query() {
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+
+        var div = $('#divQueryResult');
+
+        var factorys = [];
+
+        $('.FactoryCheckBox').each(function () {
+            if ($(this).prop('checked')) {
+                factorys.push($(this).val());
+            }
+        });
+
+        $('#Parameters_Factorys').val(JSON.stringify(factorys));
+
+        var shifts = [];
+
+        $('.ShiftCheckBox').each(function () {
+            if ($(this).prop('checked')) {
+                shifts.push($(this).val());
+            }
+        });
+
+        $('#Parameters_Shifts').val(JSON.stringify(shifts));
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Query")',
+            data: $('#QueryForm').serialize(),
+            dataType: "html",
+            beforeSend: function () { div.Overlay('show'); },
+            success: function (data) { div.Overlay('show').html(data); },
+            error: function (x, h, r) { div.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var Detail = function (uniqueID) {
+        Form('@Url.Action("Detail")', { UniqueID: uniqueID });
+    }
+
+    var Edit = function (uniqueID) {
+        Form('@Url.Action("Edit")', { UniqueID: uniqueID });
+    }
+
+    var Create = function (factoryUniqueID) {
+        Form('@Url.Action("Create")', { FactoryUniqueID: factoryUniqueID });
+    };
+
+    var Copy = function (uniqueID) {
+        Form('@Url.Action("Copy")', { UniqueID: uniqueID });
+    }
+
+    var Cancel = function () {
+        $('#divForm').empty();
+        $('#divQueryResult').empty();
+
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+    };
+
+    var Delete = function (uniqueID) {
+        $.ConfirmDialog('@string.Format("{0} {1} ?", Resources.Resource.Confirm, Resources.Resource.Delete)', function (confirmed) {
+            if (confirmed) {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Delete")',
+                    data: { UniqueID: uniqueID },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+    };
+
+    var Report = function (uniqueID) {
+        var selecteds = [];
+
+        if (uniqueID != '') {
+            selecteds.push(uniqueID);
+        }
+        else {
+            $('.CheckList').each(function () {
+                if ($(this).prop('checked')) {
+                    selecteds.push($(this).val());
+                }
+            });
+        }
+
+        if (selecteds.length == 0) {
+            $.InfoDialog('請選擇查檢紀錄');
+        }
+        else
+        {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Report")',
+                data: { Selecteds: JSON.stringify(selecteds) },
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+                    if (data.IsSuccess) {
+                        $("body").append("<iframe src='@Url.Action("ReportDownload")' style='display: none;' ></iframe>");
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                }
+            });
+        }
+    }
+
+    var MonthlyReport = function () {
+        var selecteds = [];
+
+        $('.CheckList').each(function () {
+            if ($(this).prop('checked')) {
+                selecteds.push($(this).val());
+            }
+        });
+
+        if (selecteds.length == 0) {
+            $.InfoDialog('請選擇查檢紀錄');
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("MonthlyReport")',
+                data: { Selecteds: JSON.stringify(selecteds) },
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+                    if (data.IsSuccess) {
+                        $("body").append("<iframe src='@Url.Action("MonthlyReportDownload")' style='display: none;' ></iframe>");
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                }
+            });
+        }
+    }
+</script>
+}
+
+<div class="row" id="divQueryFormContainer">
+    <div class="col-xs-12">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Search</h5>
+                <div class="widget-toolbar">
+                    <a href="#" onclick="Query(); return false;">
+                        <i class="ace-icon fa fa-search white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+                    {
+                        @Html.HiddenFor(x => x.Parameters.Factorys)
+                        @Html.HiddenFor(x => x.Parameters.Shifts)
+
+                        <table class="table table-bordered table-input">
+                            <tr>
+                                <th class="col-sm-1"><label>稽核日期</label></th>
+                                <td class="col-sm-2">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.BeginDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="col-sm-2">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.EndDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.VHNO)</th>
+                                <td class="col-sm-6">@Html.TextBoxFor(x => x.Parameters.VHNO)</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1"><label>廠別</label></th>
+                                <td colspan="4" class="col-sm-11">
+                                    <label>
+                                        <input id="AllFactory" class="ace ace-checkbox-2" type="checkbox" value="" checked="checked">
+                                        <span class="lbl"> @Resources.Resource.SelectAll</span>
+                                    </label>
+
+                                    @foreach (var factory in Model.FactoryList)
+                                    {
+                                        <label class="Factory">
+                                            <input class="ace ace-checkbox-2 FactoryCheckBox" type="checkbox" value="@factory.UniqueID">
+                                            <span class="lbl"> @factory.Description</span>
+                                        </label>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1"><label>廠別(模糊查詢)</label></th>
+                                <td colspan="2">@Html.TextBoxFor(x => x.Parameters.FactoryDescription)</td>
+                                <th class="col-sm-1"><label>CARNO</label></th>
+                                <td>@Html.TextBoxFor(x=>x.Parameters.CarNo)</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1"><label>班別</label></th>
+                                <td colspan="4" class="col-sm-11">
+                                    <label>
+                                        <input id="AllShift" class="ace ace-checkbox-2" type="checkbox" value="" checked="checked">
+                                        <span class="lbl"> @Resources.Resource.SelectAll</span>
+                                    </label>
+
+                                    @foreach (var shift in Model.ShiftList)
+                                    {
+                                        <label class="Shift">
+                                            <input class="ace ace-checkbox-2 ShiftCheckBox" type="checkbox" value="@shift.UniqueID">
+                                            <span class="lbl"> @shift.Description</span>
+                                        </label>
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+        <div id="divQueryResult" style="min-height:200px;"></div>
+    </div>
+</div>
+
+<div class="row" id="divFormContainer">
+    <div class="col-xs-12">
+        <div id="divForm" style="min-height:200px;"></div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Models.EquipmentMaintenance.AbnormalReasonManagement.HandlingMethodModel>
+
+<table class="table table-striped table-bordered table-hover nowrap">
+    <thead class="thin-border-bottom">
+        <tr>
+            <th class="col-sm-1"></th>
+            <th>@Resources.Resource.HandlingMethodType</th>
+            <th>@Resources.Resource.HandlingMethodID</th>
+            <th>@Resources.Resource.HandlingMethodDescription</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="col-sm-1 center">
+                    <div class="action-buttons">
+                        <a class="red" href="#" onclick="DeleteSelected('@item.UniqueID'); return false;" title="@Resources.Resource.Delete">
+                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                        </a>
+                    </div>
+                </td>
+                <td>@item.HandlingMethodType</td>
+                <td>@item.ID</td>
+                <td>@item.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

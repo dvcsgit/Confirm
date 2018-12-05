@@ -1,0 +1,76 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(function () {
+        $('#divTree').jstree({
+            "core": { animation: 0 },
+            "json_data": {
+                "data": [@(Html.Raw(Model))],
+                "ajax": {
+                    "url": '@Url.Action("GetTreeItem")',
+                    'cache': false,
+                    "data": function (n) {
+                        return {
+                            OrganizationUniqueID: n.attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID"),
+                            PipelineUniqueID: n.attr("@Utility.Define.EnumTreeAttribute.PipelineUniqueID"),
+                            PipePointType: n.attr("@Utility.Define.EnumTreeAttribute.PipePointType"),
+                            PipePointUniqueID: n.attr("@Utility.Define.EnumTreeAttribute.PipePointUniqueID"),
+                            FolderUniqueID: n.attr("@Utility.Define.EnumTreeAttribute.FolderUniqueID")
+                        };
+                    }
+                }
+            },
+            "animation": 0,
+            "plugins": ["themes", "json_data", "ui"],
+            "themes": { "theme": "apple", "dots": true, "icons": true },
+            "ui": { "select_limit": 1 }
+        }).bind("select_node.jstree", function (e, data) {
+            switch (data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.NodeType")) {
+                case '@Utility.Define.EnumTreeNodeType.Organization':
+                case '@Utility.Define.EnumTreeNodeType.Pipeline':
+                case '@Utility.Define.EnumTreeNodeType.PipePointType':
+                case '@Utility.Define.EnumTreeNodeType.PipePoint':
+                case '@Utility.Define.EnumTreeNodeType.Folder':
+                    $('#Parameters_OrganizationUniqueID').val(data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID"));
+                    $('#Parameters_PipelineUniqueID').val(data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.PipelineUniqueID"));
+                    $('#Parameters_PipePointType').val(data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.PipePointType"));
+                    $('#Parameters_PipePointUniqueID').val(data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.PipePointUniqueID"));
+                    $('#Parameters_FolderUniqueID').val(data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.FolderUniqueID"));
+                    Query();
+                    break;
+                case '@Utility.Define.EnumTreeNodeType.File':
+                    Detail(data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.FileUniqueID"));
+                    break;
+            }
+
+            e.preventDefault();
+        }).bind("hover_node.jstree", function (e, data) {
+            var tooltip = data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.ToolTip");
+
+            if (tooltip != '') {
+                var a = data.rslt.obj.find('a:first');
+
+                a.tooltip({
+                    'title': tooltip
+                });
+
+                a.tooltip('show');
+            }
+
+            e.preventDefault();
+        }).bind("load_node.jstree", function (e, data) {
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Organization"]').find('a:first ins').remove();
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Pipeline"]').find('a:first ins').addClass('fa fa-sliders red').removeClass('jstree-icon');
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.PipePointType"]').find('a:first ins').addClass('fa fa-chevron-right red').removeClass('jstree-icon');
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.PipePoint"]').find('a:first ins').addClass('fa fa-map-marker red').removeClass('jstree-icon');
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Folder"]').find('a:first ins').addClass('fa fa-folder red').removeClass('jstree-icon');
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.File"]').find('a:first ins').addClass('fa fa-file red').removeClass('jstree-icon');
+
+            e.preventDefault();
+        });
+    });
+</script>
+
+<div id="divTree"></div>
+
+

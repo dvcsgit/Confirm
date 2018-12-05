@@ -1,0 +1,274 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#CharacteristicUnitList').hide();
+        $('#ToleranceUnitList').hide();
+
+        $('#FormInput_CharacteristicUniqueID').change(function () {
+            OnCharacteristicChanged();
+        });
+
+        if ($('#FormInput_CharacteristicUniqueID').val() == '@Utility.Define.OTHER') {
+            $('#FormInput_CharacteristicRemark').show();
+        }
+        else {
+            $('#FormInput_CharacteristicRemark').val('').hide();
+        }
+
+        $('#FormInput_UnitUniqueID').change(function () {
+            OnUnitChanged();
+        });
+
+        if ($('#FormInput_UnitUniqueID').val() == '@Utility.Define.OTHER') {
+            $('#FormInput_UnitRemark').show();
+        }
+        else {
+            $('#FormInput_UnitRemark').val('').hide();
+        }
+
+        $('#FormInput_LowerUsingRangeUnitUniqueID').change(function () {
+            OnLowerUsingRangeUnitChanged();
+        });
+
+        if ($('#FormInput_LowerUsingRangeUnitUniqueID').val() == '@Utility.Define.OTHER') {
+            $('#FormInput_LowerUsingRangeUnitRemark').show();
+        }
+        else {
+            $('#FormInput_LowerUsingRangeUnitRemark').val('').hide();
+        }
+
+        $('#FormInput_UpperUsingRangeUnitUniqueID').change(function () {
+            OnUpperUsingRangeUnitChanged();
+        });
+
+        if ($('#FormInput_UpperUsingRangeUnitUniqueID').val() == '@Utility.Define.OTHER') {
+            $('#FormInput_UpperUsingRangeUnitRemark').show();
+        }
+        else {
+            $('#FormInput_UpperUsingRangeUnitRemark').val('').hide();
+        }
+
+        $('#FormInput_UsingRangeToleranceUnitUniqueID').change(function () {
+            OnUsingRangeToleranceUnitChanged();
+        });
+
+        if ($('#FormInput_UsingRangeToleranceUnitUniqueID').val() == '@Utility.Define.OTHER') {
+            $('#FormInput_UsingRangeToleranceUnitRemark').show();
+        }
+        else {
+            $('#FormInput_UsingRangeToleranceUnitRemark').val('').hide();
+        }
+
+        $('.CalibrationPointUnitUniqueID').each(function () {
+            var unitUniqueID = $(this).data('value');
+
+            $(this).val(unitUniqueID);
+
+            var toleranceUnit = $(this).parent().parent().find('.ToleranceUnitUniqueID');
+
+            toleranceUnit.find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+            toleranceUnit.prop('disabled', true);
+
+            if (unitUniqueID != '') {
+                $('#ToleranceUnitList li').each(function () {
+                    if ($(this).data('unituniqueid') == unitUniqueID) {
+                        toleranceUnit.append('<option value="' + $(this).data('uniqueid') + '">' + $(this).data('description') + '</option>');
+                    }
+                });
+
+                toleranceUnit.append('<option value="%">' + '%' + '</option>');
+                toleranceUnit.prop('disabled', false);
+            }
+        });
+
+        $('.ToleranceSymbol').each(function () {
+            $(this).val($(this).data('value'));
+        });
+
+        $('.ToleranceUnitUniqueID').each(function () {
+            $(this).val($(this).data('value'));
+        });
+
+        BindSubDetailItemEvent();
+    });
+
+    function OnCharacteristicChanged() {
+        var characteristicUniqueID = $('#FormInput_CharacteristicUniqueID').val();
+
+        if (characteristicUniqueID == '@Utility.Define.OTHER') {
+            $('#FormInput_CharacteristicRemark').show();
+        }
+        else {
+            $('#FormInput_CharacteristicRemark').val('').hide();
+        }
+
+        $('#FormInput_UnitUniqueID').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+        $('#FormInput_UnitUniqueID').prop('disabled', true);
+        $('#FormInput_UnitRemark').val('').hide();
+
+        $('#FormInput_LowerUsingRangeUnitUniqueID').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+        $('#FormInput_LowerUsingRangeUnitUniqueID').prop('disabled', true);
+        $('#FormInput_LowerUsingRangeUnitRemark').val('').hide();
+
+        $('#FormInput_UpperUsingRangeUnitUniqueID').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+        $('#FormInput_UpperUsingRangeUnitUniqueID').prop('disabled', true);
+        $('#FormInput_UpperUsingRangeUnitRemark').val('').hide();
+
+        $('#FormInput_UsingRangeToleranceUnitUniqueID').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+        $('#FormInput_UsingRangeToleranceUnitUniqueID').prop('disabled', true);
+        $('#FormInput_UsingRangeToleranceUnitRemark').val('').hide();
+
+        if (characteristicUniqueID != '') {
+            $('#CharacteristicUnitList li').each(function () {
+                if ($(this).data('characteristicuniqueid') == characteristicUniqueID) {
+                    var uniqueID = $(this).data('uniqueid');
+                    var description = $(this).data('description');
+                    $('#FormInput_UnitUniqueID').append('<option value="' + uniqueID + '">' + description + '</option>');
+                    $('#FormInput_LowerUsingRangeUnitUniqueID').append('<option value="' + uniqueID + '">' + description + '</option>');
+                    $('#FormInput_UpperUsingRangeUnitUniqueID').append('<option value="' + uniqueID + '">' + description + '</option>');
+                }
+            });
+
+            $('#FormInput_UnitUniqueID').append('<option value="@Utility.Define.OTHER">' + '@Resources.Resource.Other' + '</option>');
+            $('#FormInput_UnitUniqueID').prop('disabled', false);
+
+            $('#FormInput_LowerUsingRangeUnitUniqueID').append('<option value="@Utility.Define.OTHER">' + '@Resources.Resource.Other' + '</option>');
+            $('#FormInput_LowerUsingRangeUnitUniqueID').prop('disabled', false);
+
+            $('#FormInput_UpperUsingRangeUnitUniqueID').append('<option value="@Utility.Define.OTHER">' + '@Resources.Resource.Other' + '</option>');
+            $('#FormInput_UpperUsingRangeUnitUniqueID').prop('disabled', false);
+        }
+    }
+
+    function OnUnitChanged() {
+        var unitUniqueID = $('#FormInput_UnitUniqueID').val();
+
+        if (unitUniqueID == '@Utility.Define.OTHER') {
+            $('#FormInput_UnitRemark').show();
+        }
+        else {
+            $('#FormInput_UnitRemark').val('').hide();
+        }
+
+        $('#FormInput_UsingRangeToleranceUnitUniqueID').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+        $('#FormInput_UsingRangeToleranceUnitUniqueID').prop('disabled', true);
+        $('#FormInput_UsingRangeToleranceUnitRemark').val('').hide();
+
+        if (unitUniqueID != '') {
+            $('#ToleranceUnitList li').each(function () {
+                if ($(this).data('unituniqueid') == unitUniqueID) {
+                    $('#FormInput_UsingRangeToleranceUnitUniqueID').append('<option value="' + $(this).data('uniqueid') + '">' + $(this).data('description') + '</option>');
+                }
+            });
+
+            $('#FormInput_UsingRangeToleranceUnitUniqueID').append('<option value="%">' + '%' + '</option>');
+            $('#FormInput_UsingRangeToleranceUnitUniqueID').append('<option value="@Utility.Define.OTHER">' + '@Resources.Resource.Other' + '</option>');
+            $('#FormInput_UsingRangeToleranceUnitUniqueID').prop('disabled', false);
+        }
+    }
+
+    function OnLowerUsingRangeUnitChanged() {
+        var unitUniqueID = $('#FormInput_LowerUsingRangeUnitUniqueID').val();
+
+        if (unitUniqueID == '@Utility.Define.OTHER') {
+            $('#FormInput_LowerUsingRangeUnitRemark').show();
+        }
+        else {
+            $('#FormInput_LowerUsingRangeUnitRemark').val('').hide();
+        }
+    }
+
+    function OnUpperUsingRangeUnitChanged() {
+        var unitUniqueID = $('#FormInput_UpperUsingRangeUnitUniqueID').val();
+
+        if (unitUniqueID == '@Utility.Define.OTHER') {
+            $('#FormInput_UpperUsingRangeUnitRemark').show();
+        }
+        else {
+            $('#FormInput_UpperUsingRangeUnitRemark').val('').hide();
+        }
+    }
+
+    function OnUsingRangeToleranceUnitChanged() {
+        var unitUniqueID = $('#FormInput_UsingRangeToleranceUnitUniqueID').val();
+
+        if (unitUniqueID == '@Utility.Define.OTHER') {
+            $('#FormInput_UsingRangeToleranceUnitRemark').show();
+        }
+        else {
+            $('#FormInput_UsingRangeToleranceUnitRemark').val('').hide();
+        }
+    }
+
+    function AddSubDetailItem() {
+        var last = $('#CalibrationList tbody tr:last');
+
+        if (last.length > 0) {
+            var html = '<tr>' + last.html() + '</tr>';
+
+            var calibrationPoint = last.find('.CalibrationPoint').val();
+            var calibrationPointUnitUniqueID = last.find('.CalibrationPointUnitUniqueID').val();
+            var toleranceSymbol = last.find('.ToleranceSymbol').val();
+            var tolerance = last.find('.Tolerance').val();
+            var toleranceUnitUniqueID = last.find('.ToleranceUnitUniqueID').val();
+            
+            $('#CalibrationList tbody').append(html);
+
+            BindSubDetailItemEvent();
+
+            last = $('#CalibrationList tbody tr:last');
+
+            last.find('.CalibrationPoint').val(calibrationPoint);
+            last.find('.CalibrationPointUnitUniqueID').val(calibrationPointUnitUniqueID);
+            last.find('.ToleranceSymbol').val(toleranceSymbol);
+            last.find('.Tolerance').val(tolerance);
+            last.find('.ToleranceUnitUniqueID').val(toleranceUnitUniqueID);
+        }
+        else {
+            var html = '<tr><td class="col-sm-1 center"><div class="action-buttons"><a onclick="return false;" class="red RemoveSubDetailItem" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a></div></td><td class="col-sm-5"><input type="text" class="CalibrationPoint col-sm-4" /><select class="CalibrationPointUnitUniqueID"><option value="">= ' + '@Resources.Resource.SelectOne' + '=</option>';
+
+            var characteristicUniqueID = $('#FormInput_CharacteristicUniqueID').val();
+
+            if (characteristicUniqueID != '') {
+                $('#CharacteristicUnitList li').each(function () {
+                    if ($(this).data('characteristicuniqueid') == characteristicUniqueID) {
+                        html = html + '<option value="' + $(this).data('uniqueid') + '">' + $(this).data('description') + '</option>';
+                    }
+                });
+            }
+
+            html = html + '</select></td><td class="col-sm-6"><select class="ToleranceSymbol"><option value="1">±</option><option value="2">+</option><option value="3">-</option><option value="4">></option><option value="5"><</option><option value="6">≧</option><option value="7">≦</option></select><input type="text" class="Tolerance col-sm-4" /><select class="ToleranceUnitUniqueID" disabled="disabled"><option value="">= ' + '@Resources.Resource.SelectOne' + '=</option></select></td></tr>';
+
+            $('#CalibrationList tbody').append(html);
+
+            BindSubDetailItemEvent();
+        }
+    }
+
+    function BindSubDetailItemEvent() {
+        $('.RemoveSubDetailItem').click(function () {
+            $(this).closest('tr').remove();
+
+            return false;
+        });
+
+        $('.CalibrationPointUnitUniqueID').change(function () {
+            var unitUniqueID = $(this).val();
+
+            var toleranceUnit = $(this).parent().parent().find('.ToleranceUnitUniqueID');
+
+            toleranceUnit.find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+            toleranceUnit.prop('disabled', true);
+
+            if (unitUniqueID != '') {
+                $('#ToleranceUnitList li').each(function () {
+                    if ($(this).data('unituniqueid') == unitUniqueID) {
+                        toleranceUnit.append('<option value="' + $(this).data('uniqueid') + '">' + $(this).data('description') + '</option>');
+                    }
+                });
+
+                toleranceUnit.append('<option value="%">' + '%' + '</option>');
+                toleranceUnit.prop('disabled', false);
+            }
+        });
+    }
+</script>

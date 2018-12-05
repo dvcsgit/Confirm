@@ -1,0 +1,151 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetEditableOrganizationSelectedList();
+
+        InitEditableOrganizationSelectTree();
+
+        $('#divEditableOrganizationSelectTreeWidget').hide();
+    });
+
+    function GetEditableOrganizationSelectedList() {
+        var list = $('#divEditableOrganizationSelectedList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetEditableOrganizationSelectedList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitEditableOrganizationSelectTree() {
+        var container = $('#divEditableOrganizationSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitEditableOrganizationSelectTree")',
+            data: { EditableAncestorOrganizationUniqueID: $('#UniqueID').val(), AncestorOrganizationUniqueID: '@Model' },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var EditableOrganizationSelect = function () {
+        $('#divEditableOrganizationSelectedListWidget').hide();
+        $('#divEditableOrganizationSelectTreeWidget').show();
+    };
+
+    var CancelSelectEditableOrganization = function () {
+        $('#divEditableOrganizationSelectedListWidget').show();
+        $('#divEditableOrganizationSelectTreeWidget').hide();
+    };
+
+    var AddEditableOrganization = function () {
+        var data = [];
+
+        $("#divEditableOrganizationSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddEditableOrganization")',
+            data: { Selecteds: JSON.stringify(data) },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divEditableOrganizationSelectTreeWidget').hide();
+                $('#divEditableOrganizationSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divEditableOrganizationSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetEditableOrganizationSelectedList();
+                    $("#divEditableOrganizationSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divEditableOrganizationSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteEditableOrganization = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteEditableOrganization")',
+            data: { UniqueID: uniqueID, },
+            dataType: "json",
+            beforeSend: function () { $('#divEditableOrganizationSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divEditableOrganizationSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetEditableOrganizationSelectedList();
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divEditableOrganizationSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divEditableOrganizationSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.EditableOrganization</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divEditableOrganizationSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddEditableOrganization(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectEditableOrganization(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divEditableOrganizationSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.EditableOrganization</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="EditableOrganizationSelect(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:200px;">
+            <div id="divEditableOrganizationSelectedList" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

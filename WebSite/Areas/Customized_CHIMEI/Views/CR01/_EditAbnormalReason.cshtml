@@ -1,0 +1,61 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    var SaveAbnormalReason = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("SaveAbnormalReason")',
+            data: {
+                UniqueID: '@Model',
+                AbnormalReason: $('#EditAbnormalReason_AbnormalReason').val(),
+                HandlingMethod: $('#EditAbnormalReason_HandlingMethod').val()
+            },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    $('#Modal').modal('hide');
+
+                    $.SuccessDialog(data.Message);
+
+                    GetCheckItemList(data.Data);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div class="modal-body">
+    <table class="table table-bordered table-input">
+        <tr>
+            <th class="col-sm-1"><label>異常原因</label></th>
+            <td class="col-sm-11"><input id="EditAbnormalReason_AbnormalReason" type="text" class="col-sm-11" /></td>
+        </tr>
+        <tr>
+            <th><label>處理對策</label></th>
+            <td class="col-sm-11"><input id="EditAbnormalReason_HandlingMethod" type="text" class="col-sm-11" /></td>
+        </tr>
+    </table>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-sm btn-success" data-dismiss="modal">
+        <i class="ace-icon fa fa-times"></i>
+        取消
+    </button>
+
+    <button class="btn btn-sm btn-primary" onclick="SaveAbnormalReason();">
+        <i class="ace-icon fa fa-check"></i>
+        儲存
+    </button>
+</div>

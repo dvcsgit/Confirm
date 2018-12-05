@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Models.PipelinePatrol.Message.DialogGridItem>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@foreach (var dialog in Model)
+{
+    <div class="itemdiv commentdiv">
+        <div class="user">
+            <img alt="" src="@Url.Content("~/Content/images/chat.png")">
+            @*@if (dialog.HavePhoto)
+            {
+                <img alt="" src="@Url.Content("~/ChatPhoto/" + dialog.Photo)">
+            }
+            else
+            {
+                <i class="fa fa-commenting fa-2"></i>
+            }*@
+        </div>
+
+        <div class="body">
+            <div class="name">
+                <a href="@Url.Action("Dialog", new { UniqueID = dialog.UniqueID })">@dialog.Subject</a>
+            </div>
+
+            @if (dialog.LastMessageTime.HasValue)
+            {
+                <div class="time">
+                    <i class="ace-icon fa fa-clock-o"></i>
+                    <span class="green">@dialog.LastMessageTimeString</span>
+                </div>
+            }
+            
+            <div class="text">
+                <i class="ace-icon fa fa-quote-left"></i>
+                @dialog.Description
+            </div>
+        </div>
+    </div>
+}
+

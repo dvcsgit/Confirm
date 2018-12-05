@@ -1,0 +1,114 @@
+﻿@model Models.ASE.QA.QAPerformance.QueryFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+<link href="@Url.Content("~/assets/css/datepicker.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-datepicker.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/locales/bootstrap-datepicker."+ViewBag.Lang+".js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.maskedinput.min.js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+    });
+
+    function Query() {
+        if ($('#Parameters_BeginDateString').val() == '')
+        {
+            $.InfoDialog('請選擇日期(起)');
+        }
+        else if ($('#Parameters_EndDateString').val() == '') {
+            $.InfoDialog('請選擇日期(迄)');
+        }
+        else {
+            $('#divQueryFormContainer').show();
+            $('#divForm').empty();
+            $('#divFormContainer').hide();
+
+            var div = $('#divQueryResult');
+
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: '@Url.Action("Query")',
+                data: $('#QueryForm').serialize(),
+                dataType: "html",
+                beforeSend: function () { div.Overlay('show'); },
+                success: function (data) { div.Overlay('show').html(data); },
+                error: function (x, h, r) { div.Overlay('hide').html(x.responseText); }
+            });
+        }
+    }
+</script>
+}
+
+<div class="row" id="divQueryFormContainer">
+    <div class="col-xs-12">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Search</h5>
+                <div class="widget-toolbar">
+                    <a href="#" onclick="Query(); return false;">
+                        <i class="ace-icon fa fa-search white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    @using (Ajax.BeginForm("Query", null, Utility.Define.GetDefaultAjaxOptions(), new { @ID = "QueryForm" }))
+                    {
+                        <table class="table table-bordered table-input">
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.BeginDateString)</th>
+                                <td class="col-sm-5">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.BeginDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.EndDateString)</th>
+                                <td class="col-sm-5">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.EndDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+        <div id="divQueryResult" style="min-height:200px;"></div>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+﻿@model Models.PipelinePatrol.PipePointManagement.DetailViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitGoogleMap();
+    });
+
+    function InitGoogleMap() {
+        var mapOptions = {
+            zoom: 15,
+            center: new google.maps.LatLng(@Model.Location.LAT, @Model.Location.LNG),
+            mapTypeControl: false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        var maker = new google.maps.Marker({
+            position: new google.maps.LatLng(@Model.Location.LAT, @Model.Location.LNG)
+        });
+
+        maker.setMap(map);
+    }
+</script>
+
+<p>
+    @if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+    { 
+        if (ViewBag.CanEdit)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-pencil bigger-160"></i>
+                @Resources.Resource.Edit
+            </button>
+        }
+
+        if (ViewBag.CanDelete)
+        {
+            <button class="btn btn-app btn-danger btn-xs" onclick="Delete('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-trash-o bigger-160"></i>
+                @Resources.Resource.Delete
+            </button>
+        }
+    }
+    
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.PipePoint</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.PipePointType)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.PipePointType)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ID)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.ID)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Name)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Name)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Remark)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Remark)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.PipePointLocation</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <div id="map-canvas" style="height:405px;"></div>
+        </div>
+    </div>
+</div>

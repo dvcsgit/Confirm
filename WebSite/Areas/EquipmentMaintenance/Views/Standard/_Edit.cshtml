@@ -1,0 +1,285 @@
+﻿@model Models.EquipmentMaintenance.StandardManagement.EditFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#EditForm");
+
+        $('#FormInput_IsFeelItem').prop('checked', $('#FormInput_IsFeelItem').data('checked') == 'Y');
+        $('#FormInput_IsAccumulation').prop('checked', $('#FormInput_IsAccumulation').data('checked') == 'Y');
+
+        Rollback();
+
+        $('#FormInput_IsFeelItem').click(function () {
+            IsFeelItemChanged();
+        });
+
+        $('#FormInput_IsAccumulation').click(function () {
+            IsAccumulationChanged();
+        });
+
+        IsFeelItemChanged();
+
+        $('#MaintenanceType').change(function () {
+            var val = $(this).val();
+
+            if (val == '') {
+                $('#FormInput_MaintenanceType').val('').prop('readonly', true);
+            }
+            else if (val == '@Utility.Define.NEW') {
+                $('#FormInput_MaintenanceType').val('').prop('readonly', false);
+            }
+            else {
+                $('#FormInput_MaintenanceType').val(val).prop('readonly', true);
+            }
+        });
+    });
+
+    function IsFeelItemChanged() {
+        if ($('#FormInput_IsFeelItem').prop('checked')) {
+            $('#FormInput_IsAccumulation').prop({ 'checked': false, 'disabled': true });
+            $('.divFeelOption').show();
+            $('.IsNotFeelItem').hide();
+            $('.IsNotFeelItemTextBox').val('');
+        }
+        else {
+            $('#FormInput_IsAccumulation').prop('disabled', false);
+            $('.divFeelOption').hide();
+            $('.IsNotFeelItem').show();
+        }
+
+        IsAccumulationChanged();
+    }
+
+    function IsAccumulationChanged() {
+        if ($('#FormInput_IsAccumulation').prop('checked')) {
+            $('#FormInput_AccumulationBase').prop('readonly', false);
+        }
+        else {
+            $('#FormInput_AccumulationBase').prop('readonly', true).val('');
+        }
+    }
+
+    var Save = function () {
+        var form = $('#EditForm');
+
+        if (form.valid()) {
+            if ($('#FormInput_MaintenanceType').val() == '') {
+                $.InfoDialog('@Resources.Resource.MaintenanceTypeRequired');
+            }
+            else {
+                var data = [];
+
+                $('.Description').each(function () {
+                    if ($(this).val() != '') {
+                        var isAbnormal = $(this).parent().parent().find('.IsAbnormal').prop('checked') ? 'Y' : 'N';
+
+                        data.push($(this).data('uniqueid') + '@Utility.Define.Seperator' + $(this).val() + '@Utility.Define.Seperator' + isAbnormal);
+                    }
+                });
+
+                if ($('#FormInput_IsFeelItem').prop('checked') && data.length == 0) {
+                    $.InfoDialog('@Resources.Resource.FeelOptionRequired');
+                }
+                else {
+                    $('#FormInput_FeelOptions').val(JSON.stringify(data));
+
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: '@Url.Action("Edit")',
+                        data: form.serialize(),
+                        dataType: "json",
+                        beforeSend: function () { $.Overlay('show'); },
+                        success: function (data) {
+                            $.Overlay('hide');
+
+                            if (data.IsSuccess) {
+                                Query();
+                                $.SuccessDialog(data.Message);
+                            }
+                            else {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $.Overlay('hide');
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+            }
+        }
+    };
+
+    var Add = function () {
+        $('#FeelOptionList tbody').append('<tr><td class="col-sm-1 center"><div class="action-buttons"><a onclick="return false;" class="red Remove" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a></div></td><td class="col-sm-1 center"><label><input class="ace ace-checkbox-2 IsAbnormal" type="checkbox"><span class="lbl"></span></label></td><td class="col-sm-10"><input class="Description col-sm-6" type="text" data-uniqueid="" /></td></tr>');
+
+        BindRemoveEvent();
+
+        $('#FeelOptionList tbody').sortable().disableSelection();
+    }
+
+    function BindRemoveEvent() {
+        $('.Remove').click(function () {
+            $(this).closest('tr').remove();
+
+            return false;
+        });
+    };
+
+    function Rollback() {
+        $('#FeelOptionList tbody').empty();
+
+        @foreach (var item in Model.FeelOptionList)
+        {
+            <text>$('#FeelOptionList tbody').append('<tr><td class="col-sm-1 center"><div class="action-buttons"><a onclick="return false;" class="red Remove" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a></div></td><td class="col-sm-1 center"><label><input class="ace ace-checkbox-2 IsAbnormal" type="checkbox" data-checked="@(item.IsAbnormal ? "Y" : "N")"><span class="lbl"></span></label></td><td class="col-sm-10"><input class="Description col-sm-6" type="text" value="@item.Description" data-uniqueid="@item.UniqueID" /></td></tr>')</text>
+        }
+
+        $('.IsAbnormal').each(function () {
+            $(this).prop('checked', $(this).data('checked') == 'Y');
+        });
+
+        BindRemoveEvent();
+
+        $('#FeelOptionList tbody').sortable().disableSelection();
+    }
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Edit @Resources.Resource.Standard</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Edit", null, FormMethod.Post, new { @ID = "EditForm" }))
+            {
+                @Html.HiddenFor(x => x.UniqueID)
+                @Html.HiddenFor(x => x.OrganizationUniqueID)
+                @Html.HiddenFor(x => x.FormInput.FeelOptions)
+            
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.MaintenanceType)</th>
+                        <td class="col-sm-5">@Html.DropDownList("MaintenanceType", Model.MaintenanceTypeSelectItemList)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.MaintenanceType)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.MaintenanceType, new { @class = "col-sm-11", @readonly = "readonly" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.MaintenanceType)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.ID)</th>
+                        <td>
+                            @Html.TextBoxFor(x => x.FormInput.ID, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.ID)
+                        </td>
+                        <th>@Html.LabelFor(x => x.FormInput.IsFeelItem)</th>
+                        <td>
+                            <label>
+                                <input id="FormInput_IsFeelItem" name="FormInput.IsFeelItem" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.IsFeelItem ? "Y" : "N")">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td colspan="3">
+                            @Html.TextBoxFor(x => x.FormInput.Description, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Description)
+                        </td>
+                    </tr>
+                    <tr class="IsNotFeelItem">
+                        <th>@Html.LabelFor(x => x.FormInput.LowerAlertLimit)</th>
+                        <td>@Html.TextBoxFor(x => x.FormInput.LowerAlertLimit, new { @class = "col-sm-6 IsNotFeelItemTextBox" })</td>
+                        <th>@Html.LabelFor(x => x.FormInput.UpperAlertLimit)</th>
+                        <td>@Html.TextBoxFor(x => x.FormInput.UpperAlertLimit, new { @class = "col-sm-6 IsNotFeelItemTextBox" })</td>
+                    </tr>
+                    <tr class="IsNotFeelItem">
+                        <th>@Html.LabelFor(x => x.FormInput.LowerLimit)</th>
+                        <td>@Html.TextBoxFor(x => x.FormInput.LowerLimit, new { @class = "col-sm-6 IsNotFeelItemTextBox" })</td>
+                        <th>@Html.LabelFor(x => x.FormInput.UpperLimit)</th>
+                        <td>@Html.TextBoxFor(x => x.FormInput.UpperLimit, new { @class = "col-sm-6 IsNotFeelItemTextBox" })</td>
+                    </tr>
+                    <tr class="IsNotFeelItem">
+                        <th>@Html.LabelFor(x => x.FormInput.IsAccumulation)</th>
+                        <td>
+                            <label>
+                                <input id="FormInput_IsAccumulation" name="FormInput.IsAccumulation" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.IsAccumulation ? "Y" : "N")">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                        <th>@Html.LabelFor(x => x.FormInput.AccumulationBase)</th>
+                        <td>@Html.TextBoxFor(x => x.FormInput.AccumulationBase, new { @class = "col-sm-6 IsNotFeelItemTextBox" })</td>
+                    </tr>
+                    <tr class="IsNotFeelItem">
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Unit)</th>
+                        <td class="col-sm-11" colspan="3">@Html.TextBoxFor(x => x.FormInput.Unit, new { @class = "col-sm-3 IsNotFeelItemTextBox" })</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Remark)</th>
+                        <td colspan="3">@Html.TextBoxFor(x => x.FormInput.Remark, new { @class = "col-sm-11" })</td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space divFeelOption"></div>
+
+<div class="widget-box widget-color-dark divFeelOption">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.FeelOptions</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table id="FeelOptionList" class="table table-bordered">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1 center"></th>
+                        <th class="col-sm-1 center">@Resources.Resource.Abnormal</th>
+                        <th class="col-sm-10">@Resources.Resource.Option @Resources.Resource.Description</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+        </div>
+
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="Add(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Add
+            </button>
+            <button class="btn btn-primary" onclick="Rollback(); return false;">
+                <i class="ace-icon fa fa-backward"></i>
+                @Resources.Resource.Rollback
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_Select")

@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CONFIG>
+  <SystemName zh_tw="FEM設備保養管理系統" zh_cn="FEM设备保养管理系统" en_us="FEM設備保養管理系統"></SystemName>
+  
+  <SystemLogoImage zh_tw="FEM.zh-tw.png" zh_cn="FEM.zh-cn.png" en_us="FEM.zh-tw.png"></SystemLogoImage>
+  
+  <!--<CompanyLogoImage>company.png</CompanyLogoImage>-->
+  
+  <WindowsAuthentication>E:\FEM\WindowsAuthentication.xml</WindowsAuthentication>
+  
+  <!--<LDAP Domain="asecl.com.tw" UserID="eins" Password="Einsadmin"></LDAP>-->
+  <!--<LDAP Domain="asecl.com.tw" UserID="fem" Password="Femsync"></LDAP>-->
+  
+  <!--<LDAP Domain="ad1.psi.com.tw" UserID="mis" Password="2uuxoxrx"></LDAP>-->
+
+  <!--<Mail>
+    <Smtp Host="192.168.0.72"></Smtp>
+    <MailFrom Name="FEM設備保養管理系統" Mail="fem@lcygroup.com" />
+  </Mail>-->
+  
+  <!--<Mail>
+    <Smtp Host="172.24.1.19" UserName="pd99" Password="9999" Domain="e-fpg"></Smtp>
+    <MailFrom Name="FEM設備保養管理系統" Mail="fem@fpg.com.tw" />
+    <BCC>
+      <MAIL Name="" Mail=""></MAIL>
+      <MAIL Name="" Mail=""></MAIL>
+    </BCC>
+  </Mail>-->
+  
+  <!--<Mail>
+    <Smtp Host="mta.asecl.com.tw"></Smtp>
+    <MailFrom Name="eIPC" Mail="ASECL_EIPC_SYSTEM@aseglobal.com" />
+  </Mail>-->
+
+  <Mail>
+    <Smtp Host="mail.chimei.com.tw"></Smtp>
+    <MailFrom Name="FEM" Mail="fem@mail.chimei.com.tw" />
+  </Mail>
+  
+  <!--<Mail>
+    <Smtp Host="mail.psi.com.tw" ></Smtp>
+    <MailFrom Name="FEM" Mail="FEM@psi.com.tw" />
+  </Mail>-->
+  
+  <Modules>    
+    <Module>EquipmentPatrol</Module>
+    <Module>EquipmentMaintenance</Module>
+    <Module>RepairForm</Module>
+    <Module>PipelinePatrol</Module>
+    <Module>GuardPatrol</Module>
+    <Module>TruckPatrol</Module>
+    <Module>QForm</Module>
+  </Modules>
+  <UserLimits>
+    <UserLimit OrganizationUniqueID="6a7e7f04-8737-4f96-9f76-98f4d204a039" Users="15" MobileUsers="5"></UserLimit>
+    <UserLimit OrganizationUniqueID="89b535ca-5a6d-43c6-8019-cf5690149284" Users="15" MobileUsers="5"></UserLimit>
+    <UserLimit OrganizationUniqueID="96bed351-51b8-4509-91f1-f7892ff41ff0" Users="15" MobileUsers="5"></UserLimit>
+    <UserLimit OrganizationUniqueID="b3fee7ac-5d38-48be-b486-c3b4d84fb3b2" Users="15" MobileUsers="5"></UserLimit>
+    <UserLimit OrganizationUniqueID="b5edd565-aa88-401f-a710-eaf041396ca9" Users="15" MobileUsers="5"></UserLimit>
+    <UserLimit OrganizationUniqueID="c7027043-ce3e-4dea-ae2d-1037f670e783" Users="15" MobileUsers="5"></UserLimit>
+    <UserLimit OrganizationUniqueID="cda2a854-9d33-4658-b023-fcf5a17c34c5" Users="15" MobileUsers="5"></UserLimit>
+    <UserLimit OrganizationUniqueID="d1b5e7c6-3e3a-4bcd-9e94-6843f5c57983" Users="15" MobileUsers="5"></UserLimit>
+    <UserLimit OrganizationUniqueID="dced41d2-e6f9-4efa-8736-6e1c8d04dadc" Users="15" MobileUsers="5"></UserLimit>
+  </UserLimits>
+  <Folder>
+    <Log ShelfLife="">E:\FEM\Log</Log>
+    <Temp ShelfLife="">E:\FEM\Temp</Temp>
+    <UserPhoto VirtualPath="UserPhoto">E:\FEM\File\UserPhoto</UserPhoto>
+    <EquipmentMaintenance>
+      <SQLite>
+        <Template ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Template</Template>
+        <Generated ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Generated</Generated>
+        <Upload ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Upload</Upload>
+        <Processing ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Processing</Processing>
+        <Backup ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Backup</Backup>
+        <Error ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Error</Error>
+      </SQLite>
+      <TagSQLite>
+        <Template ShelfLife="">E:\FEM\File\EquipmentMaintenance\TagSQLite\Template</Template>
+        <Generated ShelfLife="">E:\FEM\File\EquipmentMaintenance\TagSQLite\Generated</Generated>
+        <Upload ShelfLife="">E:\FEM\File\EquipmentMaintenance\TagSQLite\Upload</Upload>
+        <Processing ShelfLife="">E:\FEM\File\EquipmentMaintenance\TagSQLite\Processing</Processing>
+        <Backup ShelfLife="">E:\FEM\File\EquipmentMaintenance\TagSQLite\Backup</Backup>
+        <Error ShelfLife="">E:\FEM\File\EquipmentMaintenance\TagSQLite\Error</Error>
+      </TagSQLite>
+      <Import>
+        <Template ExcelVersion="2003">E:\FEM\File\EquipmentMaintenance\Import\Template\Template.xls</Template>
+        <Template ExcelVersion="2007">E:\FEM\File\EquipmentMaintenance\Import\Template\Template.xlsx</Template>
+      </Import>
+      <Photo VirtualPath="EquipmentPatrolPhoto">E:\FEM\File\EquipmentMaintenance\Photo</Photo>
+      <File>E:\FEM\File\EquipmentMaintenance\File</File>
+      <MobileRelease>E:\FEM\MobileRelease\EquipmentMaintenance</MobileRelease>
+      <ReportTemplate>
+        <PFG>
+          <DailyReports>
+            <DailyReport OrganizationUniqueID="b8978769-90c6-4741-85f5-e2a4e883c21c" _2003="E:\20170815.PFG\Public.xls" _2007="E:\20170815.PFG\Public.xlsx"></DailyReport>
+            <DailyReport OrganizationUniqueID="37947df9-99db-4fe8-b675-772fa7e040cc" _2003="E:\20170815.PFG\1.xls" _2007="E:\20170815.PFG\1.xlsx"></DailyReport>
+            <DailyReport OrganizationUniqueID="b7beee76-8af9-4de0-b106-2e56c62255b2" _2003="E:\FEM\File\EquipmentMaintenance\PFG\DailyReport\2.xls" _2007="E:\FEM\File\EquipmentMaintenance\PFG\DailyReport\2.xlsx"></DailyReport>
+            <DailyReport OrganizationUniqueID="8be56067-3158-4803-a51a-54ab0bd1fe99" _2003="E:\FEM\File\EquipmentMaintenance\PFG\DailyReport\3.xls" _2007="E:\FEM\File\EquipmentMaintenance\PFG\DailyReport\3.xlsx"></DailyReport>
+          </DailyReports>
+          <ShiftReport>
+            <_2003>E:\FEM\File\EquipmentMaintenance\PFG\ShiftReport\ShiftReport.xls</_2003>
+            <_2007>E:\FEM\File\EquipmentMaintenance\PFG\ShiftReport\ShiftReport.xlsx</_2007>
+          </ShiftReport>
+        </PFG>
+      <SubstationInspectionReports>E:\FEM\File\ReportTemplate\變電站巡檢抄錶記錄0170905.xls</SubstationInspectionReports>
+      </ReportTemplate>
+    </EquipmentMaintenance>
+    <QA>
+      <SQLite>
+        <Template ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Template</Template>
+        <Generated ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Generated</Generated>
+        <Upload ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Upload</Upload>
+        <Processing ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Processing</Processing>
+        <Backup ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Backup</Backup>
+        <Error ShelfLife="">E:\FEM\File\EquipmentMaintenance\SQLite\Error</Error>
+      </SQLite>
+      <File>E:\FEM\File\QA\File</File>
+      <File_v2>E:\FEM\File\QA\File</File_v2>
+      <ReportTemplate>
+        <MSA>E:\FEM\File\QA\ReportTemplate\MSA.xls</MSA>
+        <MSAAnova>E:\FEM\File\QA\ReportTemplate\MSAAnova.xls</MSAAnova>
+        <MSACount>E:\FEM\File\QA\ReportTemplate\MSACount.xls</MSACount>
+      </ReportTemplate>
+    </QA>
+    <TruckPatrol>
+      <SQLite>
+        <Template ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Template</Template>
+        <Generated ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Generated</Generated>
+        <Upload ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Upload</Upload>
+        <Processing ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Processing</Processing>
+        <Backup ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Backup</Backup>
+        <Error ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Error</Error>
+      </SQLite>
+      <Photo VirtualPath="TruckPatrolPhoto">E:\FEM\File\TruckPatrol\Photo</Photo>
+      <MobileRelease>E:\FEM\MobileRelease\TruckPatrol</MobileRelease>
+    </TruckPatrol>
+    <PipelinePatrol>
+      <SQLite>
+        <Template ShelfLife="">E:\FEM\File\PipelinePatrol\SQLite\Template</Template>
+        <Generated ShelfLife="">E:\FEM\File\PipelinePatrol\SQLite\Generated</Generated>
+        <Upload ShelfLife="">E:\FEM\File\PipelinePatrol\SQLite\Upload</Upload>
+        <Processing ShelfLife="">E:\FEM\File\PipelinePatrol\SQLite\Processing</Processing>
+        <Backup ShelfLife="">E:\FEM\File\PipelinePatrol\SQLite\Backup</Backup>
+        <Error ShelfLife="">E:\FEM\File\PipelinePatrol\SQLite\Error</Error>
+      </SQLite>
+      <Photo VirtualPath="PipelinePatrolPhoto">E:\FEM\File\PipelinePatrol\Photo</Photo>
+      <File>E:\FEM\File\PipelinePatrol\File</File>
+      <MobileRelease>E:\FEM\MobileRelease\PipelinePatrol</MobileRelease>
+    </PipelinePatrol>
+    <GuardPatrol>
+      <SQLite>
+        <Template ShelfLife="">E:\FEM\File\GuardPatrol\SQLite\Template</Template>
+        <Generated ShelfLife="">E:\FEM\File\GuardPatrol\SQLite\Generated</Generated>
+        <Upload ShelfLife="">E:\FEM\File\GuardPatrol\SQLite\Upload</Upload>
+        <Processing ShelfLife="">E:\FEM\File\GuardPatrol\SQLite\Processing</Processing>
+        <Backup ShelfLife="">E:\FEM\File\GuardPatrol\SQLite\Backup</Backup>
+        <Error ShelfLife="">E:\FEM\File\GuardPatrol\SQLite\Error</Error>
+      </SQLite>
+      <TagSQLite>
+        <Template ShelfLife="">E:\FEM\File\GuardPatrol\TagSQLite\Template</Template>
+        <Generated ShelfLife="">E:\FEM\File\GuardPatrol\TagSQLite\Generated</Generated>
+        <Upload ShelfLife="">E:\FEM\File\GuardPatrol\TagSQLite\Upload</Upload>
+        <Processing ShelfLife="">E:\FEM\File\GuardPatrol\TagSQLite\Processing</Processing>
+        <Backup ShelfLife="">E:\FEM\File\GuardPatrol\TagSQLite\Backup</Backup>
+        <Error ShelfLife="">E:\FEM\File\GuardPatrol\TagSQLite\Error</Error>
+      </TagSQLite>
+      <Photo VirtualPath="GuardPatrolPhoto">E:\FEM\File\GuardPatrol\Photo</Photo>
+      <MobileRelease>E:\FEM\MobileRelease\GuardPatrol</MobileRelease>
+    </GuardPatrol>
+    <TankPatrol>
+      <SQLite>
+        <Template ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Template</Template>
+        <Generated ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Generated</Generated>
+        <Upload ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Upload</Upload>
+        <Processing ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Processing</Processing>
+        <Backup ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Backup</Backup>
+        <Error ShelfLife="">E:\FEM\File\TruckPatrol\SQLite\Error</Error>
+      </SQLite>
+      <Photo VirtualPath="TruckPatrolPhoto">E:\FEM\File\TruckPatrol\Photo</Photo>
+      <MobileRelease>E:\FEM\MobileRelease\TruckPatrol</MobileRelease>
+    </TankPatrol>
+    <QS>
+      <SQLite>
+        <Template ShelfLife="">E:\FEM\File\QS\SQLite\Template</Template>
+        <Generated ShelfLife="">E:\FEM\File\QS\SQLite\Generated</Generated>
+        <Upload ShelfLife="">E:\FEM\File\QS\SQLite\Upload</Upload>
+        <Processing ShelfLife="">E:\FEM\File\QS\SQLite\Processing</Processing>
+        <Backup ShelfLife="">E:\FEM\File\QS\SQLite\Backup</Backup>
+        <Error ShelfLife="">E:\FEM\File\QS\SQLite\Error</Error>
+      </SQLite>
+      <File>E:\FEM\File\QS\File</File>
+    </QS>
+
+    <Chat>
+      <Photo VirtualPath="ChatPhoto">E:\FEM\File\Chat\Photo</Photo>
+    </Chat>
+  </Folder>
+</CONFIG>

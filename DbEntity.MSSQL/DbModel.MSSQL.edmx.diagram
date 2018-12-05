@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d24a88fb35044fe5a417411d777d958d" Name="Diagram1">
+        <EntityTypeShape EntityType="DbModel.MSSQL.AuthGroup" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.AuthGroupWebPermissionFunction" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.EditableOrganization" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.EmgContact" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.EmgContactTel" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.Flow" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.FlowForm" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.FlowVerifyOrganization" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.Organization" Width="1.5" PointX="2.75" PointY="6.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.OrganizationManager" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.QueryableOrganization" Width="1.5" PointX="4.75" PointY="6.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.User" Width="1.5" PointX="6.75" PointY="6.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.UserAuthGroup" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.UserPhoto" Width="1.5" PointX="8.75" PointY="3.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.WebFunction" Width="1.5" PointX="8.75" PointY="6.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.WebFunctionDescription" Width="1.5" PointX="8.75" PointY="8.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.WebPermission" Width="1.5" PointX="0.75" PointY="9.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.WebPermissionDescription" Width="1.5" PointX="2.75" PointY="9.75" />
+        <EntityTypeShape EntityType="DbModel.MSSQL.WebPermissionFunction" Width="1.5" PointX="10.75" PointY="0.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

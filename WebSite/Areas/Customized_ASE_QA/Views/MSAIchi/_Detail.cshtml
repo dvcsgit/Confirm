@@ -1,0 +1,42 @@
+﻿@model Models.ASE.QA.MSAIchiManagement.DetailViewModel
+
+<p>
+    @if (ViewBag.CanEdit)
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+            <i class="ace-icon fa fa-edit bigger-160"></i>
+            @Resources.Resource.Edit
+        </button>
+    }
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="bigger lighter">MSA儀器</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Station)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.Station)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ID)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.ID)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Name)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.Name)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+

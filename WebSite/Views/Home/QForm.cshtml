@@ -1,0 +1,117 @@
+﻿@model Models.EquipmentMaintenance.QFormManagement.CreateFormModel
+
+@{
+    Layout = "~/Views/Shared/_Portal.cshtml";
+}
+
+@section Scripts{
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+    <script type="text/javascript">
+    
+        function Save() {
+            if ($('#FormInput_Captcha').val() == '') {
+                $.InfoDialog('@Resources.Resource.CaptchaRequired');
+            }
+            else {
+                var form = $('#CreateForm');
+
+                if (form.valid()) {
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: '@Url.Action("CreateQForm")',
+                        data: form.serialize(),
+                        dataType: "json",
+                        beforeSend: function () { $.Overlay('show'); },
+                        success: function (data) {
+                            $.Overlay('hide');
+
+                            if (data.IsSuccess) {
+                                $.SuccessDialog(data.Message);
+                                form[0].reset();
+                            }
+                            else {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $.Overlay('hide');
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+            }
+    }
+
+        var ReCaptcha = function () {
+            $("#imgCaptcha").prop("src", '@Url.Content("~/Content/Captcha.aspx")' + '?r=' + (new Date()).getTime());
+        };
+</script>
+    }
+
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="bigger lighter">@Resources.Resource.Create @Resources.Resource.QForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm" }))
+            {
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Subject)</th>
+                        <td colspan="3">
+                            @Html.TextBoxFor(x => x.FormInput.Subject, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Subject)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td colspan="3">
+                            @Html.TextAreaFor(x => x.FormInput.Description, new { @rows = "5", @class = "col-sm-11" })
+                            <br />
+                            <span>@Resources.Resource.QFormDescriptionRemark</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.ContactName)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.ContactName, new { @class = "col-sm-3" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.ContactName)
+                        </td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.ContactTel)</th>
+                        <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.ContactTel, new { @class = "col-sm-3" })</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.ContactEmail)</th>
+                        <td colspan="3">@Html.TextBoxFor(x => x.FormInput.ContactEmail, new { @class = "col-sm-11" })</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Captcha)</th>
+                        <td colspan="3">
+                            @Html.TextBoxFor(x => x.FormInput.Captcha, new { @class = "col-sm-3" })
+                            <img alt="" style="cursor:pointer;" id="imgCaptcha" src='@Url.Content("~/Content/Captcha.aspx")' onclick="ReCaptcha();" />
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+

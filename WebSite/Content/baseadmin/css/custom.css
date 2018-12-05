@@ -1,0 +1,63 @@
+.login-social {
+    padding:10px 0 0 0;
+    width:100%;
+    border-bottom:none;
+}
+
+/*.login-extra {
+    width:390px;
+}*/
+
+span.field-validation-error {
+    display: inline-block !important;
+    font-size: 11px;
+    padding: 4px 8px;
+    color: #FFF;
+    background: #B94A48;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.login-fields > .field > span.field-validation-error {
+    position: relative;
+    top: 10px;
+}
+
+span.field-validation-error::after {
+content: '';
+display: inline-block;
+border-left: 6px solid transparent;
+border-right: 6px solid transparent;
+border-bottom: 6px solid #B94A48;
+position: absolute;
+top: -6px;
+left: 7px;
+}
+
+.account-container {
+    width:420px;
+}
+
+.dropdown-menu > li > a > label {
+    font-size:13px;
+    font-weight:normal;
+    margin-left:5px;
+}
+
+/*.login-action {
+    width:100%;
+}*/
+
+a.dropdown-toggle > label {
+    font-weight:normal;
+    margin-left:5px;
+    cursor:pointer;
+}
+
+a.dropdown-toggle:hover {
+    text-decoration:none;
+    
+}

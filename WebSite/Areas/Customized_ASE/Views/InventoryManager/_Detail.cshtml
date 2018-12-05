@@ -1,0 +1,52 @@
+﻿@model Models.ASE.InventoryManagerManagement.DetailViewModel
+
+<p>
+    @if (ViewBag.CanEdit)
+    {
+    <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.OrganizationUniqueID');" type="button">
+        <i class="ace-icon fa fa-pencil bigger-160"></i>
+        @Resources.Resource.Edit
+    </button>
+    }
+
+    @if (ViewBag.CanDelete)
+    {
+    <button class="btn btn-app btn-danger btn-xs" onclick="Delete('@Model.OrganizationUniqueID');" type="button">
+        <i class="ace-icon fa fa-trash-o bigger-160"></i>
+        @Resources.Resource.Delete
+    </button>
+    }
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+
+<div class="row">
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">料庫負責人資料管理</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1"><label>@Resources.Resource.Organization</label></th>
+                        <td class="col-sm-11">
+                            @Html.DisplayFor(x => x.OrganizationDescription)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1"><label>料庫負責人</label></th>
+                        <td class="col-sm-11">
+                            @Html.DisplayFor(x => x.Managers)
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

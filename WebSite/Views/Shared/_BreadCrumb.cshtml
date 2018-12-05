@@ -1,0 +1,63 @@
+﻿<div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+        try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+    </script>
+
+    <ul class="breadcrumb">
+        @if (ViewBag.CurrentPage != null)
+        {
+            <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="@Url.Action("Index", "Home", new { area = "" })">
+                    @if (ViewBag.Lang == "en-us")
+                    {
+                        <text>Home</text>
+                    }
+                    else if (ViewBag.Lang == "zh-cn")
+                    {
+                        <text>首页</text>
+                    }
+                    else
+                    {
+                        <text>首頁</text>
+                    }
+                </a>
+            </li>
+
+            <li>
+                <a href="#">@ViewBag.CurrentAncestorPage</a>
+            </li>
+
+            if (ViewBag.CurrentParentPage != null)
+            {
+                <li>
+                    <a href="#">@ViewBag.CurrentParentPage</a>
+                </li>
+            }
+
+            <li class="active">@ViewBag.CurrentPage</li>
+        }
+        else
+        {
+            <li class="active">
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="@Url.Action("Index", "Home", new { area = "" })">
+                    @if (ViewBag.Lang == "en-us")
+                    {
+                        <text>Home</text>
+                    }
+                    else if (ViewBag.Lang == "zh-cn")
+                    {
+                        <text>首页</text>
+                    }
+                    else
+                    {
+                        <text>首頁</text>
+                    }
+                </a>
+            </li>
+        }
+    </ul>
+</div>
+
+

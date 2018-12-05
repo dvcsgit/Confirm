@@ -1,0 +1,130 @@
+﻿@model IEnumerable<Models.EquipmentMaintenance.EquipmentStandardManagement.PartModel>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.PartStandard').each(function () {
+            var checked = $(this).data('checked');
+
+            if (checked == 'Y') {
+                $(this).prop('checked', true);
+            }
+
+            if ($(this).data('isfeelitem') == 'Y') {
+                $(this).prop('disabled', true);
+            }
+            else if ($(this).data('ischangematerial') == 'Y') {
+                $(this).prop('disabled', true);
+                $(this).closest('tr').find('.LowerLimit, .LowerAlertLimit, .UpperAlertLimit, .UpperLimit, .AccumulationBase, .Unit, .Remark').addClass('uneditable-input').prop('disabled', true);
+            }
+            else {
+                if (checked == 'Y') {
+                    $(this).closest('tr').find('.LowerLimit, .LowerAlertLimit, .UpperAlertLimit, .UpperLimit, .AccumulationBase, .Unit, .Remark').addClass('uneditable-input').prop('disabled', true);
+                }
+                else {
+                    if (!($(this).data('isaccumulation') == 'Y')) {
+                        $(this).closest('tr').find('.AccumulationBase').addClass('uneditable-input').prop('disabled', true);
+                    }
+                }
+            }
+        });
+
+        $('.PartStandard').click(function () {
+            if ($(this).prop('checked')) {
+                $(this).closest('tr').find('.LowerLimit').val($(this).closest('tr').find('.LowerLimit').data('ori'));
+                $(this).closest('tr').find('.LowerAlertLimit').val($(this).closest('tr').find('.LowerAlertLimit').data('ori'));
+                $(this).closest('tr').find('.UpperAlertLimit').val($(this).closest('tr').find('.UpperAlertLimit').data('ori'));
+                $(this).closest('tr').find('.UpperLimit').val($(this).closest('tr').find('.UpperLimit').data('ori'));
+                $(this).closest('tr').find('.AccumulationBase').val($(this).closest('tr').find('.AccumulationBase').data('ori'));
+                $(this).closest('tr').find('.Unit').val($(this).closest('tr').find('.Unit').data('ori'));
+                $(this).closest('tr').find('.Remark').val($(this).closest('tr').find('.Remark').data('ori'));
+                $(this).closest('tr').find('.LowerLimit, .LowerAlertLimit, .UpperAlertLimit, .UpperLimit, .AccumulationBase, .Unit, .Remark').addClass('uneditable-input').prop('disabled', true);
+            }
+            else {
+                $(this).closest('tr').find('.LowerLimit, .LowerAlertLimit, .UpperAlertLimit, .UpperLimit, .Unit, .Remark').removeClass('uneditable-input').prop('disabled', false);
+
+                if ($(this).data('isaccumulation') == 'Y') {
+                    $(this).closest('tr').find('.AccumulationBase').removeClass('uneditable-input').prop('disabled', false);
+                }
+            }
+        });
+
+        $('#divPartList').css('min-height', $('#TabControl').height() + 30);
+    });
+</script>
+
+<div id="divTab" class="tabbable tabs-left">
+    <ul class="nav nav-tabs" id="TabControl">
+        @foreach (var part in Model)
+        {
+            <li class="tabLink" data-uniqueid="@part.UniqueID">
+                <a data-toggle="tab" href="@(string.Format("{0}{1}", "#", part.UniqueID))">
+                    @part.Description
+                </a>
+            </li>
+        }
+    </ul>
+
+    <div class="tab-content">
+        @foreach (var part in Model)
+        {
+            <div id="@part.UniqueID" class="tab-pane">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th class="col-sm-1"></th>
+                            <th class="col-sm-1 center">@Resources.Resource.Inherit</th>
+                            <th>@Resources.Resource.MaintenanceType</th>
+                            <th>@Resources.Resource.StandardID</th>
+                            <th>@Resources.Resource.StandardDescription</th>
+                            <th class="center">@Resources.Resource.LowerLimit</th>
+                            <th class="center">@Resources.Resource.LowerAlertLimit</th>
+                            <th class="center">@Resources.Resource.UpperAlertLimit</th>
+                            <th class="center">@Resources.Resource.UpperLimit</th>
+                            <th class="center">@Resources.Resource.AccumulationBase</th>
+                            <th class="center">@Resources.Resource.Unit</th>
+                            <th>@Resources.Resource.Remark</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in part.StandardList)
+                        {
+                            <tr>
+                                <td class="center">
+                                    <div class="action-buttons">
+                                        <a class="red" href="#" onclick="DeletePartStandard('@part.UniqueID', '@item.UniqueID'); return false;" title="@Resources.Resource.Delete">
+                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td class="center">
+                                    <label>
+                                        <input class="ace ace-checkbox-2 PartStandard" type="checkbox" value="true" data-isfeelitem="@(item.IsFeelItem ? "Y" : "N")" data-isaccumulation="@(item.IsAccumulation ? "Y" : "N")" data-checked="@(item.IsInherit ? "Y" : "N")" data-partuniqueid="@part.UniqueID" data-standarduniqueid="@item.UniqueID">
+                                        <span class="lbl"></span>
+                                    </label>
+                                </td>
+                                <td>@item.MaintenanceType</td>
+                                <td>@item.ID</td>
+                                <td>@item.Description</td>
+                                @if (item.IsFeelItem)
+                                {
+                                    <td colspan="7">@Resources.Resource.IsFeelItem</td>
+                                }
+                                else
+                                {
+                                    <td><input type="text" class="LowerLimit col-sm-12 center" value="@(item.IsInherit ? item.OriLowerLimit : item.LowerLimit)" data-ori="@item.OriLowerLimit" /></td>
+    <td><input type="text" class="LowerAlertLimit col-sm-12 center" value="@(item.IsInherit ? item.OriLowerAlertLimit : item.LowerAlertLimit)" data-ori="@item.OriLowerAlertLimit" /></td>
+    <td><input type="text" class="UpperAlertLimit col-sm-12 center" value="@(item.IsInherit ? item.OriUpperAlertLimit : item.UpperAlertLimit)" data-ori="@item.OriUpperAlertLimit" /></td>
+                                    <td><input type="text" class="UpperLimit col-sm-12 center" value="@(item.IsInherit ? item.OriUpperLimit : item.UpperLimit)" data-ori="@item.OriUpperLimit" /></td>
+                                    <td><input type="text" class="AccumulationBase col-sm-12 center" value="@(item.IsInherit ? item.OriAccumulationBase : item.AccumulationBase)" data-ori="@item.OriAccumulationBase" /></td>
+                                    <td><input type="text" class="Unit col-sm-12 center" value="@(item.IsInherit ? item.OriUnit : item.Unit)" data-ori="@item.OriUnit" /></td>
+                                    <td><input type="text" class="Remark col-sm-12" value="@(item.IsInherit ? item.OriRemark : item.Remark)" data-ori="@item.OriRemark" /></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+

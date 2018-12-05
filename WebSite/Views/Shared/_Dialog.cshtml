@@ -1,0 +1,76 @@
+﻿<script type="text/javascript">
+    !function ($) {
+        $.extend({
+            Overlay: function (show) {
+                if (show == 'show') {
+                    if (!($('#Overlay').length > 0)) {
+                        $('body').append('<div id="Overlay" class="widget-box-overlay"><i class=" ace-icon loading-icon fa fa-spinner fa-spin fa-2x white"></i></div>');
+                    }
+
+                    $('#Overlay').show();
+                }
+                if (show == 'hide') {
+                    $('#Overlay').hide();
+                }
+            },
+            Redirect: function (url) {
+                location.replace(url);
+            },
+            HtmlEnCode: function (value) {
+                return $('<div/>').text(value).html();
+            },
+            InfoDialog: function (msg) {
+                $.msgGrowl({
+                    type: 'info'
+                        , title: '@Resources.Resource.SystemMessage'
+                        , text: msg
+                    , position: 'top-center'
+                    , closeTrigger: true
+                    , lifetime: 5000
+                });
+            },
+            SuccessDialog: function (msg) {
+                $.msgGrowl({
+                    type: 'success'
+                        , title: '@Resources.Resource.SystemMessage'
+                        , text: msg
+                    , position: 'top-center'
+                    , closeTrigger: true
+                    , lifetime: 5000
+                });
+            },
+            ErrorDialog: function (msg) {
+                $.msgGrowl({
+                    type: 'error'
+                        , title: '@Resources.Resource.SystemMessage'
+                        , text: msg
+                    , position: 'top-center'
+                    , closeTrigger: true
+                    , lifetime: 5000
+                });
+            },
+            ConfirmDialog: function (msg, callback) {
+                var parts = ['<div class="modal in" tabindex="-1" aria-hidden="false" style="display: block;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="blue bigger">@Resources.Resource.Confirm</h4></div><div class="modal-body overflow-visible"><div class="row"><div class="col-xs-12">'];
+                parts.push(msg);
+                parts.push('</div></div></div><div class="modal-footer"><button class="btn btn-sm btn-danger" data-handler="1"><i class="icon-ok"></i>@Resources.Resource.Yes</button><button class="btn btn-sm btn-success" data-handler="0"><i class="icon-remove"></i>@Resources.Resource.No</button></div></div></div></div>');
+
+                var div = $(parts.join("\n"));
+
+                div.bind('hidden', function () {
+                    div.remove();
+                });
+
+                div.on('click', '.modal-footer button', function (e) {
+                    callback($(this).data("handler"));
+                    div.modal('hide');
+                });
+
+                $("body").append(div);
+
+                div.modal('show');
+
+                return div;
+            }
+        });
+    }(jQuery);
+</script>

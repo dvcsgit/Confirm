@@ -1,0 +1,791 @@
+﻿@model Models.ASE.QA.AbnormalForm.DetailViewModel
+
+@if (Model.Status == "3" && (Session["Account"] as Models.Authenticated.Account).ID == Model.Equipment.PEID) { 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        var flowFile_input = $('#FlowFile');
+
+        flowFile_input.ace_file_input({
+            no_file: '...',
+            btn_choose: '請選擇檔案',
+            btn_change: '請選擇檔案',
+            droppable: false,
+            thumbnail: false
+        }).on('change', function (e) {
+            var files = e.target.files;
+
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file" + x, files[x]);
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("UploadFlowFile")',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            $.Overlay('show');
+                        },
+                        success: function (data) {
+                            $.Overlay('hide');
+                        },
+                        error: function (x, h, r) {
+                            $.Overlay('hide');
+
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+                else {
+                    $.InfoDialog('無法上傳');
+                }
+            }
+            else {
+                $.InfoDialog('請選擇檔案');
+            }
+        });
+    });
+</script>
+}
+
+<script type="text/javascript">
+    var Change = function (abnormalFormUniqueID, changeType) {
+        Form('@Url.Action("CreateByAbnormal", "ChangeForm")', { AbnormalFormUniqueID: abnormalFormUniqueID, ChangeType: changeType });
+    };
+
+    var Submit = function () {
+        if ($('#FlowVHNO').val() == '') {
+            $.InfoDialog('請輸入e-MRB單號');
+        }
+        else if ($('#FlowClosedDateString').val() == '') {
+            $.InfoDialog('請輸入e-MRB結案日期');
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Submit")',
+                data: { UniqueID: '@Model.UniqueID', FlowVHNO: $('#FlowVHNO').val(), FlowClosedDate: $('#FlowClosedDateString').val() },
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Query();
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    var Approve = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Approve")',
+            data: { UniqueID: '@Model.UniqueID' },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Query();
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var QAApprove = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("QAApprove")',
+            data: { UniqueID: '@Model.UniqueID' },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Query();
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var Reject = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Reject")',
+            data: { UniqueID: '@Model.UniqueID', VerifyComment:$('#VerifyComment').val() },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Query();
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var QAReject = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Reject")',
+            data: { UniqueID: '@Model.UniqueID', VerifyComment: $('#VerifyComment').val() },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Query();
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var Adjust = function () {
+        var remark = $('#HandlingRemark').val();
+
+        if (remark == '') {
+            $.InfoDialog('請輸入處置說明');
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Adjust")',
+                data: { UniqueID: '@Model.UniqueID', Remark: remark },
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Query();
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    var ApproveAdjust = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("ApproveAdjust")',
+            data: { UniqueID: '@Model.UniqueID' },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Query();
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var RejectAdjust = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("RejectAdjust")',
+            data: { UniqueID: '@Model.UniqueID', VerifyComment:$('#VerifyComment').val() },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Query();
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<p>
+    @if (Model.Status == "1" && (Session["Account"] as Models.Authenticated.Account).ID == Model.Equipment.OwnerID)
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Change('@Model.UniqueID', '1');" type="button">
+            <i class="ace-icon fa fa-ban bigger-160"></i>
+            免校驗
+        </button>
+        
+        <button class="btn btn-app btn-primary btn-xs" onclick="Change('@Model.UniqueID', '4');" type="button">
+            <i class="ace-icon fa fa-wrench bigger-160"></i>
+            @Resources.Resource.Fix
+        </button>
+        
+        <button class="btn btn-app btn-primary btn-xs" onclick="Change('@Model.UniqueID', '6');" type="button">
+            <i class="ace-icon fa fa-ban bigger-160"></i>
+            庫存
+        </button>
+        
+        <button class="btn btn-app btn-primary btn-xs" onclick="Change('@Model.UniqueID', '3');" type="button">
+            <i class="ace-icon fa fa-minus-circle bigger-160"></i>
+            @Resources.Resource.Scrapped
+        </button>
+
+        <button class="btn btn-app btn-primary btn-xs" onclick="Adjust();" type="button">
+            <i class="ace-icon fa fa-check-circle-o bigger-160"></i>
+            微調處置
+        </button>
+    }
+    
+@if (Model.Status == "2" && (Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Verify"))
+{
+    <button class="btn btn-app btn-primary btn-xs " onclick="ApproveAdjust();" type="button">
+        <i class="ace-icon fa fa-check-circle-o bigger-160"></i>
+        @Resources.Resource.Approve
+    </button>
+
+    <button class="btn btn-app btn-danger btn-xs " onclick="RejectAdjust();" type="button">
+        <i class="ace-icon fa fa-times-circle-o bigger-160"></i>
+        @Resources.Resource.Reject
+    </button>
+}
+
+    @if (Model.Status == "3" && (Session["Account"] as Models.Authenticated.Account).ID == Model.Equipment.PEID)
+    { 
+    <button class="btn btn-app btn-primary btn-xs" onclick="Submit();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Submit
+    </button>
+    }
+    
+    @if (Model.Status == "5" && Model.LogList.Any(x => !x.VerifyTime.HasValue && x.UserID == (Session["Account"] as Models.Authenticated.Account).ID))
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Approve();" type="button">
+            <i class="ace-icon fa fa-check-circle-o bigger-160"></i>
+            @Resources.Resource.Approve
+        </button>
+        
+        <button class="btn btn-app btn-danger btn-xs " onclick="Reject" type="button">
+        <i class="ace-icon fa fa-times-circle-o bigger-160"></i>
+        @Resources.Resource.Reject
+    </button>
+    }
+    
+    @if (Model.Status == "5" && (Model.LogList.Any(x => x.FlowSeq == 4 && !x.VerifyTime.HasValue) && (Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Verify")))
+    { 
+    <button class="btn btn-app btn-primary btn-xs" onclick="QAApprove();" type="button">
+            <i class="ace-icon fa fa-check-circle-o bigger-160"></i>
+            @Resources.Resource.Approve
+        </button>
+        
+        <button class="btn btn-app btn-danger btn-xs " onclick="QAReject" type="button">
+        <i class="ace-icon fa fa-times-circle-o bigger-160"></i>
+        @Resources.Resource.Reject
+    </button>
+    }
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+@if ((Model.Status == "2" && (Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Verify")) || (Model.Status == "5" && Model.LogList.Any(x => !x.VerifyTime.HasValue && x.UserID == (Session["Account"] as Models.Authenticated.Account).ID)) || (Model.Status == "5" && (Model.LogList.Any(x => x.FlowSeq == 4 && !x.VerifyTime.HasValue) && (Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Verify"))))
+{ 
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">核簽意見</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <td class="col-sm-12"><input id="VerifyComment" class="col-sm-11" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (Model.Status == "1" && (Session["Account"] as Models.Authenticated.Account).ID == Model.Equipment.OwnerID)
+{
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">微調處置說明</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <td class="col-sm-12"><input id="HandlingRemark" class="col-sm-11" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    if (!string.IsNullOrEmpty(Model.HandlingRemark))
+    {
+        <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">微調處置說明</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <td class="col-sm-12">@Html.DisplayFor(x => x.HandlingRemark)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div> 
+    }
+}
+
+@if (Model.Status == "3" && (Session["Account"] as Models.Authenticated.Account).ID == Model.Equipment.PEID)
+{
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">MEASURMENT EQUIPMENT CALIBRATION OUT OF TOLERANCE PE SHOULD FOLLOW NON-CONFORMING FLOW HANDLE</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th><label>e-MRB單號</label></th>
+                        <td>@Html.TextBoxFor(x => x.FlowVHNO)</td>
+                        <th><label>e-MRB結案日期</label></th>
+                        <td>
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.FlowClosedDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="file" name="FlowFile" id="FlowFile" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    if (!string.IsNullOrEmpty(Model.FlowVHNO))
+    { 
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">MEASURMENT EQUIPMENT CALIBRATION OUT OF TOLERANCE PE SHOULD FOLLOW NON-CONFORMING FLOW HANDLE</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th><label>e-MRB單號</label></th>
+                        <td>@Html.DisplayFor(x => x.FlowVHNO)</td>
+                        <th><label>e-MRB結案日期</label></th>
+                        <td>@Html.DisplayFor(x => x.FlowClosedDateString)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    }
+}
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.CalibrationAbnormalForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>@Html.LabelFor(x => x.VHNO)</th>
+                    <td>@Html.DisplayFor(x => x.VHNO)</td>
+                    <th>@Html.LabelFor(x => x.StatusDescription)</th>
+                    <td>
+                        @if (Model.Status == "1")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.Status == "2")
+                        {
+                            <span class="label label-lg label-primary arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.Status == "3" || Model.Status == "5" || Model.Status == "6")
+                        {
+                            <span class="label label-lg label-warning arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.Status == "4")
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else
+                        {
+                            <span>@Model.StatusDescription</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.CalibrateDateString)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.CalibrateDateString)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Calibrator)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Calibrator)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.CreateTimeString)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.CreateTimeString)</td>
+                </tr>
+                <tr>
+                    <th><label>其他資訊</label></th>
+                    <td colspan="3">@Html.DisplayFor(x => x.OtherInformation)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_Equipment", Model.Equipment)
+
+@if (Model.STDUSEList != null && Model.STDUSEList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">標準件</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>儀校編號</th>
+                            <th>校驗人員</th>
+                            <th>上次校驗日期</th>
+                            <th>下次校驗日期</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.STDUSEList)
+                        {
+                            <tr>
+                                <td>@item.CalNo</td>
+                                <td>@item.Calibrator</td>
+                                <td>@item.LastCalibrateDateString</td>
+                                <td>@item.NextCalibrateDateString</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.ItemList != null && Model.ItemList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.Calibration @Resources.Resource.Information</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Characteristic</th>
+                            <th>@Resources.Resource.UsingRange</th>
+                            <th>校驗點</th>
+                            <th>標準值</th>
+                            <th>量測值</th>
+                            <th>@Resources.Resource.Tolerance</th>
+                            <th class="center">@Resources.Resource.CalibrateDate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ItemList)
+                        {
+                            <tr>
+                                <td>@item.Characteristic</td>
+                                <td>@item.UsingRange</td>
+                                <td>@item.CalibrationPoint</td>
+                                <td>@item.Standard</td>
+                                <td>@item.ReadingValue</td>
+                                <td>@item.Tolerance</td>
+                                <td class="center">@item.CalibrateDateString</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.FileList != null && Model.FileList.Count > 0)
+{
+    <div class="space"></div>
+    
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.File</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th></th>
+                            <th>@Resources.Resource.FileName</th>
+                            <th>@Resources.Resource.FileSize</th>
+                            <th>@Resources.Resource.FileTime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FileList)
+                        {
+                            <tr>
+                                <td class="center">
+                                    <div class="action-buttons">
+                                        <a class="purple" href="@Url.Action("Download", new { FormUniqueID=Model.UniqueID, Seq=item.Seq})" title="@Resources.Resource.Download">
+                                            <i class="ace-icon fa fa-cloud-download bigger-130"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>@item.Display</td>
+                                <td>@item.FileSize</td>
+                                <td>@item.LastModifyTimeString</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>  
+}
+
+@if (Model.ChangeForm != null)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.CalibrationChangeForm</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.ChangeForm.VHNO)</th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.ChangeForm.VHNO)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.ChangeForm.StatusDescription)</th>
+                        <td class="col-sm-5">
+                            @if (Model.ChangeForm.Status == "1")
+                            {
+                                <span class="label label-lg label-purple arrowed-right">@Model.ChangeForm.StatusDescription</span>
+                            }
+                            else if (Model.ChangeForm.Status == "2")
+                            {
+                                <span class="label label-lg label-danger arrowed-right">@Model.ChangeForm.StatusDescription</span>
+                            }
+                            else if (Model.ChangeForm.Status == "3" || Model.ChangeForm.Status == "5" || Model.ChangeForm.Status == "6")
+                            {
+                                <span class="label label-lg label-success arrowed-right">@Model.ChangeForm.StatusDescription</span>
+                            }
+                            else
+                            { 
+                                <span>@Model.ChangeForm.StatusDescription</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.ChangeForm.ChangeTypeDescription)</th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.ChangeForm.ChangeTypeDescription)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.ChangeForm.CreateTimeString)</th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.ChangeForm.CreateTimeString)</td>
+                    </tr>
+                    @if (Model.ChangeForm.ChangeType == "4")
+                    { 
+                        <tr>
+                            <th>@Html.LabelFor(x => x.ChangeForm.FixFinishedDateString)</th>
+                            <td colspan="3">@Html.DisplayFor(x => x.ChangeForm.FixFinishedDateString)</td>
+                        </tr>
+                    }
+                    @if (Model.ChangeForm.ChangeType == "5")
+                    { 
+                        <tr>
+                            <th>@Html.LabelFor(x=>x.ChangeForm.Owner)</th>
+                            <td>@Html.DisplayFor(x => x.ChangeForm.Owner)</td>
+                            <th>@Html.LabelFor(x => x.ChangeForm.PE)</th>
+                            <td>@Html.DisplayFor(x => x.ChangeForm.PE)</td>
+                        </tr>
+    <tr>
+        <th>@Html.LabelFor(x => x.ChangeForm.OwnerManager)</th>
+        <td>@Html.DisplayFor(x => x.ChangeForm.OwnerManager)</td>
+        <th>@Html.LabelFor(x => x.ChangeForm.PEManager)</th>
+        <td>@Html.DisplayFor(x => x.ChangeForm.PEManager)</td>
+    </tr>
+                    }
+                    <tr>
+                        <th>@Html.LabelFor(x => x.ChangeForm.ChangeReason)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.ChangeForm.ChangeReason)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.LogList != null && Model.LogList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">簽核流程</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Role</th>
+                            <th>@Resources.Resource.VerifyUser</th>
+                            <th>@Resources.Resource.NotifyTime</th>
+                            <th>@Resources.Resource.VerifyTime</th>
+                            <th>@Resources.Resource.VerifyResult</th>
+                            <th>@Resources.Resource.VerifyComment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.LogList)
+                        {
+                            <tr>
+                                <td>@item.Role</td>
+                                <td>@item.User</td>
+                                <td>@item.NotifyTimeString</td>
+                                <td>@item.VerifyTimeString</td>
+                                <td>@item.VerifyResultDescription</td>
+                                <td>@item.VerifyComment</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

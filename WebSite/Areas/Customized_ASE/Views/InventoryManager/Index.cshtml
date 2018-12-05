@@ -1,0 +1,127 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+    <link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+    <link href="@Url.Content("~/assets/css/select2.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+    <script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/select2.min.js")"></script>
+
+    <script type="text/javascript">
+    $(function () {
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+
+        Query();
+    });
+
+    var Form = function (url, data) {
+        $('#divQueryFormContainer').hide();
+        $('#divFormContainer').show();
+
+        var form = $('#divForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            data: data,
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    function Query() {
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+
+        var div = $('#divQueryResult');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Query")',
+                dataType: "html",
+                beforeSend: function () { div.Overlay('show'); },
+                success: function (data) { div.Overlay('show').html(data); },
+                error: function (x, h, r) { div.Overlay('hide').html(x.responseText); }
+            });
+        }
+
+        var Create = function () {
+            Form('@Url.Action("Create")');
+        };
+
+        var Detail = function (organizationUniqueID) {
+            Form('@Url.Action("Detail")', { OrganizationUniqueID: organizationUniqueID });
+    }
+
+    var Edit = function (organizationUniqueID) {
+        Form('@Url.Action("Edit")', { OrganizationUniqueID: organizationUniqueID });
+    }
+
+    var Cancel = function () {
+        $('#divForm').empty();
+        $('#divQueryResult').empty();
+
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+    };
+
+    var Delete = function (organizationUniqueID) {
+        $.ConfirmDialog('@string.Format("{0} {1} ?", Resources.Resource.Confirm, Resources.Resource.Delete)', function (confirmed) {
+            if (confirmed) {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Delete")',
+                    data: { OrganizationUniqueID: organizationUniqueID },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+    };
+    </script>
+}
+
+<div class="row" id="divQueryFormContainer">
+    <div class="col-xs-12">
+        <div id="divQueryResult" style="min-height:200px;"></div>
+    </div>
+</div>
+
+<div class="row" id="divFormContainer">
+    <div class="col-xs-12">
+        <div id="divForm" style="min-height:200px;"></div>
+    </div>
+</div>

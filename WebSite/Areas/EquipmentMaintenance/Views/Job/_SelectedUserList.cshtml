@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Models.EquipmentMaintenance.JobManagement.UserModel>
+
+
+<table class="table table-striped table-bordered table-hover nowrap">
+    <thead class="thin-border-bottom">
+        <tr>
+            <th class="col-sm-1 center"></th>
+            <th>@Resources.Resource.Organization</th>
+            <th>@Resources.Resource.UserID</th>
+            <th>@Resources.Resource.UserName</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="center">
+                    <div class="action-buttons">
+                        <a class="red" href="#" onclick="DeleteUser('@item.ID'); return false;" title="@Resources.Resource.Delete">
+                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                        </a>
+                    </div>
+                </td>
+                <td>@item.OrganizationDescription</td>
+                <td>@item.ID</td>
+                <td>@item.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

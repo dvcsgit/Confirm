@@ -1,0 +1,151 @@
+﻿
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedUserList();
+
+        InitSelectUserTree();
+
+        $('#divUserSelectTreeWidget').hide();
+    });
+
+    function GetSelectedUserList() {
+        var list = $('#divSelectedUserList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedUserList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitSelectUserTree() {
+        var container = $('#divUserSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitSelectUserTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var UserSelect = function () {
+        $('#divUserSelectedListWidget').hide();
+        $('#divUserSelectTreeWidget').show();
+    };
+
+    var CancelUserSelect = function () {
+        $('#divUserSelectedListWidget').show();
+        $('#divUserSelectTreeWidget').hide();
+    };
+
+    var AddUser = function () {
+        var data = [];
+
+        $("#divSelectUserTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.UserID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddUser")',
+            data: { Selecteds: JSON.stringify(data) },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divUserSelectTreeWidget').hide();
+                $('#divUserSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divUserSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedUserList();
+                    $("#divSelectUserTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divUserSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteUser = function (userID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteUser")',
+            data: { UserID: userID, },
+            dataType: "json",
+            beforeSend: function () { $('#divUserSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divUserSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedUserList();
+                    $("#divSelectUserTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divUserSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+
+<div id="divUserSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">選擇通知人員</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divUserSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddUser(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelUserSelect(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divUserSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">通知人員</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="UserSelect(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; min-height:100px; max-height:300px;">
+            <div id="divSelectedUserList" style="min-height:100px;"></div>
+        </div>
+    </div>
+</div>

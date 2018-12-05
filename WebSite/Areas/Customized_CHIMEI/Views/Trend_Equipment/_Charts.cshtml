@@ -1,0 +1,20 @@
+﻿@model Utility.Models.RequestResult
+
+@if (!Model.IsSuccess)
+{ 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.InfoDialog('@Model.Message');
+        });
+    </script>
+}
+else
+{
+    var viewModels = Model.Data as List<Customized.CHIMEI.Models.TrendQuery.ChartViewModel>;
+
+    foreach (var viewModel in viewModels)
+    { 
+    @Html.Partial("_Chart", viewModel)
+    <div class="space"></div>
+    }
+}

@@ -1,0 +1,195 @@
+﻿@model Models.ASE.QA.CalibrationNotify.DetailViewModel
+
+<p>
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        返回
+    </button>
+
+    @if (Model.FormViewModel.Equipment!=null&& Model.FormViewModel.Equipment.IsQuatationExist)
+    {
+        <a class="btn btn-app btn-primary btn-xs" style="width:100px;" href="@Url.Action("Quatation", new { UniqueID = Model.UniqueID })">
+            <i class="ace-icon fa fa-cloud-download bigger-160"></i>
+            報價單下載
+        </a>
+    }
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">儀器校驗通知單</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.VHNO)</th>
+                    <td >@Html.DisplayFor(x => x.FormViewModel.VHNO)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.Status.Display)</th>
+                    <td >
+                        @if ( Model.FormViewModel.Status.Status == "1")
+                        {
+                            <span class="label label-lg label-purple arrowed-right">@Model.FormViewModel.Status.Display</span>
+                        }
+                        else if (Model.FormViewModel.Status.Status == "0" || Model.FormViewModel.Status.Status == "2")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.FormViewModel.Status.Display</span>
+                        }
+                        else if (Model.FormViewModel.Status.Status == "3")
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Model.FormViewModel.Status.Display</span>
+                        }
+                        else
+                        {
+                            <span>@Model.FormViewModel.Status.Display</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CalNo)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.CalNo)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CreateTimeString)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.CreateTimeString)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CharacteristicType)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.CharacteristicType)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.Cycle)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.Cycle)</td>
+                </tr>
+                @if (!string.IsNullOrEmpty(Model.FormViewModel.FormVHNO))
+                {
+                    <tr>
+                        <th><label>執行單號</label></th>
+                        <td colspan="3">
+                            <a class="blue" onclick="CalibrationForm('@Model.FormViewModel.FormUniqueID')" title="@Resources.Resource.Detail">
+                                @Model.FormViewModel.FormVHNO
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_Equipment", Model.FormViewModel.Equipment)
+
+@if (Model.FormViewModel.ItemList != null && Model.FormViewModel.ItemList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">校驗資訊</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Characteristic</th>
+                            <th>@Resources.Resource.Unit</th>
+                            <th>@Resources.Resource.UsingRange</th>
+                            <th>@Resources.Resource.UsingRangeTolerance</th>
+                            <th>校驗點</th>
+                            <th>@Resources.Resource.Tolerance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FormViewModel.ItemList)
+                        {
+                            foreach (var subitem in item.ItemList)
+                            {
+                                <tr>
+                                    <td>@item.Characteristic</td>
+                                    <td>@item.Unit</td>
+                                    <td>@item.UsingRange</td>
+                                    <td>@item.UsingRangeToleranceDisplay</td>
+                                    <td>@subitem.CalibrationPointDisplay</td>
+                                    <td>@subitem.ToleranceDisplay</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Calibration @Resources.Resource.Information</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CalibrateTypeDisplay)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FormViewModel.CalibrateTypeDisplay)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CalibrateUnitDisplay)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.CalibrateUnitDisplay)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CaseTypeDisplay)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.CaseTypeDisplay)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.Calibrator)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.Calibrator)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.EstCalibrateDateString)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.EstCalibrateDateString)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.FormViewModel.LogList != null && Model.FormViewModel.LogList.Count > 0)
+{
+    <div class="space"></div>
+    
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">簽核流程</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Role</th>
+                            <th>@Resources.Resource.VerifyUser</th>
+                            <th>@Resources.Resource.NotifyTime</th>
+                            <th>@Resources.Resource.VerifyTime</th>
+                            <th>@Resources.Resource.VerifyResult</th>
+                            <th>@Resources.Resource.VerifyComment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FormViewModel.LogList)
+                        {
+                            <tr>
+                                <td>@item.Role</td>
+                                <td>@item.User</td>
+                                <td>@item.NotifyTimeString</td>
+                                <td>@item.VerifyTimeString</td>
+                                <td>@item.VerifyResultDescription</td>
+                                <td>@item.VerifyComment</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

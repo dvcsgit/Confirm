@@ -1,0 +1,113 @@
+﻿@model Models.ASE.QA.MSAIchiManagement.QueryFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        Query();
+
+        $('#Parameters_KeyWord').keydown(function (event) {
+            if (event.which == 13) {
+                Query();
+                return false;
+            }
+        });
+    });
+
+    var Query = function () {
+        $('#divForm').empty().hide();
+        $('#divQueryForm').show();
+
+        var grid = $('#divList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Query")',
+            data: $('#QueryForm').serialize(),
+            dataType: "html",
+            beforeSend: function () {
+                grid.Overlay('show');
+            },
+            success: function (data) {
+                grid.Overlay('hide').html(data);
+            },
+            error: function (x, h, r) {
+                grid.Overlay('hide').html(x.responseText);
+            }
+        });
+    };
+
+    var Form = function (url, data) {
+        $('#divQueryForm').hide();
+
+        var form = $('#divForm');
+
+        form.empty().show();
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            data: data,
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Detail = function (uniqueID) {
+        Form('@Url.Action("Detail")', { UniqueID: uniqueID });
+    };
+
+    var Create = function () {
+        Form('@Url.Action("Create")');
+    };
+
+    var Edit = function (uniqueID) {
+        Form('@Url.Action("Edit")', { UniqueID: uniqueID });
+    };
+</script>
+}
+
+<div class="row">
+    <div id="divQueryForm" class="col-xs-12">
+        @if (ViewBag.CanCreate)
+        {
+            <p>
+                <button class="btn btn-app btn-primary btn-xs" onclick="Create();" type="button">
+                    <i class="ace-icon fa fa-plus bigger-160"></i>
+                    @Resources.Resource.Create
+                </button>
+            </p>
+        }
+
+        @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+        {
+            <p>
+                <div class="input-group">
+                    <span class="input-group-addon" style="cursor:pointer;" onclick="Query();">
+                        <i class="fa fa-search bigger-110"></i>
+                    </span>
+                    @Html.TextBoxFor(x => x.Parameters.KeyWord, new { @class = "form-control" })
+                </div>
+            </p>
+        }
+
+        <div id="divList" style="min-height:200px;"></div>
+    </div>
+
+    <div id="divForm" style="min-height:200px;" class="col-xs-12"></div>
+</div>
+
+

@@ -1,0 +1,225 @@
+﻿@model Models.ASE.QA.CalibrationNotify.DetailItemCreateFormModel
+
+<ul id="CharacteristicUnitList">
+    @foreach (var unit in Model.UnitList)
+    {
+        <li data-characteristicuniqueid="@unit.CharacteristicUniqueID" data-uniqueid="@unit.UniqueID" data-description="@unit.Description"></li>
+    }
+</ul>
+
+<ul id="ToleranceUnitList">
+    @foreach (var unit in Model.ToleranceUnitList)
+    {
+        <li data-unituniqueid="@unit.UnitUniqueID" data-uniqueid="@unit.UniqueID" data-description="@unit.Description"></li>
+    }
+</ul>
+
+@Html.Partial("_DetailFormScripts")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateDetailItemForm");
+    });
+
+    var SaveDetailItem = function () {
+        var form = $('#CreateDetailItemForm');
+
+        if ($('#FormInput_CharacteristicUniqueID').val() == '' || ($('#FormInput_CharacteristicUniqueID').val() == '@Utility.Define.OTHER' && $('#FormInput_CharacteristicRemark').val() == '')) {
+            $.InfoDialog('請選擇量測特性');
+        }
+        @*else if ($('#FormInput_UnitUniqueID').val() == '' || ($('#FormInput_UnitUniqueID').val() == '@Utility.Define.OTHER' && $('#FormInput_UnitRemark').val() == '')) {
+            $.InfoDialog('請選擇單位');
+        }*@
+        else if ($('#FormInput_LowerUsingRange').val() == '' && $('#FormInput_UpperUsingRange').val() == '') {
+            $.InfoDialog('@Resources.Resource.UsingRangeRequired');
+        }
+        @*else if ($('#FormInput_LowerUsingRange').val() != '' && $('#FormInput_LowerUsingRangeUnitUniqueID').val() == '') {
+            $.InfoDialog('請選擇使用範圍下限單位');
+        }
+        else if ($('#FormInput_LowerUsingRange').val() != '' && $('#FormInput_LowerUsingRangeUnitUniqueID').val() == '@Utility.Define.OTHER' && $('#FormInput_LowerUsingRangeUnitRemark').val() == '') {
+            $.InfoDialog('請輸入使用範圍下限單位');
+        }*@
+        @*else if ($('#FormInput_UpperUsingRange').val() != '' && $('#FormInput_UpperUsingRangeUnitUniqueID').val() == '') {
+            $.InfoDialog('請選擇使用範圍上限單位');
+        }
+        else if ($('#FormInput_UpperUsingRange').val() != '' && $('#FormInput_UpperUsingRangeUnitUniqueID').val() == '@Utility.Define.OTHER' && $('#FormInput_UpperUsingRangeUnitRemark').val() == '') {
+            $.InfoDialog('請輸入使用範圍上限單位');
+        }*@
+        else if ($('#FormInput_UsingRangeTolerance').val() == '') {
+            $.InfoDialog('請輸入使用範圍允收');
+        }
+        @*else if ($('#FormInput_UsingRangeToleranceUnitUniqueID').val() == '' || ($('#FormInput_UsingRangeToleranceUnitUniqueID').val() == '@Utility.Define.OTHER' && $('#FormInput_UsingRangeToleranceUnitRemark').val() == '')) {
+            $.InfoDialog('請選擇使用範圍允收單位');
+        }*@
+        else {
+            var valid = true;
+            var errMessage = '';
+
+            var data = [];
+
+            $('.CalibrationPoint').each(function () {
+                var calibrationPoint = $(this).val();
+                var calibrationPointUnitUniqueID = $(this).parent().parent().find('.CalibrationPointUnitUniqueID').val();
+
+                var toleranceSymbol = $(this).parent().parent().find('.ToleranceSymbol').val();
+                var tolerance = $(this).parent().parent().find('.Tolerance').val();
+                var toleranceUnitUniqueID = $(this).parent().parent().find('.ToleranceUnitUniqueID').val();
+
+                if (calibrationPoint == '') {
+                    valid = false;
+                    errMessage = '請輸入校驗點';
+                }
+                //else if (calibrationPointUnitUniqueID == '') {
+                //    valid = false;
+                //    errMessage = '請選擇校驗點單位';
+                //}
+                else if (tolerance == '') {
+                    valid = false;
+                    errMessage = '請輸入允收標準';
+                }
+                //else if (toleranceUnitUniqueID == '') {
+                //    valid = false;
+                //    errMessage = '請選擇允收標準單位';
+                //}
+                else {
+                    data.push(calibrationPoint + '@Utility.Define.Seperator' + calibrationPointUnitUniqueID + '@Utility.Define.Seperator' + toleranceSymbol + '@Utility.Define.Seperator' + tolerance + '@Utility.Define.Seperator' + toleranceUnitUniqueID);
+                }
+            });
+
+            if (!valid) {
+                $.InfoDialog(errMessage);
+            }
+            else {
+                if (data.length == 0) {
+                    $.InfoDialog('請設定校驗點');
+                }
+                else {
+                    $('#FormInput_SubItems').val(JSON.stringify(data));
+
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: '@Url.Action("CreateDetailItem")',
+                        data: form.serialize(),
+                        dataType: "json",
+                        beforeSend: function () { $.Overlay('show'); },
+                        success: function (data) {
+                            $.Overlay('hide');
+
+                            if (data.IsSuccess) {
+                                $('#divCreateDetailItem').empty();
+                                $('#divCreateDetailItemWidget').hide();
+                                $('#divDetailItemListWidget').show();
+
+                                GetDetailItemList();
+                            }
+                            else {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $.Overlay('hide');
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+            }
+        }
+    };
+</script>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.Calibration @Resources.Resource.Information</h5>
+    </div>
+
+    <div class="widget-body">
+        <div>
+            <div class="widget-main no-padding">
+                @using (Html.BeginForm("CreateDetailItem", null, FormMethod.Post, new { @ID = "CreateDetailItemForm" }))
+                {
+                    @Html.HiddenFor(x => x.FormInput.SubItems)
+                    
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.CharacteristicUniqueID)</th>
+                            <td class="col-sm-5">
+                                @Html.DropDownListFor(x => x.FormInput.CharacteristicUniqueID, Model.CharacteristicSelectItemList)
+                                @Html.TextBoxFor(x => x.FormInput.CharacteristicRemark)
+                            </td>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.UnitUniqueID)</th>
+                            <td class="col-sm-5">
+                                @Html.DropDownListFor(x => x.FormInput.UnitUniqueID, Model.UnitSelectItemList)
+                                @Html.TextBoxFor(x => x.FormInput.UnitRemark, new { @class = "col-sm-2" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.LowerUsingRange)</th>
+                            <td class="col-sm-5">
+                                @Html.TextBoxFor(x => x.FormInput.LowerUsingRange, new { @class = "col-sm-3" })
+                                @Html.DropDownListFor(x => x.FormInput.LowerUsingRangeUnitUniqueID, Model.LowerUsingRangeUnitSelectItemList)
+                                @Html.TextBoxFor(x => x.FormInput.LowerUsingRangeUnitRemark, new { @class = "col-sm-2" })
+                            </td>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.UpperUsingRange)</th>
+                            <td class="col-sm-5">
+                                @Html.TextBoxFor(x => x.FormInput.UpperUsingRange, new { @class = "col-sm-3" })
+                                @Html.DropDownListFor(x => x.FormInput.UpperUsingRangeUnitUniqueID, Model.UpperUsingRangeUnitSelectItemList)
+                                @Html.TextBoxFor(x => x.FormInput.UpperUsingRangeUnitRemark, new { @class = "col-sm-2" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.UsingRangeTolerance)</th>
+                            <td class="col-sm-5">
+                                @Html.DropDownListFor(x => x.FormInput.UsingRangeToleranceSymbol, Model.UsingRangeToleranceSymbolSelectItemList)
+                                @Html.TextBoxFor(x => x.FormInput.UsingRangeTolerance, new { @class = "col-sm-3" })
+                                @Html.DropDownListFor(x => x.FormInput.UsingRangeToleranceUnitUniqueID, Model.UsingRangeToleranceUnitSelectItemList)
+                                @Html.TextBoxFor(x => x.FormInput.UsingRangeToleranceUnitRemark, new { @class = "col-sm-2" })
+                            </td>
+                            <td colspan="2"></td>
+                        </tr>
+                    </table>
+                }
+            </div>
+
+            <div class="widget-toolbox padding-8 clearfix">
+                <button class="btn btn-primary" onclick="SaveDetailItem();">
+                    <i class="ace-icon fa fa-save"></i>
+                    @Resources.Resource.Save
+                </button>
+                <button class="btn btn-success" onclick="CanelCreateDetailItem(); return false;">
+                    <i class="ace-icon fa fa-ban"></i>
+                    @Resources.Resource.Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">校驗點</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="AddSubDetailItem(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+            <table id="CalibrationList" class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="center"></th>
+                        <th>校驗點</th>
+                        <th>@Resources.Resource.Tolerance</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

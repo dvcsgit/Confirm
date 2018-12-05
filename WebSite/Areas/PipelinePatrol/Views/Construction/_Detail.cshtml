@@ -1,0 +1,251 @@
+﻿@model Models.PipelinePatrol.Construction.DetailViewModel
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        InitGoogleMap();
+    });
+
+    function InitGoogleMap() {
+        var mapOptions = {
+            zoom: 15,
+            center: new google.maps.LatLng(@Model.LAT, @Model.LNG),
+            mapTypeControl:false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        var maker = new google.maps.Marker({
+            position: new google.maps.LatLng(@Model.LAT,@Model.LNG)
+        });
+
+        maker.setMap(map);
+    }
+</script>
+
+@if (Model.PipePointLAT.HasValue && Model.PipePointLNG.HasValue)
+{
+    <script type="text/javascript">
+        $(document).ready(function(){
+            InitGoogleMapPipePoint();
+        });
+
+        function InitGoogleMapPipePoint() {
+            var mapOptions = {
+                zoom: 15,
+                center: new google.maps.LatLng(@Model.PipePointLAT, @Model.PipePointLNG),
+                mapTypeControl:false,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            var map = new google.maps.Map(document.getElementById('map-pipepoint-canvas'), mapOptions);
+
+            var maker = new google.maps.Marker({
+                position: new google.maps.LatLng(@Model.PipePointLAT,@Model.PipePointLNG)
+            });
+
+            maker.setMap(map);
+        }
+    </script>
+}
+
+
+<p>
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="bigger lighter">@Resources.Resource.Construction</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>@Html.LabelFor(x => x.VHNO)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.VHNO)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Description)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Description)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Address)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Address)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ConstructionFirm)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.ConstructionFirm)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ConstructionType)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.ConstructionType)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.BeginDate)</th>
+                    <td>@Html.DisplayFor(x => x.BeginDate)</td>
+                    <th>@Html.LabelFor(x => x.EndDate)</th>
+                    <td>@Html.DisplayFor(x => x.EndDate)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.CreateTimeString)</th>
+                    <td>@Html.DisplayFor(x => x.CreateTimeString)</td>
+                    <th>@Html.LabelFor(x => x.CreateUser)</th>
+                    <td>@Html.DisplayFor(x => x.CreateUser.User)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Resources.Resource.InspectionUser
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th>@Resources.Resource.InspectTime</th>
+                        <th>@Resources.Resource.InspectionUser</th>
+                        <th>@Resources.Resource.Remark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.InspectionUserList)
+                    {
+                        <tr>
+                            <td>@item.InspectionTimeString</td>
+                            <td>@item.User.User</td>
+                            <td>@item.Remark</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.PhotoList != null && Model.PhotoList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">施工照片</h5>
+            <div class="widget-toolbar">
+                <a href="#" data-action="collapse">
+                    <i class="ace-icon fa fa-chevron-up"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main padding-8">
+                <ul class="ace-thumbnails clearfix">
+                    @foreach (var photo in Model.PhotoList)
+                    {
+                        <li>
+                            <a href="#" title="Photo Title" data-rel="colorbox" class="cboxElement">
+                                <img width="500" height="290" alt="500x290" src="@Url.Content("~/PipelinePatrolPhoto/" + photo)">
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">施工位置</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <div id="map-canvas" style="height:500px;"></div>
+        </div>
+    </div>
+</div>
+
+@*@if (Model.PipePointLAT.HasValue && Model.PipePointLNG.HasValue)
+{ 
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">定位點位置</h5>
+            <div class="widget-toolbar">
+                <a href="#" data-action="collapse">
+                    <i class="ace-icon fa fa-chevron-up"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <div id="map-pipepoint-canvas" style="height:500px;"></div>
+            </div>
+        </div>
+    </div>
+}*@
+
+@if (Model.MessageList.Count > 0)
+{
+    var account = Session["Account"] as Models.Authenticated.Account;
+    
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">對話紀錄</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                @foreach (var message in Model.MessageList)
+                {
+                    <div class="itemdiv dialogdiv">
+                        <div class="user">
+                            <img alt="" src="@(!string.IsNullOrEmpty(account.Photo) ? Url.Content(string.Format("~/{0}/{1}", Utility.Config.UserPhotoVirtualPath, account.Photo)) : Url.Content("~/Content/images/ic_chat_user.png"))">
+                        </div>
+
+                        <div class="body">
+                            <div class="time">
+                                <span>@message.MessageTimeString</span>
+                            </div>
+
+                            <div class="name">
+                                <a href="#">@message.User.OrganizationDescription @message.User.User</a>
+                            </div>
+                            @if (message.IsPhoto)
+                            {
+                                <div class="text"><img alt="" src="@Url.Content("~/ChatPhoto/" + message.Photo)" /></div>
+                            }
+                            else
+                            {
+                                <div class="text">@message.Message</div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div><!-- /.widget-main -->
+        </div><!-- /.widget-body -->
+    </div>
+}

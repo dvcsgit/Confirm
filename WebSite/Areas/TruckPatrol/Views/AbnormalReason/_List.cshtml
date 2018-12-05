@@ -1,0 +1,126 @@
+﻿@model Models.TruckPatrol.AbnormalReasonManagement.GridViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#All').click(function () {
+            if ($(this).prop('checked')) {
+                $('.AbnormalReason').prop('checked', true);
+            }
+            else {
+                $('.AbnormalReason').prop('checked', false);
+            }
+        });
+    });
+</script>
+
+@if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+{ 
+    if (ViewBag.CanCreate)
+    {
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="Create('@Model.OrganizationUniqueID', '@Model.AbnormalType');">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Create @Resources.Resource.AbnormalReason @Resources.Resource.At @Model.OrganizationDescription
+            </button>
+        </div>
+    }
+
+    if (ViewBag.CanDelete && Model.ItemList.Count > 0)
+    {
+        <div class="btn-group">
+            <button class="btn btn-danger" onclick="Delete('');">
+                <i class="ace-icon fa fa-trash-o"></i>
+                @Resources.Resource.Delete
+            </button>
+        </div>
+    }
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Model.FullOrganizationDescription
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1 center">
+                            @if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+                            {
+                                <label>
+                                    <input id="All" class="ace ace-checkbox-2" type="checkbox">
+                                    <span class="lbl"></span>
+                                </label>
+                            }
+                        </th>
+                        <th class="col-sm-1 center"></th>
+                        <th>@Resources.Resource.Organization</th>
+                        <th>@Resources.Resource.AbnormalType</th>
+                        <th>@Resources.Resource.AbnormalReasonID</th>
+                        <th>@Resources.Resource.AbnormalReasonDescription</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemList)
+                    {
+                        <tr>
+                            <td class="col-sm-1 center">
+                                @if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable && item.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+                                {
+                                    <label>
+                                        <input class="ace ace-checkbox-2 AbnormalReason" type="checkbox" value="@item.UniqueID">
+                                        <span class="lbl"></span>
+                                    </label>
+                                }
+                            </td>
+                            <td class="col-sm-1 center">
+                                <div class="action-buttons">
+                                    <a class="blue" href="#" onclick="Detail('@item.UniqueID');" title="@Resources.Resource.Detail">
+                                        <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                    </a>
+
+                                    @if (item.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+                                    {
+                                        if (ViewBag.CanEdit)
+                                        {
+                                            <a class="green" href="#" onclick="Edit('@item.UniqueID');" title="@Resources.Resource.Edit">
+                                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                            </a>
+
+                                            if (ViewBag.CanCreate)
+                                            {
+                                                <a class="orange2" href="#" onclick="Copy('@item.UniqueID');" title="@Resources.Resource.Copy">
+                                                    <i class="ace-icon fa fa-copy bigger-130"></i>
+                                                </a>
+                                            }
+                                        }
+
+                                        if (ViewBag.CanDelete)
+                                        {
+                                            <a class="red" href="#" onclick="Delete('@item.UniqueID');" title="@Resources.Resource.Delete">
+                                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                            </a>
+                                        }
+                                    }
+                                </div>
+                            </td>
+                            <td>@item.OrganizationDescription</td>
+                            <td>@item.AbnormalType</td>
+                            <td>@item.ID</td>
+                            <td>@item.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+

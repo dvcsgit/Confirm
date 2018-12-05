@@ -1,0 +1,150 @@
+﻿@model Utility.Models.RequestResult
+
+@if (!Model.IsSuccess)
+{ 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.InfoDialog('@Model.Message');
+        });
+    </script>
+}
+else
+{
+    var viewModel = Model.Data as Models.EquipmentMaintenance.TrendQuery_CheckItem.ChartViewModel;
+
+    <script type="text/javascript">
+    $(function () {
+        var lowerLimitData = [];
+        var lowerAlertLimitData = [];
+        var upperAlertLimitData = [];
+        var upperLimitData = [];
+
+        @if (viewModel.LowerLimit.HasValue)
+        {
+            <text>lowerLimitData.push([(new Date(@viewModel.Min.Year, @viewModel.Min.Month - 1, @viewModel.Min.Day, @viewModel.Min.Hour, @viewModel.Min.Minute, @viewModel.Min.Second, 0)).getTime(), @viewModel.LowerLimit.Value]);</text>
+            <text>lowerLimitData.push([(new Date(@viewModel.Max.Year, @viewModel.Max.Month-1, @viewModel.Max.Day, @viewModel.Max.Hour, @viewModel.Max.Minute, @viewModel.Max.Second, 0)).getTime(), @viewModel.LowerLimit.Value]);</text>
+        }
+
+        @if (viewModel.LowerAlertLimit.HasValue)
+        {
+            <text>lowerAlertLimitData.push([(new Date(@viewModel.Min.Year, @viewModel.Min.Month-1, @viewModel.Min.Day, @viewModel.Min.Hour, @viewModel.Min.Minute, @viewModel.Min.Second, 0)).getTime(), @viewModel.LowerAlertLimit.Value]);</text>
+            <text>lowerAlertLimitData.push([(new Date(@viewModel.Max.Year, @viewModel.Max.Month-1, @viewModel.Max.Day, @viewModel.Max.Hour, @viewModel.Max.Minute, @viewModel.Max.Second, 0)).getTime(), @viewModel.LowerAlertLimit.Value]);</text>
+        }
+
+        @if (viewModel.UpperAlertLimit.HasValue)
+        {
+            <text>upperAlertLimitData.push([(new Date(@viewModel.Min.Year, @viewModel.Min.Month-1, @viewModel.Min.Day, @viewModel.Min.Hour, @viewModel.Min.Minute, @viewModel.Min.Second, 0)).getTime(), @viewModel.UpperAlertLimit.Value]);</text>
+            <text>upperAlertLimitData.push([(new Date(@viewModel.Max.Year, @viewModel.Max.Month - 1, @viewModel.Max.Day, @viewModel.Max.Hour, @viewModel.Max.Minute, @viewModel.Max.Second, 0)).getTime(), @viewModel.UpperAlertLimit.Value]);</text>
+        }
+
+        @if (viewModel.UpperLimit.HasValue)
+        {
+            <text>upperLimitData.push([(new Date(@viewModel.Min.Year, @viewModel.Min.Month-1, @viewModel.Min.Day, @viewModel.Min.Hour, @viewModel.Min.Minute, @viewModel.Min.Second, 0)).getTime(), @viewModel.UpperLimit.Value]);</text>
+            <text>upperLimitData.push([(new Date(@viewModel.Max.Year, @viewModel.Max.Month-1, @viewModel.Max.Day, @viewModel.Max.Hour, @viewModel.Max.Minute, @viewModel.Max.Second, 0)).getTime(), @viewModel.UpperLimit.Value]);</text>
+        }
+
+        var data = [];
+
+        @if (viewModel.LowerLimit.HasValue)
+        {
+            <text>  data.push({ label: "@Resources.Resource.LowerLimit" + "@viewModel.LowerLimit.Value", data: lowerLimitData, color: '#d15b47' }); </text>
+        }
+
+        @if (viewModel.LowerAlertLimit.HasValue)
+        {
+            <text>  data.push({ label: "@Resources.Resource.LowerAlertLimit" + "@viewModel.LowerAlertLimit.Value", data: lowerAlertLimitData, color: '#f89406' }); </text>
+        }
+
+        @if (viewModel.UpperAlertLimit.HasValue)
+        {
+            <text>  data.push({ label: "@Resources.Resource.UpperAlertLimit" + "@viewModel.UpperAlertLimit.Value", data: lowerAlertLimitData, color: '#f89406' }); </text>
+        }
+
+        @if (viewModel.UpperLimit.HasValue)
+         {
+            <text>  data.push({ label: "@Resources.Resource.UpperLimit" + "@viewModel.UpperLimit.Value", data: upperLimitData, color: '#d15b47' }); </text>
+        }
+
+        var checkResultData = [];
+
+        @if (viewModel.EquipmentList.Count > 0)
+            {
+            int i=0;
+
+                    foreach (var equipment in viewModel.EquipmentList)
+                    {
+                        <text>
+        checkResultData[@i]=[];
+
+        </text>
+
+                        foreach (var item in equipment.CheckResultList)
+                        {
+                        <text>
+        checkResultData[@i].push([(new Date(@item.CheckDateTime.Year, @item.CheckDateTime.Month-1, @item.CheckDateTime.Day, @item.CheckDateTime.Hour, @item.CheckDateTime.Minute, @item.CheckDateTime.Second, 0)).getTime(), @item.Result]);
+        </text>
+                        }
+
+                    <text>
+        data.push({ label: "@equipment.Display", data: checkResultData[@i], color: '@equipment.Color' });
+        </text>
+
+                        i++;
+                    }
+            }
+
+        $.plot($("@string.Format("#Chart")"), data, {
+            series: {
+                lines: { show: true },
+                points: { show: true }
+            },
+            grid: { hoverable: true },
+            xaxis: {
+                mode: "time",
+                timeformat: "@viewModel.TimeFormat",
+                tickSize: [@viewModel.TickUnit, "@viewModel.TickSize"],
+                min: (new Date(@viewModel.Min.Year, @viewModel.Min.Month-1, @viewModel.Min.Day, @viewModel.Min.Hour, @viewModel.Min.Minute, @viewModel.Min.Second, 0)).getTime(),
+                max: (new Date(@viewModel.Max.Year, @viewModel.Max.Month-1, @viewModel.Max.Day, @viewModel.Max.Hour, @viewModel.Max.Minute, @viewModel.Max.Second, 0)).getTime()
+            }
+        });
+
+        $("<div id='tooltip'></div>").css({
+            position: "absolute",
+            display: "none",
+            border: "1px solid #fdd",
+            padding: "2px",
+            "background-color": "#fee",
+            opacity: 0.80
+        }).appendTo("body");
+
+        $("@string.Format("#Chart")").bind("plothover", function (event, pos, item) {
+            if (item) {
+                var x = item.datapoint[0].toFixed(2),
+                    y = item.datapoint[1].toFixed(2);
+
+                var date = new Date(item.datapoint[0]).toLocaleDateString();
+
+                $("#tooltip").html(item.series.label+ " : "+date+"("  + y+")")
+                    .css({ top: item.pageY + 5, left: item.pageX + 5 })
+                    .fadeIn(200);
+            } else {
+                $("#tooltip").hide();
+            }
+        });
+    });
+</script>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">
+                @string.Format("{0} ({1}：{2})", @Resources.Resource.TrendChart, Resources.Resource.CheckItem, viewModel.CheckItemDescription)
+            </h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main padding-4">
+                <div id="@string.Format("Chart")" style="width: 100%; height: 500px;"></div>
+            </div>
+        </div>
+    </div>
+}

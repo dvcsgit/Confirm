@@ -1,0 +1,137 @@
+﻿@model Models.ASE.QA.MSACharacteristicManagement.CreateFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateForm");
+    });
+
+    function Save() {
+        var form = $('#CreateForm');
+
+        if (form.valid()) {
+            var data = [];
+
+            $('.Unit').each(function () {
+                if ($(this).val() != '') {
+                    data.push($(this).val());
+                }
+            });
+
+            $('#FormInput_Units').val(JSON.stringify(data));
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Create")',
+                data: form.serialize(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Query();
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    }
+
+    var Add = function () {
+        $('#UnitList tbody').append('<tr><td class="col-sm-1 center"><div class="action-buttons"><a onclick="return false;" class="red Remove" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a></div></td><td class="col-sm-11"><input class="Unit col-sm-6" type="text" /></td></tr>');
+
+        BindRemoveEvent();
+    }
+
+    function BindRemoveEvent() {
+        $('.Remove').click(function () {
+            $(this).closest('tr').remove();
+
+            return false;
+        });
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+    
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="bigger lighter">@Resources.Resource.Create MSA量測特性</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm" }))
+            {
+                @Html.HiddenFor(x => x.FormInput.Units)
+                
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.IchiUniqueID)</th>
+                        <td class="col-sm-11">
+                            @Html.DropDownListFor(x => x.FormInput.IchiUniqueID, Model.IchiSelectItemList)
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.IchiUniqueID)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Name)</th>
+                        <td class="col-sm-11">
+                            @Html.TextBoxFor(x => x.FormInput.Name, new { @class = "col-sm-3" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Name)
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark divFeelOption">
+    <div class="widget-header">
+        <h5 class="widget-title">單位</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table id="UnitList" class="table table-bordered">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1 center"></th>
+                        <th class="col-sm-11">單位</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+        </div>
+
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="Add(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Add
+            </button>
+        </div>
+    </div>
+</div>

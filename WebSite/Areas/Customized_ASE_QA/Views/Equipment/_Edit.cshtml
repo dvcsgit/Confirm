@@ -1,0 +1,424 @@
+﻿@model Models.ASE.QA.EquipmentManagement.EditFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#EditForm");
+
+        $('#QuatationModal').hide();
+
+        $('#PhotoUpload').ace_file_input({
+            style: 'well',
+            btn_choose: '',
+            btn_change: '',
+            droppable: false,
+            thumbnail: 'fit'
+        }).on('change', function (e) {
+            var files = e.target.files;
+
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file" + x, files[x]);
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("UploadPhoto")'+'?UniqueID='+'@Model.UniqueID',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            $.Overlay('show');
+                        },
+                        success: function (data) {
+                            $.Overlay('hide');
+                            $('#PhotoUpload').ace_file_input('reset_input');
+                            if (data.IsSuccess) {
+                                Edit('@Model.UniqueID');
+                            }
+                            else {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $.Overlay('hide');
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+                else {
+                    $.InfoDialog('無法上傳');
+                }
+            }
+            else {
+                $.InfoDialog('請選擇檔案');
+            }
+        });
+    });
+
+    var QuatationUpload = function (uniqueID) {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("QuatationUpload")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                $('#QuatationModalContent').html(data);
+                $('#QuatationModal').show().modal('show');
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    }
+
+    var Save = function () {
+        var form = $('#EditForm');
+
+        if (form.valid())
+        {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Edit")',
+                data: form.serialize(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Detail('@Model.UniqueID');
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    var CAL = function () {
+        Form('@Url.Action("CAL")', { UniqueID: '@Model.UniqueID' });
+    };
+
+    var MSA = function () {
+        Form('@Url.Action("MSA")', { UniqueID: '@Model.UniqueID' });
+    };
+</script>
+
+<p>
+    @if ((Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Admin"))
+    {
+        <button class="btn btn-app btn-danger btn-xs" onclick="Save();" type="button">
+            <i class="ace-icon fa fa-save bigger-160"></i>
+            @Resources.Resource.Save
+        </button>
+
+        if (Model.CanCAL)
+        {
+            <button class="btn btn-app btn-danger btn-xs" onclick="CAL();" type="button">
+                <i class="ace-icon fa fa-plus bigger-160"></i>
+                校驗
+            </button>
+        }
+
+        if (Model.CanMSA)
+        {
+            <button class="btn btn-app btn-danger btn-xs" onclick="MSA();" type="button">
+                <i class="ace-icon fa fa-plus bigger-160"></i>
+                MSA
+            </button>
+        }
+    }
+    
+    @if (Model.Equipment.IsQuatationExist)
+    {
+        <a class="btn btn-app btn-primary btn-xs" style="width:100px;" href="@Url.Action("Quatation", new { UniqueID = Model.UniqueID })">
+            <i class="ace-icon fa fa-cloud-download bigger-160"></i>
+            報價單下載
+        </a>
+    }
+    
+    <button class="btn btn-app btn-primary btn-xs" style="width:100px;" onclick="QuatationUpload('@Model.UniqueID');">
+        <i class="ace-icon fa fa-cloud-upload bigger-160"></i>
+        報價單上傳
+    </button>
+    
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">設備資訊</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+@using (Html.BeginForm("Edit", null, FormMethod.Post, new { @ID = "EditForm" }))
+{ 
+    @Html.HiddenFor(x => x.UniqueID)
+            <table class="table table-bordered table-input">
+                <tr>
+                    <td class="col-sm-2 center" rowspan="4">
+                        @if (!string.IsNullOrEmpty(Model.Equipment.Extension))
+                        {
+                            <span class="profile-picture">
+                                <img class="img-responsive" style="max-height:200px;max-width:160px;" alt="" src="@Url.Content(string.Format("~/QAPhoto/{0}?t={1}", Model.Equipment.PhotoName, Guid.NewGuid().ToString()))" />
+                            </span>
+                        }
+                        else
+                        {
+                            <i class="fa fa-cog fa-5x" aria-hidden="true"></i>
+                        }
+                    </td>
+                    <th class="col-sm-1"><label>校驗編號</label></th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.Equipment.CalNo)</td>
+                    <th class="col-sm-1"><label>MSA校驗編號</label></th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.Equipment.MSACalNo)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Equipment.IchiTypeDisplay)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.Equipment.IchiTypeDisplay)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.SerialNo)</th>
+@if ((Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Admin"))
+{ 
+    <td class="col-sm-4">@Html.TextBoxFor(x => x.FormInput.SerialNo)</td>
+}
+                    else
+{ 
+<td class="col-sm-4">@Html.DisplayFor(x => x.FormInput.SerialNo)</td>
+}
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Equipment.IchiDisplay)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Equipment.IchiDisplay)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.MachineNo)</th>
+@if ((Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Admin"))
+{ 
+    <td class="col-sm-4">@Html.TextBoxFor(x => x.FormInput.MachineNo)</td>
+}
+else
+{ 
+<td class="col-sm-4">@Html.DisplayFor(x => x.FormInput.MachineNo)</td>
+}
+                    
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Equipment.Spec)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.Equipment.Spec)</td>
+                </tr>
+                <tr>
+@if ((Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Admin"))
+{ 
+                        <td>
+                        <input type="file" id="PhotoUpload" style="height:35px;" />
+                    </td>
+}
+                    else
+{ 
+<td></td>
+}
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Brand)</th>
+@if ((Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Admin"))
+{ 
+                        <td class="col-sm-4">
+                        @Html.TextBoxFor(x => x.FormInput.Brand)
+                        <br />
+                        @Html.ValidationMessageFor(x => x.FormInput.Brand)
+                    </td>
+}
+                    else
+{ 
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.FormInput.Brand)</td>
+}
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Model)</th>
+@if ((Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Admin"))
+{ 
+                        <td class="col-sm-4">
+                        @Html.TextBoxFor(x => x.FormInput.Model)
+                        <br />
+                        @Html.ValidationMessageFor(x => x.FormInput.Model)
+                    </td>
+}
+else
+{
+      <td class="col-sm-4">
+                        @Html.DisplayFor(x => x.FormInput.Model)
+                    </td>
+}
+
+                </tr>
+                <tr>
+                    <th><label>廠別</label></th>
+                    <td colspan="4">@Html.DisplayFor(x => x.Equipment.Factory)</td>
+                </tr>
+                <tr>
+                    <th><label>部門</label></th>
+                    <td colspan="4">@Html.DisplayFor(x => x.Equipment.OrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-2"><label>量測特性</label></th>
+                    <td colspan="4">@Html.DisplayFor(x => x.Equipment.CharacteristicType)</td>
+                </tr>
+
+                @if (!Model.Equipment.CAL && !Model.Equipment.MSA)
+                {
+                    <tr>
+                        <th class="col-sm-2"><label>免校驗</label></th>
+                        <td colspan="4">
+                            <i class="ace-icon fa fa-check bigger-110 red"></i>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <th class="col-sm-2">@Html.LabelFor(x => x.Equipment.CAL)</th>
+                        <td colspan="2">
+                            @if (Model.Equipment.CAL)
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.Equipment.MSA)</th>
+                        <td class="col-sm-4">
+                            @if (Model.Equipment.MSA)
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th class="col-sm-2"><label>校正頻率(月)</label></th>
+                        <td colspan="2">@Html.DisplayFor(x => x.Equipment.CalCycle)</td>
+                        <th class="col-sm-1"><label>MSA頻率(月)</label></th>
+                        <td class="col-sm-4">@Html.DisplayFor(x => x.Equipment.MSACycle)</td>
+                    </tr>
+    <tr>
+        <th class="col-sm-2"><label>上次校驗日期</label></th>
+        <td colspan="2">@Html.DisplayFor(x => x.Equipment.LastCalDateString)</td>
+        <th class="col-sm-1"><label>上次MSA日期</label></th>
+        <td class="col-sm-4">@Html.DisplayFor(x => x.Equipment.NextMSADateString)</td>
+    </tr>
+    <tr>
+        <th class="col-sm-2"><label>下次校驗日期</label></th>
+        <td colspan="2">@Html.DisplayFor(x => x.Equipment.NextCalDateString)</td>
+        <th class="col-sm-1"><label>下次MSA日期</label></th>
+        <td class="col-sm-4">@Html.DisplayFor(x => x.Equipment.NextMSADateString)</td>
+    </tr>
+                }
+                <tr>
+                    <th class="col-sm-2">@Html.LabelFor(x => x.Equipment.Owner)</th>
+                    <td colspan="2">@Html.DisplayFor(x => x.Equipment.Owner)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Equipment.PE)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.Equipment.PE)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-2">@Html.LabelFor(x => x.Equipment.OwnerManager)</th>
+                    <td colspan="2">@Html.DisplayFor(x => x.Equipment.OwnerManager)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Equipment.PEManager)</th>
+                    <td class="col-sm-4">@Html.DisplayFor(x => x.Equipment.PEManager)</td>
+                </tr>
+                <tr>
+                    <th><label>備註</label></th>
+@if ((Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Admin"))
+{ 
+    <td colspan="4">@Html.TextBoxFor(x => x.FormInput.Remark, new { @class = "col-sm-11" })</td>
+}
+                    else
+{ 
+<td colspan="4">@Html.DisplayFor(x => x.FormInput.Remark)</td>
+}
+                </tr>
+            </table>
+    }
+        </div>
+    </div>
+</div>
+
+@if (Model.AbnormalFormList != null && Model.AbnormalFormList.Count > 0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_AbnormalFormList", Model.AbnormalFormList)
+}
+
+@if (Model.CalibrationApply != null)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_CalibrationApplyList", Model.CalibrationApply)
+}
+
+@if (Model.ChangeFormList != null && Model.ChangeFormList.Count > 0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_ChangeFormList", Model.ChangeFormList)
+}
+
+@if (Model.CalibrationNotifyList != null && Model.CalibrationNotifyList.Count > 0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_CalibrationNotifyList", Model.CalibrationNotifyList)
+}
+
+@if (Model.CalibrationFormList != null && Model.CalibrationFormList.Count > 0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_CalibrationFormList", Model.CalibrationFormList)
+}
+
+@if (Model.MSANotifyList != null && Model.MSANotifyList.Count > 0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_MSANotifyList", Model.MSANotifyList)
+}
+
+@if (Model.MSAFormList != null && Model.MSAFormList.Count > 0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_MSAFormList", Model.MSAFormList)
+}
+
+
+<div class="modal" id="QuatationModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="blue bigger">請選擇檔案</h4>
+            </div>
+            <div class="modal-body" id="QuatationModalContent"></div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5b10c8e93b1e4821981fd61669d176a7" Name="Diagram1">
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.AbnormalReason" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.AbnormalReasonHandlingMethod" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.ArriveRecord" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.ArriveRecordPhoto" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.CheckItem" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.CheckItemAbnormalReason" Width="1.5" PointX="4.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.CheckItemFeelOption" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.CheckResult" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.CheckResultAbnormalReason" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.CheckResultHandlingMethod" Width="1.5" PointX="2.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.CheckResultPhoto" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.Construction" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.ConstructionFile" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.ConstructionFirm" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.ConstructionPhoto" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.ConstructionType" Width="1.5" PointX="10.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.Dialog" Width="1.5" PointX="0.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.File" Width="1.5" PointX="2.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.Folder" Width="1.5" PointX="4.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.HandlingMethod" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.Inspection" Width="1.5" PointX="12.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.InspectionPhoto" Width="1.5" PointX="6.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.InspectionUser" Width="1.5" PointX="8.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.Job" Width="1.5" PointX="12.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.JobRoute" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.JobUserLocus" Width="1.5" PointX="14.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.Message" Width="1.5" PointX="14.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.OnlineUserLocus" Width="1.5" PointX="14.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.Pipeline" Width="1.5" PointX="10.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.PipelineAbnormal" Width="1.5" PointX="12.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.PipelineAbnormalFile" Width="1.5" PointX="14.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.PipelineAbnormalPhoto" Width="1.5" PointX="0.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.PipelineLocus" Width="1.5" PointX="2.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.PipelineSpec" Width="1.5" PointX="4.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.PipelineSpecOption" Width="1.5" PointX="6.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.PipelineSpecValue" Width="1.5" PointX="16.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.PipePoint" Width="1.5" PointX="16.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.PipePointCheckItem" Width="1.5" PointX="16.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.Route" Width="1.5" PointX="16.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.RouteCheckPoint" Width="1.5" PointX="16.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.RouteCheckPointCheckItem" Width="1.5" PointX="8.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.RoutePipeline" Width="1.5" PointX="14.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.TimeSpanAbnormalReason" Width="1.5" PointX="16.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.UploadLog" Width="1.5" PointX="18.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.UserExtra" Width="1.5" PointX="0.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Customized.CPDC.RENDA.P.DbModel.Version" Width="1.5" PointX="2.75" PointY="18.75" IsExpanded="true" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

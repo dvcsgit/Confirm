@@ -1,0 +1,92 @@
+﻿<script type="text/javascript">
+
+    $(document).ready(function () {
+        GetWorkingHourList();
+
+        $('#divCreateWorkingHourWidget').hide();
+    });
+
+    function GetWorkingHourList() {
+        var list = $('#divWorkingHourList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetWorkingHourList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var CreateWorkingHourForm = function () {
+        $('#divWorkingHourListWidget').hide();
+        $('#divCreateWorkingHourWidget').show();
+
+        var form = $('#divCreateWorkingHourForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("CreateWorkingHour")',
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var DeleteWorkingHour = function (seq) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteWorkingHour")',
+            data: { 'Seq': seq },
+            dataType: "json",
+            beforeSend: function () { $('#divWorkingHourListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divWorkingHourListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetWorkingHourList();
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divWorkingHourListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divWorkingHourListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.WorkingHourRecord</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="CreateWorkingHourForm(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+            <div id="divWorkingHourList"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divCreateWorkingHourWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.WorkingHour</h5>
+    </div>
+
+    <div class="widget-body">
+        <div id="divCreateWorkingHourForm" class="widget-main no-padding"></div>
+    </div>
+</div>

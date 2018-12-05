@@ -1,0 +1,86 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetPhotoList();
+
+        $('#divUploadPhotoWidget').hide();
+    });
+
+    function GetPhotoList() {
+        var list = $('#divPhotoList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetPhotoList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var UploadPhoto = function () {
+        var form = $('#divUploadPhoto');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("PhotoUpload")',
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) {
+                form.Overlay('show').html(data);
+            },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var CanelUploadPhoto = function () {
+        $('#divPhotoListWidget').show();
+        $('#divUploadPhoto').empty();
+        $('#divUploadPhotoWidget').hide();
+    };
+
+    var DeletePhoto = function (checkItemSeq, seq) {
+        var widget = $('#divPhotoListWidget');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeletePhoto")',
+            data: { CheckItemSeq: checkItemSeq, Seq: seq },
+            dataType: "json",
+            beforeSend: function () { widget.Overlay('show'); },
+            success: function (data) {
+                widget.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetPhotoList();
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                widget.Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+
+<div id="divPhotoListWidget" class="alert alert-success" style="padding:0; margin-bottom:0;">
+    <div id="divPhotoList"></div>
+</div>
+
+    <div id="divUploadPhotoWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Upload @Resources.Resource.Photo</h5>
+    </div>
+
+    <div class="widget-body">
+        <div style="min-height:150px;" id="divUploadPhoto"></div>
+    </div>
+</div>

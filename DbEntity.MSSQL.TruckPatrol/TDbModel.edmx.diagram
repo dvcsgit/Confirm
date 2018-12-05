@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="edd78ecf2e6c40808c793227488c0dca" Name="Diagram1">
+        <EntityTypeShape EntityType="TDbModel.AbnormalReason" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TDbModel.AbnormalReasonHandlingMethod" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TDbModel.ArriveRecord" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TDbModel.ArriveRecordPhoto" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TDbModel.CheckItem" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TDbModel.CheckItemAbnormalReason" Width="1.5" PointX="4.75" PointY="5.75" />
+        <EntityTypeShape EntityType="TDbModel.CheckItemFeelOption" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TDbModel.CheckResult" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TDbModel.CheckResultAbnormalReason" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TDbModel.CheckResultHandlingMethod" Width="1.5" PointX="2.75" PointY="8.75" />
+        <EntityTypeShape EntityType="TDbModel.CheckResultPhoto" Width="1.5" PointX="8.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TDbModel.ControlPoint" Width="1.5" PointX="8.75" PointY="6.75" />
+        <EntityTypeShape EntityType="TDbModel.ControlPointCheckItem" Width="1.5" PointX="4.75" PointY="9.75" />
+        <EntityTypeShape EntityType="TDbModel.HandlingMethod" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TDbModel.Temp" Width="1.5" PointX="10.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TDbModel.Tmp_ControlPoint" Width="1.5" PointX="6.75" PointY="10.75" />
+        <EntityTypeShape EntityType="TDbModel.Tmp_Truck" Width="1.5" PointX="10.75" PointY="7.75" />
+        <EntityTypeShape EntityType="TDbModel.Truck" Width="1.5" PointX="8.75" PointY="10.75" />
+        <EntityTypeShape EntityType="TDbModel.TruckBindingResult" Width="1.5" PointX="10.75" PointY="10.75" />
+        <EntityTypeShape EntityType="TDbModel.UnRFIDReason" Width="1.5" PointX="0.75" PointY="11.75" />
+        <EntityTypeShape EntityType="TDbModel.UploadLog" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TDbModel.Version" Width="1.5" PointX="12.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TDbModel.View_ControlPointCheckItem" Width="1.5" PointX="12.75" PointY="7.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

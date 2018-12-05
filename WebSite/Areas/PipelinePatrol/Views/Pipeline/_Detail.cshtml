@@ -1,0 +1,189 @@
+﻿@model Models.PipelinePatrol.PipelineManagement.DetailViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitGoogleMap();
+    });
+
+    function InitGoogleMap() {
+        var bounds = new google.maps.LatLngBounds();
+
+        bounds.extend(new google.maps.LatLng(@Model.Max.LAT, @Model.Max.LNG));
+        bounds.extend(new google.maps.LatLng(@Model.Min.LAT, @Model.Min.LNG));
+
+        var mapOptions = {
+            zoom: 15,
+            center: bounds.getCenter(),
+            mapTypeControl:false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        @if (Model.Locus.Count > 0)
+        {
+            <text>
+        var pipeline =
+        [
+            @foreach (var item in Model.Locus)
+                {
+                    <text>new google.maps.LatLng(@item.LAT, @item.LNG),</text>
+                }
+        ];
+
+        var path = new google.maps.Polyline({
+            path: pipeline,
+            geodesic: true,
+            strokeColor: '#'+'@Model.Color',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        });
+
+        path.setMap(map);
+        </text>
+        }
+    }
+</script>
+
+<p>
+    @if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+    { 
+        if (ViewBag.CanEdit)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-pencil bigger-160"></i>
+                @Resources.Resource.Edit
+            </button>
+        }
+
+        if (ViewBag.CanDelete)
+        {
+            <button class="btn btn-app btn-danger btn-xs" onclick="Delete('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-trash-o bigger-160"></i>
+                @Resources.Resource.Delete
+            </button>
+        }
+    }
+    
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Pipeline</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ID)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.ID)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.SpecList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title"> @Resources.Resource.PipelineSpec</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    @{
+    var rowCount = 0;
+
+    if (Model.SpecList.Count % 2 == 0)
+    {
+        rowCount = Model.SpecList.Count / 2;
+    }
+    else
+    {
+        rowCount = Model.SpecList.Count / 2 + 1;
+    }
+                    }
+
+                    @for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
+                    {
+                        if (rowIndex * 2 + 1 > Model.SpecList.Count - 1)
+                        {
+                            var item = Model.SpecList[rowIndex * 2];
+
+                            <tr>
+                                <th><label>@item.Description</label></th>
+                                @if (item.OptionList.Count > 0)
+                                {
+                                    <td colspan="3">@item.OptionValue</td>
+                                }
+                                else
+                                {
+                                    <td colspan="3">@item.Value</td>
+                                }
+                            </tr>
+                        }
+                        else
+                        {
+                            var item1 = Model.SpecList[rowIndex * 2];
+                            var item2 = Model.SpecList[rowIndex * 2 + 1];
+
+                            <tr>
+                                <th class="col-sm-1"><label>@item1.Description</label></th>
+                                @if (item1.OptionList.Count > 0)
+                                {
+                                    <td class="col-sm-5">@item1.OptionValue</td>
+                                }
+                                else
+                                {
+                                    <td class="col-sm-5">@item1.Value</td>
+                                }
+
+                                <th class="col-sm-1"><label>@item2.Description</label></th>
+                                @if (item2.OptionList.Count > 0)
+                                {
+                                    <td class="col-sm-5">@item2.OptionValue</td>
+                                }
+                                else
+                                {
+                                    <td class="col-sm-5">@item2.Value</td>
+                                }
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Pipeline @Resources.Resource.Locus</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <div id="map-canvas" style="height:500px;"></div>
+        </div>
+    </div>
+</div>

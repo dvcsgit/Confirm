@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Models.EquipmentMaintenance.MaintenanceJobManagement.EquipmentModel>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.EquipmentStandard, .EquipmentStandardParent').each(function () {
+            if ($(this).data('checked') == 'Y') {
+                $(this).prop('checked', true);
+            }
+        });
+
+        $('.EquipmentStandardParent').click(function () {
+            var parent = $(this);
+            var equipmentUniqueID = parent.data('equipmentuniqueid');
+            var partUniqueID = parent.data('partuniqueid');
+            var checked = parent.prop('checked') ? 'Y' : 'N';
+
+            $('.EquipmentStandard').each(function () {
+                var chk = $(this);
+                if (chk.data('equipmentuniqueid') == equipmentUniqueID && chk.data('partuniqueid') == partUniqueID) {
+                    chk.prop('checked', checked == 'Y');
+                }
+            });
+        });
+    });
+</script>
+
+<div class="accordion-style1 panel-group">
+
+    @foreach (var equipment in Model)
+    {
+        <div class="panel panel-default" data-equipmentuniqueid="@equipment.EquipmentUniqueID" data-partuniqueid="@equipment.PartUniqueID">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" href="@("#Collapse" + equipment.EquipmentUniqueID + (equipment.PartUniqueID == "*" ? "" : equipment.PartUniqueID))">
+                        <i class="bigger-110 ace-icon fa fa-angle-right" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
+                        @equipment.Display
+                    </a>
+                </h4>
+            </div>
+
+            <div class="panel-collapse collapse" id="@("Collapse" + equipment.EquipmentUniqueID + (equipment.PartUniqueID == "*" ? "" : equipment.PartUniqueID))" style="height: 0px;">
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead class="thin-border-bottom">
+                            <tr>
+                                <th class="col-sm-1 center">
+                                    <label>
+                                        <input class="ace ace-checkbox-2 EquipmentStandardParent" type="checkbox" value="true" data-checked="@(equipment.StandardList.Any(x => x.IsChecked == false) ? "N" : "Y")" data-equipmentuniqueid="@equipment.EquipmentUniqueID" data-partuniqueid="@equipment.PartUniqueID">
+                                        <span class="lbl"> </span>
+                                    </label>
+                                </th>
+                                <th>@Resources.Resource.MaintenanceType</th>
+                                <th>@Resources.Resource.StandardID</th>
+                                <th>@Resources.Resource.StandardDescription</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in equipment.StandardList)
+                            {
+                                <tr>
+                                    <td class="center">
+                                        <label>
+                                            <input class="ace ace-checkbox-2 EquipmentStandard" type="checkbox" value="true" data-equipmentuniqueid="@equipment.EquipmentUniqueID" data-partuniqueid="@equipment.PartUniqueID" data-standarduniqueid="@item.UniqueID" data-checked="@(item.IsChecked ? "Y" : "N")">
+                                            <span class="lbl"> </span>
+                                        </label>
+                                    </td>
+                                    <td>@item.MaintenanceType</td>
+                                    <td>@item.StandardID</td>
+                                    <td>@item.StandardDescription</td>
+                                    
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>

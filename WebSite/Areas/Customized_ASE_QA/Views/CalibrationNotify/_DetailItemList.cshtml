@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Models.ASE.QA.CalibrationNotify.DetailItem>
+
+<table class="table table-striped table-bordered table-hover nowrap">
+    <thead class="thin-border-bottom">
+        <tr>
+            <th class="center col-sm-1"></th>
+            <th class="col-sm-1">@Resources.Resource.Characteristic</th>
+            <th class="col-sm-1">@Resources.Resource.Unit</th>
+            <th class="col-sm-2">@Resources.Resource.UsingRange</th>
+            <th class="col-sm-1">@Resources.Resource.UsingRangeTolerance</th>
+            <th class="col-sm-6">@Resources.Resource.CalibrationPoint</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="col-sm-1 center">
+                    <div class="action-buttons">
+                        <a class="green" href="#" onclick="EditDetailItem('@item.Seq'); return false;" title="@Resources.Resource.Edit">
+                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                        </a>
+                        <a class="red" href="#" onclick="DeleteDetailItem('@item.Seq'); return false;" title="@Resources.Resource.Delete">
+                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                        </a>
+                    </div>
+                </td>
+                <td>@item.Characteristic</td>
+                <td>@item.Unit</td>
+                <td>@item.UsingRange</td>
+                <td>@item.UsingRangeToleranceDisplay</td>
+                <td>@item.Items</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

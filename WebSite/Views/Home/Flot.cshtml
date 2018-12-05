@@ -1,0 +1,121 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Flot</title>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/jquery.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/flot/jquery.flot.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/flot/jquery.flot.time.min.js")"></script>
+
+    @*<script type="text/javascript">
+
+
+        $(function () {
+
+            var d1 = [];
+            for (var i = 0; i < 14; i += 0.5) {
+                d1.push([i, Math.sin(i)]);
+            }
+
+            var d2 = [[0, 3], [4, 8], [8, 5], [9, 13]];
+
+            // A null signifies separate line segments
+
+            var d3 = [[0, 12], [7, 12], null, [7, 2.5], [12, 2.5]];
+
+            $.plot("#placeholder", [d1, d2, d3]);
+        });
+
+
+    </script>*@
+
+    <script type="text/javascript">
+
+        $(function () {
+            var upperLimitData = [];
+
+            upperLimitData.push([(new Date(2017,1,6,14,50,21,0)).getTime(), 4]);
+            upperLimitData.push([(new Date(2017,8,8,16,17,07,0)).getTime(), 4]);
+
+           
+
+            var checkResultData = [];
+
+            checkResultData[0] = [];
+            checkResultData[0].push([(new Date(2017,3,14,8,34,8,0)).getTime(), 0.55]);
+            checkResultData[0].push([(new Date(2017,5,9,10,33,25,0)).getTime(), 0.69]);
+            checkResultData[0].push([(new Date(2017,6,26,14,09,56,0)).getTime(), 0.43]);
+            checkResultData[0].push([(new Date(2017,7,10,10,08,35,0)).getTime(), 0.55]);
+            checkResultData[0].push([(new Date(2017,8,8,10,17,9,0)).getTime(), 0.3]);
+            
+            checkResultData[1] = [];
+            checkResultData[1].push([(new Date(2017,1,9,10,11,48,0)).getTime(), 0.7]);
+            checkResultData[1].push([(new Date(2017,3,27,9,40,53,0)).getTime(), 1.01]);
+            checkResultData[1].push([(new Date(2017,4,7,14,21,54,0)).getTime(), 0.59]);
+            checkResultData[1].push([(new Date(2017,6,29,16,1,48,0)).getTime(), 0.46]);
+            checkResultData[1].push([(new Date(2017,7,10,10,6,18,0)).getTime(), 0.49]);
+
+            checkResultData[2] = [];
+            checkResultData[2].push([(new Date(2017,5,9,13,59,55,0)).getTime(), 0.37]);
+            checkResultData[2].push([(new Date(2017,7,28,13,39,17,0)).getTime(), 0.29]);
+            checkResultData[2].push([(new Date(2017,8,8,16,17,7,0)).getTime(), 0.31]);
+
+           
+            var data = [];
+
+            data.push({ label: "上限值" + "4", data: upperLimitData, color: '#d15b47' });
+            data.push({ label: "MAA1120R04 擠壓脫水機主馬達", data: checkResultData[0], color: '#a47ae2' });
+            data.push({ label: "MDY0750R01 擠壓脫水機馬達", data: checkResultData[1], color: '#cd74e6' });
+            data.push({ label: "MAE0400R07 擠壓脫水機馬達", data: checkResultData[2], color: '#f691b2' });
+
+            $.plot($("#Chart"), data, {
+                series: {
+                    lines: { show: true },
+                    points: { show: true }
+                },
+                grid: { hoverable: true },
+                xaxis: {
+                    mode: "time",
+                    timeformat: "%y-%m-%d",
+                    tickSize: [21, "day"],
+                    min: (new Date(2017,1,6,14,50,21,0)).getTime(),
+                    max: (new Date(2017,8,8,16,17,7,0)).getTime()
+                }
+            });
+
+            //$("<div id='tooltip'></div>").css({
+            //    position: "absolute",
+            //    display: "none",
+            //    border: "1px solid #fdd",
+            //    padding: "2px",
+            //    "background-color": "#fee",
+            //    opacity: 0.80
+            //}).appendTo("body");
+
+            //$("#Chart").bind("plothover", function (event, pos, item) {
+            //    if (item) {
+            //        var x = item.datapoint[0].toFixed(2),
+            //            y = item.datapoint[1].toFixed(2);
+
+            //        $("#tooltip").html(item.series.label + " : " + y)
+            //            .css({ top: item.pageY + 5, left: item.pageX + 5 })
+            //            .fadeIn(200);
+            //    } else {
+            //        $("#tooltip").hide();
+            //    }
+            //});
+        });
+
+    </script>
+</head>
+<body>
+    @*<div id="placeholder" style="width: 100%; height: 500px;"></div>*@
+        <div id="@string.Format("Chart")" style="width: 100%; height: 500px;"></div>
+</body>
+</html>

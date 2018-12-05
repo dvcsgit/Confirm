@@ -1,0 +1,12 @@
+﻿@model Models.ASE.QA.CalibrationForm.EditFormModel
+
+@if (!string.IsNullOrEmpty(Model.Equipment.Extension))
+{
+    <span class="profile-picture">
+        <img class="img-responsive" alt="" src="~/QAPhoto/@Model.Equipment.PhotoName" />
+    </span>
+}
+else
+{
+    <i class="fa fa-cog fa-5x" aria-hidden="true"></i>
+}

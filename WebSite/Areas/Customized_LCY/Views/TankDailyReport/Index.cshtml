@@ -1,0 +1,92 @@
+﻿@model Customized.LCY.Models.TankDailyReport.QueryFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+    <link href="@Url.Content("~/assets/css/datepicker.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/jquery.maskedinput.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-datepicker.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/date-time/locales/bootstrap-datepicker."+ViewBag.Lang+".js")"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('.datepicker').datepicker({
+                format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+                language: "@ViewBag.Lang"
+            }).on('changeDate', function () {
+                $(this).focusout();
+                $(this).datepicker('hide');
+            }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').change(function () { Query(); }).next().on(ace.click_event, function () {
+                $(this).prev().focus();
+            });
+        });
+
+        var Query = function () {
+            var form = $('#divForm');
+
+            form.empty();
+
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: '@Url.Action("Query")',
+                data: $('#QueryForm').serialize(),
+                dataType: "html",
+                beforeSend: function () { form.Overlay('show'); },
+                success: function (data) { form.Overlay('show').html(data); },
+                error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+            });
+        }
+    </script>
+}
+
+<div class="row">
+    <div class="col-xs-3">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.PatrolDate</h5>
+                <div class="widget-toolbar">
+                    <a href="#" onclick="Query();">
+                        <i class="ace-icon fa fa-search white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+                    {
+                        <table class="table table-bordered table-input">
+                            <tr>
+                                <th class="col-sm-1">巡檢日期</th>
+                                <td class="col-sm-11">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.DateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-9">
+        <div id="divForm" style="min-height:200px;"></div>
+    </div>
+</div>

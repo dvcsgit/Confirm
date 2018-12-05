@@ -1,0 +1,151 @@
+﻿@model Models.Home.SummaryViewModel
+
+@if (Model != null && (Model.PersonalItemCount > 0 || Model.QueryableOrganizationItemCount > 0))
+{
+    <div class="well well-lg">
+        <h4 class="blue">定期保養作業</h4>
+        <hr />
+
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="TabRepairForm">
+                @if (Model.PersonalItemCount > 0 && Model.QueryableOrganizationItemCount > 0)
+                {
+                    <li class="active">
+                        <a data-toggle="tab" href="#PersonalMaintenanceForm" aria-expanded="true">
+                            <i class="green ace-icon fa fa-user bigger-120"></i>
+                            個人
+                            <span class="badge badge-danger">@Model.PersonalItemCount</span>
+                        </a>
+                    </li>
+
+                    <li class="">
+                        <a data-toggle="tab" href="#QueryableOrganizationMaintenanceForm" aria-expanded="false">
+                            <i class="green ace-icon fa fa-sitemap bigger-120"></i>
+                            組織
+                            <span class="badge badge-danger">@Model.QueryableOrganizationItemCount</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    if (Model.PersonalItemCount > 0)
+                    {
+                        <li class="active">
+                            <a data-toggle="tab" href="#PersonalMaintenanceForm" aria-expanded="true">
+                                <i class="green ace-icon fa fa-user bigger-120"></i>
+                                個人
+                                <span class="badge badge-danger">@Model.PersonalItemCount</span>
+                            </a>
+                        </li>
+                    }
+
+                    if (Model.QueryableOrganizationItemCount > 0)
+                    {
+                        <li class="active">
+                            <a data-toggle="tab" href="#QueryableOrganizationMaintenanceForm" aria-expanded="true">
+                                <i class="green ace-icon fa fa-sitemap bigger-120"></i>
+                                組織
+                                <span class="badge badge-danger">@Model.QueryableOrganizationItemCount</span>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+
+            <div class="tab-content">
+                @if (Model.PersonalItemCount > 0 && Model.QueryableOrganizationItemCount > 0)
+                {
+                    <div id="PersonalMaintenanceForm" class="tab-pane fade active in">
+                        <div class="row">
+                            @foreach (var item in Model.PersonalItemList)
+                            {
+                                <div class="infobox @item.BoxColor" style="width:160px;">
+                                    <div class="infobox-icon">
+                                        <i class="ace-icon fa @item.Icon"></i>
+                                    </div>
+
+                                    <div class="infobox-data" style="min-width:90px;">
+                                        <span class="infobox-data-number"><a href="@Url.Action("Index", "MaintenanceForm", new { Area = "EquipmentMaintenance", Status = item.Status })">@item.Count</a></span>
+                                        <div class="infobox-content">@item.Text</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div id="QueryableOrganizationMaintenanceForm" class="tab-pane fade">
+                        <div class="row">
+                            @foreach (var item in Model.QueryableOrganizationItemList)
+                            {
+                                <div class="infobox @item.BoxColor" style="width:160px;">
+                                    <div class="infobox-icon">
+                                        <i class="ace-icon fa @item.Icon"></i>
+                                    </div>
+
+                                    <div class="infobox-data" style="min-width:90px;">
+                                        <span class="infobox-data-number"><a href="@Url.Action("Index", "MaintenanceForm", new { Area = "EquipmentMaintenance", Status = item.Status })">@item.Count</a></span>
+                                        <div class="infobox-content">@item.Text</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    if (Model.PersonalItemCount > 0)
+                    {
+                        <div id="PersonalMaintenanceForm" class="tab-pane fade active in">
+                            <div class="row">
+                                @foreach (var item in Model.PersonalItemList)
+                                {
+                                    <div class="infobox @item.BoxColor" style="width:160px;">
+                                        <div class="infobox-icon">
+                                            <i class="ace-icon fa @item.Icon"></i>
+                                        </div>
+
+                                        <div class="infobox-data" style="min-width:90px;">
+                                            <span class="infobox-data-number"><a href="@Url.Action("Index", "MaintenanceForm", new { Area = "EquipmentMaintenance", Status = item.Status })">@item.Count</a></span>
+                                            <div class="infobox-content">@item.Text</div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    if (Model.QueryableOrganizationItemCount > 0)
+                    {
+                        <div id="QueryableOrganizationMaintenanceForm" class="tab-pane fade active in">
+                            <div class="row">
+                                @foreach (var item in Model.QueryableOrganizationItemList)
+                                {
+                                    <div class="infobox @item.BoxColor" style="width:160px;">
+                                        <div class="infobox-icon">
+                                            <i class="ace-icon fa @item.Icon"></i>
+                                        </div>
+
+                                        <div class="infobox-data" style="min-width:90px;">
+                                            <span class="infobox-data-number"><a href="@Url.Action("Index", "MaintenanceForm", new { Area = "EquipmentMaintenance", Status = item.Status })">@item.Count</a></span>
+                                            <div class="infobox-content">@item.Text</div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#divMaintenanceForm').hide();
+        });
+    </script>
+}
+
+

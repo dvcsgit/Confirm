@@ -1,0 +1,283 @@
+﻿@model Models.EquipmentMaintenance.JobManagement.EditFormModel
+
+@Html.Partial("_Scripts", Model.AncestorOrganizationUniqueID)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#EditForm");
+
+        $('#FormInput_IsCheckBySeq').prop('checked', $('#FormInput_IsCheckBySeq').data('checked') == 'Y');
+        $('#FormInput_IsShowPrevRecord').prop('checked', $('#FormInput_IsShowPrevRecord').data('checked') == 'Y');
+        $('#FormInput_IsNeedVerify').prop('checked', $('#FormInput_IsNeedVerify').data('checked') == 'Y');
+
+        $('#TabControl a:first').tab('show');
+
+        $('#BeginTimePicker').timepicker({
+            showSeconds: false,
+            showMeridian: false,
+            defaultTime: false,
+            minuteStep: 10
+        }).on('changeTime.timepicker', function (e) {
+            $('#FormInput_BeginTime').val(padLeft(e.time.hours.toString(), 2) + padLeft(e.time.minutes.toString(), 2));
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });;
+
+        $('#EndTimePicker').timepicker({
+            showSeconds: false,
+            showMeridian: false,
+            defaultTime: false,
+            minuteStep: 10
+        }).on('changeTime.timepicker', function (e) {
+            $('#FormInput_EndTime').val(padLeft(e.time.hours.toString(), 2) + padLeft(e.time.minutes.toString(), 2));
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });;
+
+        if ($('#BeginTimePickerValue').val() != '') {
+            $('#BeginTimePicker').timepicker('setTime', $('#BeginTimePickerValue').val());
+        }
+
+        if ($('#EndTimePickerValue').val() != '') {
+            $('#EndTimePicker').timepicker('setTime', $('#EndTimePickerValue').val());
+        }
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });;
+    });
+
+    var Save = function () {
+        var form = $('#EditForm');
+
+        if (form.valid()) {
+            if ($('#FormInput_BeginDateString').val() == '') {
+                $.InfoDialog('@Resources.Resource.BeginDateRequired');
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Edit")',
+                    data: form.serialize() + "&ControlPointPageStates=" + ControlPointPageState() + "&ControlPointCheckItemPageStates=" + ControlPointCheckItemPageState() + "&EquipmentCheckItemPageStates=" + EquipmentCheckItemPageState(),
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Detail('@Url.Action("Detail", "Job")', '@Model.UniqueID');
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Url.Action("Detail", "Job")', '@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Edit @Resources.Resource.Job</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Edit", null, FormMethod.Post, new { @ID = "EditForm" }))
+            {
+                @Html.HiddenFor(x => x.UniqueID)
+
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.RouteID)</th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.RouteID)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.RouteName)</th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.RouteName)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td colspan="3">
+                            @Html.DisplayFor(x => x.RouteName)
+                            <label>-</label>
+                            @Html.TextBoxFor(x => x.FormInput.Description, new { @class = "col-sm-6" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Description)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.IsCheckBySeq)</th>
+                        <td>
+                            <label>
+                                <input id="FormInput_IsCheckBySeq" name="FormInput.IsCheckBySeq" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.IsCheckBySeq ? "Y" : "N")">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                        <th>@Html.LabelFor(x => x.FormInput.IsShowPrevRecord)</th>
+                        <td>
+                            <label>
+                                <input id="FormInput_IsShowPrevRecord" name="FormInput.IsShowPrevRecord" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.IsShowPrevRecord ? "Y" : "N")">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Resources.Resource.CycleMode</th>
+                        <td>
+                            <label>@Resources.Resource.Every</label>
+                            @Html.TextBoxFor(x => x.FormInput.CycleCount, new { @class = "col-sm-1" })
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.CycleMode, "D", new { @class = "ace", @checked = true })
+                                <span class="lbl"> @Resources.Resource.Day</span>
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.CycleMode, "W", new { @class = "ace" })
+                                <span class="lbl"> @Resources.Resource.Week</span>
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.CycleMode, "M", new { @class = "ace" })
+                                <span class="lbl"> @Resources.Resource.Month</span>
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.CycleMode, "Y", new { @class = "ace" })
+                                <span class="lbl"> @Resources.Resource.Year</span>
+                            </label>
+                        </td>
+                        <th>@Html.LabelFor(x => x.FormInput.IsNeedVerify)</th>
+                        <td>
+                            <label>
+                                <input id="FormInput_IsNeedVerify" name="FormInput.IsNeedVerify" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.IsNeedVerify ? "Y" : "N")">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.BeginDateString)</th>
+                        <td>
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.FormInput.BeginDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon" style="cursor:pointer;">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                                <span class="input-group-addon" style="cursor:pointer;" onclick="ClearBeginDate();" title="@Resources.Resource.Clear">
+                                    <i class="fa fa-eraser bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                        <th>@Html.LabelFor(x => x.FormInput.EndDateString)</th>
+                        <td>
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.FormInput.EndDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon" style="cursor:pointer;">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                                <span class="input-group-addon" style="cursor:pointer;" onclick="ClearEndDate();" title="@Resources.Resource.Clear">
+                                    <i class="fa fa-eraser bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.TimeMode)</th>
+                        <td colspan="3">
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.TimeMode, 0, new { @class = "ace" })
+                                <span class="lbl"> @Resources.Resource.TimeMode0</span>
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.TimeMode, 1, new { @class = "ace" })
+                                <span class="lbl"> @Resources.Resource.TimeMode1</span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.BeginTime)</th>
+                        <td>
+                            @Html.HiddenFor(x => x.BeginTimePickerValue)
+                            @Html.HiddenFor(x => x.FormInput.BeginTime)
+                            <div class="input-group bootstrap-timepicker">
+                                @Html.TextBox("BeginTimePicker", "", new { @class = "form-control timepicker" })
+                                <span class="input-group-addon" style="cursor:pointer;">
+                                    <i class="fa fa-clock-o bigger-110"></i>
+                                </span>
+                                <span class="input-group-addon" style="cursor:pointer;" onclick="ClearBeginTime();" title="@Resources.Resource.Clear">
+                                    <i class="fa fa-eraser bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                        <th>@Html.LabelFor(x => x.FormInput.EndTime)</th>
+                        <td>
+                            @Html.HiddenFor(x => x.EndTimePickerValue)
+                            @Html.HiddenFor(x => x.FormInput.EndTime)
+                            <div class="input-group bootstrap-timepicker">
+                                @Html.TextBox("EndTimePicker", "", new { @class = "form-control timepicker" })
+                                <span class="input-group-addon" style="cursor:pointer;">
+                                    <i class="fa fa-clock-o bigger-110"></i>
+                                </span>
+                                <span class="input-group-addon" style="cursor:pointer;" onclick="ClearEndTime();" title="@Resources.Resource.Clear">
+                                    <i class="fa fa-eraser bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Remark)</th>
+                        <td colspan="3">@Html.TextBoxFor(x => x.FormInput.Remark, new { @class = "col-sm-11" })</td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.JobUser</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            @Html.Partial("_UserSelect")
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Job @Resources.Resource.ControlPoint @Resources.Resource.Equipment @Resources.Resource.CheckItem</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            @Html.Partial("_ControlPointList", Model.ControlPointList)
+        </div>
+    </div>
+</div>

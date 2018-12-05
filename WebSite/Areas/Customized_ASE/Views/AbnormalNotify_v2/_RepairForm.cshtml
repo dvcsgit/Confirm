@@ -1,0 +1,250 @@
+﻿@model Models.ASE.AbnormalNotify_v2.RepairFormCreateFormModel
+
+@Html.Partial("_MaintenanceOrganizationSelectScripts", Model.AncestorOrganizationUniqueID)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateRepairForm");
+
+        $('#EquipmentMaintenanceOrganizationList').hide();
+        $('#RepairFormTypeSubjectList').hide();
+
+        $('#FormInput_RepairFormTypeUniqueID').change(function () {
+
+            var repairFormTypeUniqueID = $(this).val();
+
+            $('#FormInput_SubjectUniqueID').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>').prop('disabled', true);
+
+            if (repairFormTypeUniqueID != '') {
+                $('#RepairFormTypeSubjectList li').each(function () {
+                    if ($(this).data('repairformtypeuniqueid') == repairFormTypeUniqueID) {
+                        $('#FormInput_SubjectUniqueID').append('<option value="' + $(this).data('subjectuniqueid') + '">' + $(this).data('subjectid') + '/' + $(this).data('subjectdescription') + '</option>');
+                    }
+                });
+
+                $('#FormInput_SubjectUniqueID').append('<option value="@Utility.Define.OTHER">' + '@Resources.Resource.Other' + '</option>').prop('disabled', false);
+            }
+        }).trigger('change');
+
+        $('#FormInput_SubjectUniqueID').change(function () {
+
+            var val = $(this).val();
+
+            if (val == '') {
+                $('#FormInput_Subject').val('').prop("readonly", true);
+            }
+            else if (val == '@Utility.Define.OTHER') {
+                $('#FormInput_Subject').val('').prop("readonly", false);
+            }
+            else {
+                $('#FormInput_Subject').val($('#FormInput_SubjectUniqueID option:selected').text()).prop("readonly", true);
+            }
+        });
+
+        $('#FormInput_EquipmentUniqueID').change(function () {
+            $('#FormInput_MaintenanceOrganizationUniqueID').val('');
+            $('#MaintenanceOrganization').val('');
+
+            var equipmentUniqueID = $(this).val().split('@Utility.Define.Seperator')[0];
+
+            if (equipmentUniqueID != '') {
+                $('#EquipmentMaintenanceOrganizationList li').each(function () {
+                    if ($(this).data('equipmentuniqueid') == equipmentUniqueID) {
+                        var organizationUniqueID = $(this).data('organizationuniqueid');
+                        var organizationID = $(this).data('organizationid');
+                        var organizationDescription = $(this).data('organizationdescription');
+
+                        if (organizationUniqueID != '') {
+                            $('#FormInput_MaintenanceOrganizationUniqueID').val(organizationUniqueID);
+                            $('#MaintenanceOrganization').val(organizationID + '/' + organizationDescription);
+                        }
+                    }
+                });
+            }
+        });
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        $('#EstDate').hide();
+
+        $('#FormInput_IsRepairBySelf').click(function () {
+            if ($(this).prop('checked')) {
+                $('#EstDate').show();
+            }
+            else {
+                $('#EstDate').hide();
+                $('#FormInput_EstBeginDateString').val('');
+                $('#FormInput_EstEndDateString').val('');
+            }
+        });
+    });
+
+    var Save = function () {
+        var form = $('#CreateRepairForm');
+
+        if (form.valid()) {
+            if ($('#FormInput_IsRepairBySelf').prop('checked') && $('#FormInput_EstBeginDateString').val() == '') {
+                $.InfoDialog('@Resources.Resource.MaintenanceBeginDateRequired')
+            }
+            else if ($('#FormInput_IsRepairBySelf').prop('checked') && $('#FormInput_EstEndDateString').val() == '') {
+                $.InfoDialog('@Resources.Resource.MaintenanceEndDateRequired')
+            }
+            else if (!$('#FormInput_IsRepairBySelf').prop('checked') && $('#FormInput_MaintenanceOrganizationUniqueID').val() == '') {
+                $.InfoDialog('@Resources.Resource.MaintenanceOrganizationRequired');
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("RepairForm")',
+                    data: form.serialize(),
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Closed('@Model.FormUniqueID');
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();">
+        <i class="ace-icon fa fa-save"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();">
+        <i class="ace-icon fa fa-ban"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.RepairForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("CreateRepairForm", null, FormMethod.Post, new { @ID = "CreateRepairForm" }))
+            {
+                @Html.HiddenFor(x => x.FormUniqueID)
+                @Html.HiddenFor(x => x.OrganizationUniqueID)
+
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FullOrganizationDescription)</th>
+                        <td class="col-sm-11" colspan="3">@Html.DisplayFor(x => x.FullOrganizationDescription)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.RepairFormTypeUniqueID)</th>
+                        <td colspan="3">
+                            @Html.DropDownListFor(x => x.FormInput.RepairFormTypeUniqueID, Model.RepairFormTypeSelectItemList)
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.RepairFormTypeUniqueID)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.EquipmentUniqueID)</th>
+                        <td colspan="3">@Html.DropDownListFor(x => x.FormInput.EquipmentUniqueID, Model.EquipmentSelectItemList)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.MaintenanceOrganizationUniqueID)</th>
+                        <td colspan="3">
+                            @Html.HiddenFor(x => x.FormInput.MaintenanceOrganizationUniqueID)
+                            <div class="input-group">
+                                <input class="form-control" id="MaintenanceOrganization" type="text" readonly="readonly" value="@Model.MaintenanceOrganization">
+                                @Html.Partial("_MaintenanceOrganizationSelect")
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">@Html.LabelFor(x => x.FormInput.Subject)</th>
+                        <td colspan="3">
+                            @Html.DropDownListFor(x => x.FormInput.SubjectUniqueID, Model.SubjectSelectItemList)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            @Html.TextBoxFor(x => x.FormInput.Subject, new { @class = "col-sm-11", @readonly = "readonly" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Subject)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td colspan="3">@Html.TextAreaFor(x => x.FormInput.Description, new { @rows = "5", @class = "col-sm-11" })</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.IsRepairBySelf)</th>
+                        <td colspan="3">
+                            <label>
+                                <input id="FormInput_IsRepairBySelf" name="FormInput.IsRepairBySelf" class="ace ace-checkbox-2" type="checkbox" value="true">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr id="EstDate">
+                        <th class="col-sm-1"><label>預計修復日期(起)</label></th>
+                        <td class="col-sm-5">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.FormInput.EstBeginDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                        <th class="col-sm-1"><label>預計修復日期(迄)</label></th>
+                        <td class="col-sm-5">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.FormInput.EstEndDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<ul id="EquipmentMaintenanceOrganizationList">
+    @foreach (var item in Model.EquipmentMaintenanceOrganizationList)
+    {
+        <li data-equipmentuniqueid="@item.Key" data-organizationuniqueid="@(item.Value!=null?item.Value.UniqueID:"")" data-organizationid="@(item.Value != null ? item.Value.ID : "")" data-organizationdescription="@(item.Value != null ? item.Value.Description : "")"></li>
+    }
+</ul>
+
+<ul id="RepairFormTypeSubjectList">
+    @foreach (var item in Model.RepairFormTypeSubjectList)
+    {
+        foreach (var subject in item.Value)
+        {
+            <li data-repairformtypeuniqueid="@item.Key" data-subjectuniqueid="@subject.UniqueID" data-subjectid="@subject.ID" data-subjectdescription="@subject.Description"></li>
+        }
+    }
+</ul>

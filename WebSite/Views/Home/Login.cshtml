@@ -1,0 +1,115 @@
+﻿@model Models.Authenticated.LoginFormModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width" />
+
+    <title>@Utility.Config.SystemName[ViewBag.Lang]</title>
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/font-awesome.min.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/baseadmin/css/bootstrap.min.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/baseadmin/css/bootstrap-responsive.min.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/baseadmin/css/base-admin-3.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/baseadmin/css/base-admin-3-responsive.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/baseadmin/css/pages/signin.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/baseadmin/css/custom.css")" />
+
+    <style>
+        .account-container {
+            background-color:#fff;
+        }
+    </style>
+
+    <!--[if !IE]> -->
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='@Url.Content("~/Scripts/jquery-3.1.0.min.js")'>" + "<" + "/script>");
+    </script>
+    <!-- <![endif]-->
+    <!--[if IE]>
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='@Url.Content("~/Scripts/ie8/jquery1x.min.js")'>"+"<"+"/script>");
+    </script>
+    <![endif]-->
+
+    <!--[if lt IE 10]>
+        <script type="text/javascript">
+        document.write("<script type=\"text/javascript\">$(document).ready(function () { location.replace('@Url.Action("IE10")'); });" + "<" + "/script>");
+        </script>
+    <![endif]-->
+
+    <script type="text/javascript" src="@Url.Content("~/Scripts/json2.min.js")"></script>
+    <!--[if !IE]> -->
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <!-- <![endif]-->
+    <!--[if IE]>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ie8/jquery.validate.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ie8/jquery.validate.unobtrusive.min.js")"></script>
+    <![endif]-->
+    <script type="text/javascript" src="@Url.Content("~/Content/baseadmin/js/libs/bootstrap.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/baseadmin/js/demo/signin.js")"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($('body').find('title').length > 0)
+            {
+                $.Redirect('@Url.Action("Login", "Home")');
+            }
+        });
+    </script>
+</head>
+<body class="login-layout light-login">
+    <div class="account-container stacked" style="margin:60px auto 10px auto;">
+       @if (!string.IsNullOrEmpty(Utility.Config.CompanyLogoImage))
+       {
+            <img style="margin-top:10px;margin-left:5px;" alt="" src="@Url.Content(string.Format("~/Content/images/{0}", Utility.Config.CompanyLogoImage))" />
+            <hr style="margin:5px; margin-bottom:0px;" />
+       }
+        
+        <div class="content clearfix">
+            @using (Html.BeginForm("Login", null, FormMethod.Post))
+            {
+                <h1>
+                    <img alt="@Utility.Config.SystemName[ViewBag.Lang]" src="@Url.Content(string.Format("~/Content/images/{0}", Utility.Config.SystemLogoImage[ViewBag.Lang]))" />
+                </h1>
+                
+                <div class="login-fields">
+                    <div class="field">
+                        @Html.LabelFor(x => x.UserID)
+                        @Html.TextBoxFor(x => x.UserID, new { @placeholder = Resources.Resource.UserID, @class = "form-control input-lg username-field" })
+                        @Html.ValidationMessageFor(x => x.UserID)
+                    </div>
+                    <div class="field">
+                        @Html.LabelFor(x => x.Password)
+                        @Html.PasswordFor(x => x.Password, new { @placeholder = Resources.Resource.UserPassword, @class = "form-control input-lg password-field" })
+                        @Html.ValidationMessageFor(x => x.Password)
+                    </div>
+                </div>
+
+                <div class="login-actions">
+                    <button type="submit" class="login-action btn btn-lg btn-primary">
+                        <i class="ace-icon fa fa-sign-in"></i>
+                        @Resources.Resource.SignIn
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+    <div style="display: block; width:420px;  margin: 10px auto 0 auto;">
+        <p style="float:left">
+            <span style="font-family: 'Trebuchet MS';">
+                <label style="color:#e18822;">Formosa Technology Corporation</label> &copy; @DateTime.Today.Year
+            </span>
+        </p>
+
+        <p style="float:right">@Utility.Define.Version</p>
+    </div>    
+</body>
+</html>

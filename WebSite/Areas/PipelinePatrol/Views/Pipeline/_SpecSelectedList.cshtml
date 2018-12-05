@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Models.PipelinePatrol.PipelineManagement.SpecModel>
+
+<table class="table table-bordered table-input" id="tableSpec">
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="col-sm-1 center">
+                    <div class="action-buttons">
+                        <a class="red" href="#" onclick="DeleteSpec('@item.UniqueID'); return false;" title="@Resources.Resource.Delete">
+                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                        </a>
+                    </div>
+                </td>
+                <th class="col-sm-1">@item.Description</th>
+                <td class="col-sm-10">
+                    <input type="hidden" class="Spec" value="@item.UniqueID" data-isselect="@(item.OptionList.Count>0?"Y":"N")" />
+                    @if (item.OptionList.Count > 0)
+                    {
+                        <select>
+                            @foreach (var option in item.OptionList)
+                            {
+                                if (item.OptionUniqueID == option.UniqueID)
+                                {
+                                    <option value="@option.UniqueID" selected="selected">@option.Description</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.UniqueID">@option.Description</option>
+                                }
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <input type="text" class="col-sm-11" value="@item.Value" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

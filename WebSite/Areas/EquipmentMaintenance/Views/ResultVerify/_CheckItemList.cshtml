@@ -1,0 +1,112 @@
+﻿@model IEnumerable<Models.EquipmentMaintenance.ProgressQuery.JobResultModel>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="center">@Resources.Resource.Abnormal</th>
+                        <th>@Resources.Resource.ControlPoint</th>
+                        <th>@Resources.Resource.Equipment</th>
+                        <th>@Resources.Resource.CheckItem</th>
+                        <th class="center">@Resources.Resource.CheckDate</th>
+                        <th class="center">@Resources.Resource.CheckTime</th>
+                        <th>@Resources.Resource.CheckResult</th>
+                        <th class="center">@Resources.Resource.LowerLimit</th>
+                        <th class="center">@Resources.Resource.LowerAlertLimit</th>
+                        <th class="center">@Resources.Resource.UpperAlertLimit</th>
+                        <th class="center">@Resources.Resource.UpperLimit</th>
+                        <th class="center">@Resources.Resource.Unit</th>
+                        <th>@Resources.Resource.CheckUser</th>
+                        <th>@Resources.Resource.AbnormalReason @Resources.Resource.And @Resources.Resource.HandlingMethod</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var controlPoint in Model.First().ControlPointList)
+                    {
+                        foreach (var checkItem in controlPoint.CheckItemList)
+                        {
+                            if (checkItem.CheckResultList.Count > 0)
+                            {
+                                <tr>
+                                    <td class="center">
+                                        @if (checkItem.CheckResultList[0].IsAbnormal)
+                                        {
+                                            <span class="label label-lg label-danger arrowed-right">@Resources.Resource.Abnormal</span>
+                                        }
+                                        else if (checkItem.CheckResultList[0].IsAlert)
+                                        {
+                                            <span class="label label-lg label-warning arrowed-right">@Resources.Resource.Warning</span>
+                                        }
+                                    </td>
+                                    <td>@controlPoint.ControlPoint</td>
+                                    <td>@checkItem.Equipment</td>
+                                    <td>@checkItem.CheckItem</td>
+                                    <td class="center">@checkItem.CheckResultList[0].CheckDate</td>
+                                    <td class="center">@checkItem.CheckResultList[0].CheckTime</td>
+                                    <td>@checkItem.CheckResultList[0].Result</td>
+                                    <td class="center">@checkItem.CheckResultList[0].LowerLimit</td>
+                                    <td class="center">@checkItem.CheckResultList[0].LowerAlertLimit</td>
+                                    <td class="center">@checkItem.CheckResultList[0].UpperAlertLimit</td>
+                                    <td class="center">@checkItem.CheckResultList[0].UpperLimit</td>
+                                    <td class="center">@checkItem.CheckResultList[0].Unit</td>
+                                    <td>@controlPoint.ArriveRecordList.First(x => x.UniqueID == checkItem.CheckResultList[0].ArriveRecordUniqueID).User.User</td>
+                                    <td>@checkItem.CheckResultList[0].AbnormalReasons</td>
+                                </tr>
+
+                                for (int i = 1; i < checkItem.CheckResultList.Count; i++)
+                                {
+                                    <tr>
+                                        <td class="center">
+                                            @if (checkItem.CheckResultList[i].IsAbnormal)
+                                            {
+                                                <span class="label label-lg label-danger arrowed-right">@Resources.Resource.Abnormal</span>
+                                            }
+                                            else if (checkItem.CheckResultList[i].IsAlert)
+                                            {
+                                                <span class="label label-lg label-warning arrowed-right">@Resources.Resource.Warning</span>
+                                            }
+                                        </td>
+                                        <td>@controlPoint.ControlPoint</td>
+                                        <td>@checkItem.Equipment</td>
+                                        <td>@checkItem.CheckItem</td>
+                                        <td class="center">@checkItem.CheckResultList[i].CheckDate</td>
+                                        <td class="center">@checkItem.CheckResultList[i].CheckTime</td>
+                                        <td>@checkItem.CheckResultList[i].Result</td>
+                                        <td class="center">@checkItem.CheckResultList[i].LowerLimit</td>
+                                        <td class="center">@checkItem.CheckResultList[i].LowerAlertLimit</td>
+                                        <td class="center">@checkItem.CheckResultList[i].UpperAlertLimit</td>
+                                        <td class="center">@checkItem.CheckResultList[i].UpperLimit</td>
+                                        <td class="center">@checkItem.CheckResultList[i].Unit</td>
+                                        <td>@controlPoint.ArriveRecordList.First(x => x.UniqueID == checkItem.CheckResultList[i].ArriveRecordUniqueID).User.User</td>
+                                        <td>@checkItem.CheckResultList[i].AbnormalReasons</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>@controlPoint.ControlPoint</td>
+                                    <td>@checkItem.Equipment</td>
+                                    <td>@checkItem.CheckItem</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="center">@checkItem.LowerLimit</td>
+                                    <td class="center">@checkItem.LowerAlertLimit</td>
+                                    <td class="center">@checkItem.UpperAlertLimit</td>
+                                    <td class="center">@checkItem.UpperLimit</td>
+                                    <td class="center">@checkItem.Unit</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

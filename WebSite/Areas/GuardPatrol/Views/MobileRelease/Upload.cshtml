@@ -1,0 +1,111 @@
+﻿@model Models.GuardPatrol.MobileRelease.UploadFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+<link href="@Url.Content("~/assets/css/datepicker.css")" rel="stylesheet" />
+}
+
+@section Scripts{
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.maskedinput.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-datepicker.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/locales/bootstrap-datepicker."+ViewBag.Lang+".js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        var file_input = $('input[name="FormInput.File"]');
+
+        file_input.ace_file_input({
+            style: 'well',
+            btn_choose: '@Resources.Resource.UploadButtonChoose',
+            btn_change: '@Resources.Resource.UploadButtonChange',
+            droppable: true,
+            thumbnail: 'small'
+        });
+    });
+</script>
+
+@if (ViewBag.RequestResult != null)
+{
+    var requestResult = ViewBag.RequestResult as Utility.Models.RequestResult;
+
+    if (requestResult.IsSuccess)
+    {
+        <script type="text/javascript">
+            $(function () {
+                $.SuccessDialog('@requestResult.Message');
+            });
+        </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            $(function () {
+                $.ErrorDialog('@requestResult.Message');
+            });
+        </script>
+    }
+}
+    
+}
+
+<p>
+    @if (ViewBag.CanUpload)
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="$('#UploadForm').submit();" type="button">
+            <i class="ace-icon fa fa-upload bigger-160"></i>
+            Upload
+        </button>
+    }
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="bigger lighter">Mobile Release</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Upload", null, FormMethod.Post, new { @ID = "UploadForm", enctype = "multipart/form-data" }))
+            {
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th>Device</th>
+                        <td colspan="3">@Html.DropDownListFor(x => x.FormInput.Device, Model.DeviceSelectItemList)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">Release Date</th>
+                        <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.ReleaseDateString, new { @class = "col-sm-3 datepicker" })</td>
+                        <th class="col-sm-1">Force Update</th>
+                        <td class="col-sm-5">
+                            <label>
+                                <input id="FormInput_IsForceUpdate" name="FormInput.IsForceUpdate" class="ace ace-checkbox-2" type="checkbox" value="true">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Release Note</th>
+                        <td colspan="3">@Html.TextBoxFor(x => x.FormInput.ReleaseNote, new { @class = "col-sm-11" })</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><input type="file" name="FormInput.File"></td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>

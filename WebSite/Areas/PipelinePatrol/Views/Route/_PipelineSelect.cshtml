@@ -1,0 +1,157 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetPipelineSelectedList('');
+
+        InitPipelineSelectTree();
+
+        $('#divPipelineSelectTreeWidget').hide();
+    });
+
+    function GetPipelineSelectedList() {
+        var list = $('#divPipelineSelectedList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetPipelineSelectedList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) {
+                list.Overlay('show').html(data);
+            },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitPipelineSelectTree() {
+        var container = $('#divPipelineSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitPipelineSelectTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectPipeline = function () {
+        $('#divPipelineSelectedListWidget').hide();
+        $('#divPipelineSelectTreeWidget').show();
+    };
+
+    var CancelSelectPipeline = function () {
+        $('#divPipelineSelectedListWidget').show();
+        $('#divPipelineSelectTreeWidget').hide();
+    };
+
+    var AddPipeline = function () {
+        var data = [];
+
+        $("#divPipelineSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.PipelineUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddPipeline")',
+            data: {
+                Selecteds: JSON.stringify(data)
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divPipelineSelectTreeWidget').hide();
+                $('#divPipelineSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divPipelineSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetPipelineSelectedList('');
+                    $("#divPipelineSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divPipelineSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeletePipeline = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeletePipeline")',
+            data: {
+                PipelineUniqueID: uniqueID
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divPipelineSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divPipelineSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetPipelineSelectedList('');
+                    $("#divPipelineSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divPipelineSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+
+<div id="divPipelineSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Pipeline</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divPipelineSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddPipeline(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectPipeline(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divPipelineSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Pipeline</h5>
+
+        <div class="widget-toolbar">
+            <a href="#" onclick="SelectPipeline(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <div id="divPipelineSelectedList" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

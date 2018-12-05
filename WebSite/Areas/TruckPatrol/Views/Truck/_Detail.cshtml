@@ -1,0 +1,83 @@
+﻿@model Models.TruckPatrol.TruckManagement.DetailViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var container = $('#divDetailTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitDetailTree")',
+            data: { UniqueID: '@Model.UniqueID' },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    });
+</script>
+
+
+<p>
+    @if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+    { 
+        if (ViewBag.CanEdit)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Url.Action("Edit")', '@Model.UniqueID')" type="button">
+                <i class="ace-icon fa fa-pencil bigger-160"></i>
+                @Resources.Resource.Edit
+            </button>
+        }
+
+        if (ViewBag.CanDelete)
+        {
+            <button class="btn btn-app btn-danger btn-xs" onclick="Delete('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-trash-o bigger-160"></i>
+                @Resources.Resource.Delete
+            </button>
+        }
+    }
+    
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Back
+    </button>
+
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">車輛</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th><label>組織</label></th>
+                    <td colspan="3">@Html.DisplayFor(x => x.OrganizationDescription)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>車牌號碼</label></th>
+                    <td class="col-sm-5"> @Html.DisplayFor(x => x.TruckNo)</td>
+                    <th class="col-sm-1"><label>車輛種類</label></th>
+                    <td class="col-sm-5"> @Html.DisplayFor(x => x.TruckType)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.ControlPoint @Resources.Resource.CheckItem</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4" style="overflow-x:scroll;">
+            <div id="divDetailTreeContainer" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

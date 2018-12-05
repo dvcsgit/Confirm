@@ -1,0 +1,134 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Utility;
+
+namespace Models.ASE.AbnormalNotify
+{
+    public class GridItem
+    {
+        public string UniqueID { get; set; }
+
+        public string VHNO { get; set; }
+
+        public string Status { get; set; }
+
+        public string StatusDescription
+        {
+            get
+            {
+                if (Status == "0")
+                {
+                    return Resources.Resource.AbnormalNotifyStatus_0;
+                }
+                else if (Status == "1")
+                {
+                    return Resources.Resource.AbnormalNotifyStatus_1;
+                }
+                else if (Status == "2")
+                {
+                    return Resources.Resource.AbnormalNotifyStatus_2;
+                }
+                else if (Status == "3")
+                {
+                    return Resources.Resource.AbnormalNotifyStatus_3;
+                }
+                else
+                {
+                    return "-";
+                }
+            }
+        }
+
+        public string Subject { get; set; }
+
+        public DateTime? OccurTime { get; set; }
+
+        public string OccurTimeString
+        {
+            get
+            {
+                return DateTimeHelper.DateTime2DateTimeStringWithSeperator(OccurTime);
+            }
+        }
+
+        public DateTime CreateTime { get; set; }
+
+        public string CreateTimeString
+        {
+            get
+            {
+                return DateTimeHelper.DateTime2DateTimeStringWithSeperator(CreateTime);
+            }
+        }
+
+        public string CreateUserID { get; set; }
+
+        public string CreateUserName { get; set; }
+
+        public string CreateUser
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(CreateUserName))
+                {
+                    return string.Format("{0}/{1}", CreateUserID, CreateUserName);
+                }
+                else
+                {
+                    return CreateUserID;
+                }
+            }
+        }
+
+        public string TakeJobUserID { get; set; }
+
+        public string TakeJobUserName { get; set; }
+
+        public string TakeJobUser
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(TakeJobUserName))
+                {
+                    return string.Format("{0}/{1}", TakeJobUserID, TakeJobUserName);
+                }
+                else
+                {
+                    return TakeJobUserID;
+                }
+            }
+        }
+
+        public DateTime? TakeJobTime { get; set; }
+
+        public string TakeJobTimeString
+        {
+            get
+            {
+                return DateTimeHelper.DateTime2DateTimeStringWithSeperator(TakeJobTime);
+            }
+        }
+
+        public string ResponsibleOrganization { get; set; }
+
+        public List<string> ResponsibleOrganizationList { get; set; }
+
+        public DateTime? ClosedTime { get; set; }
+
+        public string ClosedTimeString
+        {
+            get
+            {
+                return DateTimeHelper.DateTime2DateTimeStringWithSeperator(ClosedTime);
+            }
+        }
+
+        public GridItem()
+        {
+            ResponsibleOrganizationList = new List<string>();
+        }
+    }
+}

@@ -1,0 +1,364 @@
+﻿@model Models.ASE.AbnormalNotify_v2.DetailViewModel
+
+<script type="text/javascript">
+    var Save = function () {
+        var form = $('#TakeJobForm');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("TakeJob")',
+            data: form.serialize(),
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Edit('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+            <i class="ace-icon fa fa-download bigger-160"></i>
+            @Resources.Resource.TakeJob
+        </button>
+    
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+@using (Html.BeginForm("TakeJob", null, FormMethod.Post, new { @ID = "TakeJobForm" }))
+{ 
+    @Html.HiddenFor(x => x.UniqueID)
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.AbnormalNotifyForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.VHNO)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.VHNO)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.StatusDescription)</th>
+                    <td class="col-sm-5">
+                        @if (Model.Status == "1")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.Status == "2")
+                        {
+                            <span class="label label-lg label-warning arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.Status == "3" || Model.Status == "4" || Model.Status == "6")
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.Status == "5")
+                        {
+                            <span class="label label-lg label-primary arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.Status == "7")
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else
+                        {
+                            <span>@Model.StatusDescription</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.OccurTimeString)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.OccurTimeString)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Contact)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Contact)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Mvpn)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Mvpn)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Subject)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Subject)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Description)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Description)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.HandlingDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.HandlingDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.RecoveryTimeString)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.RecoveryTimeString)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.RecoveryDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.RecoveryDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.EffectArea)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.EffectArea)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.EffectSystem)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.EffectSystem)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>後續追蹤負責單位</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.ResponsibleOrganization)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Cost)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Cost)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Groups)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Groups)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.CreateUser)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.CreateUser)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.CreateTimeString)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.CreateTimeString)</td>
+                </tr>
+                @if (Model.Status != "0")
+                {
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.TakeJobUser)</th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.TakeJobUser)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.TakeJobTimeString)</th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.TakeJobTimeString)</td>
+                    </tr>
+                    <tr>
+                        <th><label>@Resources.Resource.Closed @Resources.Resource.Comment</label></th>
+                        <td colspan="3">@Html.DisplayFor(x => x.ClosedRemark)</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.NotifyUserList != null && Model.NotifyUserList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.NotifyUser</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px; max-height:200px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Organization</th>
+                            <th>@Resources.Resource.UserID</th>
+                            <th colspan="2">@Resources.Resource.UserName</th>
+                            <th>@Resources.Resource.EMail</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model.NotifyUserList)
+                        {
+                            <tr>
+                                <td>@item.OrganizationDescription</td>
+                                <td>@item.ID</td>
+                                <td>@item.EName</td>
+                                <td>@item.Name</td>
+                                <td>@item.Email</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (Model.FileList != null && Model.FileList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.File</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th></th>
+                            <th>@Resources.Resource.FileName</th>
+                            <th>@Resources.Resource.FileSize</th>
+                            <th>@Resources.Resource.FileTime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FileList)
+                        {
+                            <tr>
+                                <td class="center">
+                                    <div class="action-buttons">
+                                        <a class="purple" href="@Url.Action("Download", new { FormUniqueID=Model.UniqueID, Seq=item.Seq})" title="@Resources.Resource.Download">
+                                            <i class="ace-icon fa fa-cloud-download bigger-130"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>@item.Display</td>
+                                <td>@item.FileSize</td>
+                                <td>@item.LastModifyTimeString</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.RepairForm != null)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.RepairForm</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th>@Html.LabelFor(x => x.RepairForm.VHNO)</th>
+                        <td>
+                            @Html.DisplayFor(x => x.RepairForm.VHNO)
+                            @if (Model.RepairForm.StatusCode == "0" || Model.RepairForm.StatusCode == "2" || Model.RepairForm.StatusCode == "3")
+                            {
+                                <span class="label label-lg label-warning arrowed-right">@Model.RepairForm.StatusDescription</span>
+                            }
+                            else if (Model.RepairForm.StatusCode == "1" || Model.RepairForm.StatusCode == "8")
+                            {
+                                <span class="label label-lg label-success arrowed-right">@Model.RepairForm.StatusDescription</span>
+                            }
+                            else if (Model.RepairForm.StatusCode == "4")
+                            {
+                                <span class="label label-lg label-info arrowed-right">@Model.RepairForm.StatusDescription</span>
+                            }
+                            else if (Model.RepairForm.StatusCode == "5" || Model.RepairForm.StatusCode == "7")
+                            {
+                                <span class="label label-lg label-danger arrowed-right">@Model.RepairForm.StatusDescription</span>
+                            }
+                            else if (Model.RepairForm.StatusCode == "6" || Model.RepairForm.StatusCode == "9")
+                            {
+                                <span class="label label-lg label-purple arrowed-right">@Model.RepairForm.StatusDescription</span>
+                            }
+                            else
+                            {
+                                <span>@Model.RepairForm.StatusDescription</span>
+                            }
+                        </td>
+                        <th>@Html.LabelFor(x => x.RepairForm.RepairFormType)</th>
+                        <td>@Html.DisplayFor(x => x.RepairForm.RepairFormType)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.RepairForm.ParentOrganizationFullDescription)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.RepairForm.ParentOrganizationFullDescription)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.RepairForm.MaintenanceOrganizationDescription)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.RepairForm.MaintenanceOrganizationDescription)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.RepairForm.Subject)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.RepairForm.Subject)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.RepairForm.Description)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.RepairForm.Description)</td>
+                    </tr>
+                    @if (!string.IsNullOrEmpty(Model.RepairForm.Equipment))
+                    {
+                        <tr>
+                            <th>@Html.LabelFor(x => x.RepairForm.Equipment)</th>
+                            <td colspan="3">@Html.DisplayFor(x => x.RepairForm.Equipment)</td>
+                        </tr>
+                    }
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.RepairForm.EstBeginDateString)</th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.RepairForm.EstBeginDateString)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.RepairForm.EstEndDateString)</th>
+                        <td class="col-sm-5">
+                            @if (Model.RepairForm.StatusCode == "5")
+                            {
+                                <span class="label label-lg label-danger">@Model.RepairForm.EstBeginDateString</span>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(x => x.RepairForm.EstEndDateString)
+                            }
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">異動紀錄</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th>異動類別</th>
+                        <th>異動人員</th>
+                        <th>異動時間</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.LogList)
+                    {
+                        <tr>
+                            <td>@item.Action</td>
+                            <td>@item.User</td>
+                            <td>@item.LogTimeString</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

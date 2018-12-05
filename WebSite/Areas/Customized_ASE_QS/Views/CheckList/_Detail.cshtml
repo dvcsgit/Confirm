@@ -1,0 +1,431 @@
+﻿@model Models.ASE.QS.CheckListManagement.DetailViewModel
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        @foreach (var item in Model.PhotoList)
+{
+    <text>$(".@string.Format("{0}_{1}_{2}_{3}", item.FormUniqueID, item.CheckItemUniqueID, item.CheckItemSeq, item.Seq)").colorbox({ rel: '@string.Format("{0}_{1}_{2}_{3}", item.FormUniqueID, item.CheckItemUniqueID, item.CheckItemSeq, item.Seq)', maxWidth: '100%', maxHeight: '100%' });</text>
+    }
+    });
+
+</script>
+
+<p>
+    @if (ViewBag.CanEdit || Model.AuditorID==(Session["Account"] as Models.Authenticated.Account).ID)
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+            <i class="ace-icon fa fa-edit bigger-160"></i>
+            @Resources.Resource.Edit
+        </button>
+    }
+
+    @if (ViewBag.CanDelete || Model.AuditorID == (Session["Account"] as Models.Authenticated.Account).ID)
+    {
+        <button class="btn btn-app btn-danger btn-xs" onclick="Delete('@Model.UniqueID');" type="button">
+            <i class="ace-icon fa fa-trash-o bigger-160"></i>
+            @Resources.Resource.Delete
+        </button>
+    }
+    
+    <button class="btn btn-app btn-primary btn-xs" onclick="Report('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-cloud-download bigger-160"></i>
+        匯出
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="bigger lighter">內稽查檢表</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th><label>單號</label></th>
+                    <td colspan="5">@Html.DisplayFor(x => x.VHNO)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>稽核日期</label></th>
+                    <td class="col-sm-3">@Html.DisplayFor(x => x.AuditDateString)</td>
+                    <th class="col-sm-1"><label>稽核人員</label></th>
+                    <td class="col-sm-3">@Html.DisplayFor(x => x.Auditor)</td>
+                    <th class="col-sm-1"><label>稽核主管</label></th>
+                    <td class="col-sm-3">@Html.DisplayFor(x => x.AuditorManager)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>受稽廠別</label></th>
+                    <td class="col-sm-11" colspan="5">@Html.DisplayFor(x => x.Factory)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>受稽班別</label></th>
+                    <td class="col-sm-11" colspan="5">@Html.DisplayFor(x => x.Shift)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>受稽站別</label></th>
+                    <td class="col-sm-11" colspan="5">@Html.DisplayFor(x => x.Stations)</td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@foreach (var checkType in Model.CheckTypeList)
+{
+    <div class="alert alert-info">
+        <strong>@checkType.ID</strong>
+        @checkType.EDescription
+        @checkType.CDescription
+    </div>
+
+    foreach (var checkItem in checkType.CheckItemList)
+    {
+        var checkResult = checkItem.CheckResultList.FirstOrDefault(x => x.Seq == 1);
+
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="bigger lighter">
+                    @checkItem.ID
+                    @checkItem.EDescription
+                </h5>
+                <h5 class="bigger lighter">
+                    @checkItem.CDescription
+                </h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <div class="well" style="padding:0; margin-bottom:0;">
+                        <h4 class="blue smaller lighter" style="margin:20px;">第 1 @checkItem.Unit</h4>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead class="thin-border-bottom">
+                                <tr>
+                                    <th class="col-sm-1 center" rowspan="2">製程站別</th>
+                                    <th class="col-sm-5 center" colspan="3">稽核記錄</th>
+                                    <th class="col-sm-1 center" rowspan="2">CARNO</th>
+                                    <th class="col-sm-6" rowspan="2">備註</th>
+                                </tr>
+                                <tr>
+                                    <th class="col-sm-2 center">受稽OP/機台/文件/區域</th>
+                                    <th class="col-sm-2 center">負責部門</th>
+                                    <th class="col-sm-1 center">稽核結果</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="center">
+                                        @if (checkResult != null)
+                                        { 
+                                        <label>@checkResult.Station</label>
+                                        }
+                                    </td>
+                                    <td class="center">
+                                        @if (checkResult != null)
+                                        {
+                                            <label>@checkResult.AuditObject</label>
+                                        }
+                                    </td>
+                                    <td class="center">
+                                        @if (checkResult != null)
+                                        {
+                                            <label>@checkResult.ResDepartmentDescription</label>
+                                        }
+                                    </td>
+                                    <td class="left">
+                                        @if (checkResult != null)
+                                        { 
+                                        if(checkResult.Result=="Y")
+                                        {
+                                        <span class="label label-lg label-success arrowed-right">符合</span>
+                                        }
+                                            if(checkResult.Result=="N")
+                                                {
+                                            <span class="label label-lg label-danger arrowed-right">不符合</span>
+                                            }
+                                                if(checkResult.Result=="0")
+                                                { 
+                                                <span class="label label-lg label-primary arrowed-right">無此項目</span>
+                                                }
+                                                
+                                        }
+                                    </td>
+                                    <td class="center">
+                                        @if (checkResult != null)
+                                        {
+                                            <label>@checkResult.CarNo</label>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (checkResult != null)
+                                        { 
+                                        <label>@checkResult.Remark</label>
+                                        }
+                                    </td>
+                                </tr>
+
+                                @if (checkResult != null && checkResult.Result == "N")
+                                {
+                                    <tr>
+                                        <td colspan="6" style="padding:0px;">
+                                            <div class="alert alert-danger" style="padding:0; margin-bottom:0;">
+                                                <h4 class="red smaller lighter" style="margin:20px;">第 1 @checkItem.Unit 不符合說明</h4>
+                                                <table class="table table-bordered table-input">
+                                                    <tr>
+                                                        <th class="col-sm-1">C.P No.</th>
+                                                        <td class="col-sm-2">@checkResult.CPNO</td>
+                                                        <th class="col-sm-1">週別</th>
+                                                        <td class="col-sm-2">@checkResult.Weekly</td>
+                                                        <th class="col-sm-1">稽核性質</th>
+                                                        <td class="col-sm-2">@checkResult.AuditType</td>
+                                                        <th class="col-sm-1">稽核者班別</th>
+                                                        <td class="col-sm-2">@checkResult.AuditorShift</td>
+                                                    </tr>
+                                                    <tr>
+                                                       
+                                                        <th>問題發生歸屬班別</th>
+                                                        <td>@checkResult.BelongShift</td>
+                                                        <th>CAR Owner</th>
+                                                        <td>@checkResult.CarOwner</td>
+                                                        <th>CAR Owner's Boss</th>
+                                                        <td>@checkResult.CarOwnerManager</td>
+                                                        <th>Dept.Magr</th>
+                                                        <td>@checkResult.DepartmentManager</td>
+
+                                                        
+                                                    </tr>
+                                                    <tr>
+                                                        <th>風險等級</th>
+                                                        <td>@checkResult.Risk</td>
+                                                        <th>Grade</th>
+                                                        <td>@checkResult.Grade</td>
+                                                        <th>是否歸屬MO</th>
+                                                        <td>
+                                                            @if (checkResult.IsBelongMO == "Y")
+                                                            {
+                                                                <label>是</label>
+                                                            }
+                                                            @if (checkResult.IsBelongMO == "N")
+                                                            {
+                                                                <label>否</label>
+                                                            }
+                                                        </td>
+                                                        <th>缺失人員工號</th>
+                                                        <td>@checkResult.ErrorUser</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>缺失機台編號</th>
+                                                        <td>@checkResult.ErrorMachineNo</td>
+                                                        <th>缺失區域</th>
+                                                        <td colspan="5">@checkResult.ErrorArea</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                
+                                @if (checkResult != null && checkResult.PhotoList != null && checkResult.PhotoList.Count > 0)
+                                { 
+                                <tr>
+                                    <td colspan="6" style="padding:0px;">
+                                        <div class="alert alert-success" style="padding:0; margin-bottom:0;">
+                                            <h4 class="green smaller lighter" style="margin:20px;">第 1 @checkItem.Unit @Resources.Resource.Photo</h4>
+
+                                            <ul class="ace-thumbnails clearfix">
+                                                @foreach (var photo in checkResult.PhotoList)
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Content("~/QSPhoto/" + photo.FileName)" title="Photo Title" data-rel="colorbox" class="cboxElement @string.Format("{0}_{1}_{2}_{3}", photo.FormUniqueID, photo.CheckItemUniqueID, photo.CheckItemSeq, photo.Seq)">
+                                                            <img width="150" height="150" alt="150x150" src="@Url.Content("~/QSPhoto/" + photo.FileName)">
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if (checkItem.CheckTimes > 1)
+                    {
+                        for (int i = 1; i < checkItem.CheckTimes; i++)
+                        {
+                            checkResult = checkItem.CheckResultList.FirstOrDefault(x => x.Seq == i + 1);
+
+                            <div class="well" style="padding:0; margin-bottom:0;">
+                                <h4 class="blue smaller lighter" style="margin:20px;">第 @(i + 1) @checkItem.Unit</h4>
+
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead class="thin-border-bottom">
+                                        <tr>
+                                            <th class="col-sm-1 center" rowspan="2">製程站別</th>
+                                            <th class="col-sm-5 center" colspan="3">稽核記錄</th>
+                                            <th class="col-sm-1 center" rowspan="2">CARNO</th>
+                                            <th class="col-sm-5" rowspan="2">備註</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="col-sm-2 center">受稽OP/機台/文件/區域</th>
+                                            <th class="col-sm-2 center">負責部門</th>
+                                            <th class="col-sm-1 center">稽核結果</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="center">
+                                                @if (checkResult != null)
+                                                {
+                                                    <label>@checkResult.Station</label>
+                                                }
+                                            </td>
+                                            <td class="center">
+                                                @if (checkResult != null)
+                                                {
+                                                    <label>@checkResult.AuditObject</label>
+                                                }
+                                            </td>
+                                            <td class="center">
+                                                @if (checkResult != null)
+                                                {
+                                                    <label>@checkResult.ResDepartmentDescription</label>
+                                                }
+                                            </td>
+                                            <td class="left">
+                                                @if (checkResult != null)
+                                                {
+                                                    if (checkResult.Result == "Y")
+                                                    {
+                                                        <span class="label label-lg label-success arrowed-right">符合</span>
+                                                    }
+                                                    if (checkResult.Result == "N")
+                                                    {
+                                                        <span class="label label-lg label-danger arrowed-right">不符合</span>
+                                                    }
+                                                    if (checkResult.Result == "0")
+                                                    {
+                                                        <span class="label label-lg label-primary arrowed-right">無此項目</span>
+                                                    }
+
+                                                }
+                                            </td>
+                                            <td class="center">
+                                                @if (checkResult != null)
+                                                {
+                                                    <label>@checkResult.CarNo</label>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (checkResult != null)
+                                                {
+                                                    <label>@checkResult.Remark</label>
+                                                }
+                                            </td>
+                                        </tr>
+
+                                        @if (checkResult != null && checkResult.Result == "N")
+                                        {
+                                            <tr>
+                                                <td colspan="6" style="padding:0px;">
+                                                    <div class="alert alert-danger" style="padding:0; margin-bottom:0;">
+                                                        <h4 class="red smaller lighter" style="margin:20px;">第 @(i + 1) @checkItem.Unit 不符合說明</h4>
+                                                        <table class="table table-bordered table-input">
+                                                            <tr>
+                                                                <th class="col-sm-1">C.P No.</th>
+                                                                <td class="col-sm-2">@checkResult.CPNO</td>
+                                                                <th class="col-sm-1">週別</th>
+                                                                <td class="col-sm-2">@checkResult.Weekly</td>
+                                                                <th class="col-sm-1">稽核性質</th>
+                                                                <td class="col-sm-2">@checkResult.AuditType</td>
+                                                                <th class="col-sm-1">稽核者班別</th>
+                                                                <td class="col-sm-2">@checkResult.AuditorShift</td>
+                                                            </tr>
+                                                            <tr>
+
+                                                                <th>問題發生歸屬班別</th>
+                                                                <td>@checkResult.BelongShift</td>
+                                                                <th>CAR Owner</th>
+                                                                <td>@checkResult.CarOwner</td>
+                                                                <th>CAR Owner's Boss</th>
+                                                                <td>@checkResult.CarOwnerManager</td>
+                                                                <th>Dept.Magr</th>
+                                                                <td>@checkResult.DepartmentManager</td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                <th>風險等級</th>
+                                                                <td>@checkResult.Risk</td>
+                                                                <th>Grade</th>
+                                                                <td>@checkResult.Grade</td>
+                                                                <th>是否歸屬MO</th>
+                                                                <td>
+                                                                    @if (checkResult.IsBelongMO == "Y")
+                                                                    {
+                                                                        <label>是</label>
+                                                                    }
+                                                                    @if (checkResult.IsBelongMO == "N")
+                                                                    {
+                                                                        <label>否</label>
+                                                                    }
+                                                                </td>
+                                                                <th>缺失人員工號</th>
+                                                                <td>@checkResult.ErrorUser</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>缺失機台編號</th>
+                                                                <td>@checkResult.ErrorMachineNo</td>
+                                                                <th>缺失區域</th>
+                                                                <td colspan="5">@checkResult.ErrorArea</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                        @if (checkResult != null && checkResult.PhotoList != null && checkResult.PhotoList.Count > 0)
+                                        {
+                                            <tr>
+                                                <td colspan="6" style="padding:0px;">
+                                                    <div class="alert alert-success" style="padding:0; margin-bottom:0;">
+                                                        <h4 class="green smaller lighter" style="margin:20px;">第 @(i+1) @checkItem.Unit @Resources.Resource.Photo</h4>
+
+                                                        <ul class="ace-thumbnails clearfix">
+                                                            @foreach (var photo in checkResult.PhotoList)
+                                                            {
+                                                                <li>
+                                                                    <a href="@Url.Content("~/QSPhoto/" + photo.FileName)" title="Photo Title" data-rel="colorbox" class="cboxElement @string.Format("{0}_{1}_{2}_{3}", photo.FormUniqueID, photo.CheckItemUniqueID, photo.CheckItemSeq, photo.Seq)">
+                                                                        <img width="150" height="150" alt="150x150" src="@Url.Content("~/QSPhoto/" + photo.FileName)">
+                                                                    </a>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+    }
+}

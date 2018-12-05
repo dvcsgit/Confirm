@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Models.EquipmentMaintenance.QFormManagement.GridItem>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var data = [];
+
+        @{
+            var minYear = Model.Min(x => x.CreateTime).Year;
+            var minMonth = Model.Min(x => x.CreateTime).Month;
+            var min = new DateTime(minYear, minMonth, 1);
+            var maxYear = Model.Max(x => x.CreateTime).Year;
+            var maxMonth = Model.Max(x => x.CreateTime).Month;
+            var max = new DateTime(maxYear, maxMonth, 1);
+
+            var tmp = min;
+
+            var index = 0;
+         }
+
+        @while(tmp<=max)
+        {
+            <text>
+        data.push([@index, @Model.Count(x=>x.CreateTime.Year==tmp.Year&&x.CreateTime.Month==tmp.Month)]);
+            </text>
+            
+            index++;
+            tmp = tmp.AddMonths(1);
+        }
+
+        var dataset = [
+    { label: "", data: data, color: "#5482FF" }
+        ];
+
+        var ticks = [];
+
+        @{ tmp = min; index = 0;}
+
+        @while(tmp<=max)
+        {
+            <text>
+        ticks.push([@index, '@tmp.ToString("yyyy/MM")']);
+            </text>
+            
+            index++;
+            tmp = tmp.AddMonths(1);
+        }
+
+        var options = {
+            series: {
+                bars: {
+                    show: true
+                }
+            },
+            bars: {
+                align: "center",
+                barWidth: 0.5
+            },
+            xaxis: {
+                ticks: ticks
+            }
+        };
+
+        $.plot($("#QFormChart"), dataset, options);
+    });
+</script>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">
+            報修案件
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="QFormChart" style="width: 100%; height: 300px;"></div>
+        </div>
+    </div>
+</div>

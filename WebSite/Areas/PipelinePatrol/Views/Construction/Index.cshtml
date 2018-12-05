@@ -1,0 +1,115 @@
+﻿@model Models.PipelinePatrol.Construction.QueryFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts
+{
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing&key=AIzaSyByPZwdPAsaiBHq9w05-e14fKZAEjxX7l0"></script>
+
+    <script type="text/javascript">
+        var Query = function () {
+            $('#divForm').empty().hide();
+            $('#divQueryForm').show();
+
+            var grid = $('#divList');
+
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: '@Url.Action("Query")',
+                data: $('#QueryForm').serialize(),
+                dataType: "html",
+                beforeSend: function () { grid.Overlay('show'); },
+                success: function (data) { grid.Overlay('hide').html(data); },
+                error: function (x, h, r) { grid.Overlay('hide').html(x.responseText); }
+            });
+        };
+
+        var Form = function (url, data) {
+            $('#divQueryForm').hide();
+
+            var form = $('#divForm');
+
+            form.empty().show();
+
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: url,
+                data: data,
+                dataType: "html",
+                beforeSend: function () { form.Overlay('show'); },
+                success: function (data) { form.Overlay('show').html(data); },
+                error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+            });
+        };
+
+        var Detail = function (uniqueID) {
+            Form('@Url.Action("Detail")', { UniqueID: uniqueID });
+        };
+    </script>
+
+    @if (ViewBag.UniqueID != null && !string.IsNullOrEmpty(ViewBag.UniqueID))
+    { 
+        <script type="text/javascript">
+            $(function () {
+                Detail('@ViewBag.UniqueID');
+            });
+        </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            $(function () {
+                Query();
+            });
+        </script>
+    }
+}
+
+<div class="row">
+    <div id="divQueryForm" class="col-xs-12">
+        @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+        {
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.Search</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" onclick="Query();">
+                            <i class="ace-icon fa fa-search white"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding">
+                        @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+                        {
+                            <table class="table table-bordered table-input">
+                                <tr>
+                                    <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.ConstructionFirmUniqueID)</th>
+                                    <td class="col-sm-5">@Html.DropDownListFor(x => x.Parameters.ConstructionFirmUniqueID, Model.ConstructionFirmSelectItemList)</td>
+                                    <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.ConstructionTypeUniqueID)</th>
+                                    <td class="col-sm-5">@Html.DropDownListFor(x => x.Parameters.ConstructionTypeUniqueID, Model.ConstructionTypeSelectItemList)</td>
+                                </tr>
+                                <tr>
+                                    <th>@Html.LabelFor(x => x.Parameters.VHNO)</th>
+                                    <td colspan="3">@Html.TextBoxFor(x => x.Parameters.VHNO)</td>
+                                </tr>
+                            </table>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="space"></div>
+
+        <div id="divList" style="min-height:200px;"></div>
+    </div>
+
+    <div id="divForm" style="min-height:200px;" class="col-xs-12"></div>
+</div>
+

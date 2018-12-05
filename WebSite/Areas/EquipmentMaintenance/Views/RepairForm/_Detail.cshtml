@@ -1,0 +1,849 @@
+﻿@model Models.EquipmentMaintenance.RepairFormManagement.DetailViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+    });
+
+    var Job = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Job")',
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var Refuse = function () {
+        if ($('#RefuseReason').val() == '') {
+            $.InfoDialog('@Resources.Resource.RefuseReasonRequired')
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Refuse")',
+                data: { UniqueID: '@Model.UniqueID', RefuseReason: $('#RefuseReason').val() },
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Detail('@Model.UniqueID');
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    var TakeJob = function () {
+        if ($('#EstBeginDateString').val() == '') {
+            $.InfoDialog('@Resources.Resource.MaintenanceBeginDateRequired')
+        }
+        else if ($('#EstEndDateString').val() == '')
+        {
+            $.InfoDialog('@Resources.Resource.MaintenanceEndDateRequired')
+        }
+        else if ($('#RealTakeJobDateString').val() == '') {
+            $.InfoDialog('請選擇實際接案日期')
+        }
+        else if ($('#RealTakeJobHour').val() == '' || $('#RealTakeJobMin').val() == '') {
+            $.InfoDialog('請選擇實際接案時間')
+        }
+        else if ($('#RealTakeJobUserID').val() == '') {
+            $.InfoDialog('請選擇實際接案人員')
+        }
+        else
+        {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("TakeJob")',
+                data: {
+                    UniqueID: '@Model.UniqueID',
+                    EstBeginDateString: $('#EstBeginDateString').val(),
+                    EstEndDateString: $('#EstEndDateString').val(),
+                    RealTakeJobDateString: $('#RealTakeJobDateString').val(),
+                    RealTakeJobHour: $('#RealTakeJobHour').val(),
+                    RealTakeJobMin: $('#RealTakeJobMin').val(),
+                    RealTakeJobUserID: $('#RealTakeJobUserID').val()
+                },
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Edit('@Model.UniqueID');
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    var RefuseJob = function () {
+        if ($('#JobRefuseReason').val() == '') {
+            $.InfoDialog('@Resources.Resource.RefuseReasonRequired')
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("RefuseJob")',
+                data: { UniqueID: '@Model.UniqueID', JobRefuseReason: $('#JobRefuseReason').val() },
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Detail('@Model.UniqueID');
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    var Approve = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Approve")',
+            data: { UniqueID: '@Model.UniqueID', Remark: $('#Comment').val() },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var Reject = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Reject")',
+            data: { UniqueID: '@Model.UniqueID', Remark: $('#Comment').val() },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<p>
+    @if ((Model.Status == "0" || Model.Status == "3") && Model.JobManagerIDList.Contains((Session["Account"] as Models.Authenticated.Account).ID))
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Job();" type="button">
+            <i class="ace-icon fa fa-calendar bigger-160"></i>
+            @Resources.Resource.Job
+        </button>
+
+        <button class="btn btn-app btn-danger btn-xs" onclick="Refuse();" type="button">
+            <i class="ace-icon fa fa-ban bigger-160"></i>
+            @Resources.Resource.Refuse
+        </button>
+    }
+    else if (Model.Status == "2" && (Model.JobUsers.Contains((Session["Account"] as Models.Authenticated.Account).ID)||ViewBag.CanTakeJob))
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="TakeJob();" type="button">
+            <i class="ace-icon fa fa-download bigger-160"></i>
+            @Resources.Resource.TakeJob
+        </button>
+
+        <button class="btn btn-app btn-danger btn-xs" onclick="RefuseJob();" type="button">
+            <i class="ace-icon fa fa-ban bigger-160"></i>
+            @Resources.Resource.Refuse
+        </button>
+    }
+    else if (Model.Status == "6" && Model.CurrentVerifyUserIDList.Contains((Session["Account"] as Models.Authenticated.Account).ID))
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Approve();" type="button">
+            <i class="ace-icon fa fa-legal bigger-160"></i>
+            @Resources.Resource.Approve
+        </button>
+
+        <button class="btn btn-app btn-danger btn-xs" onclick="Reject();" type="button">
+            <i class="ace-icon fa fa-ban bigger-160"></i>
+            @Resources.Resource.Reject
+        </button>
+    }
+    
+    <a href="@Url.Action("Export")" class="btn btn-app btn-primary btn-xs" type="button">
+        <i class="ace-icon fa fa-print bigger-160"></i>
+        @Resources.Resource.Print
+    </a>
+    
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Back
+    </button>
+</p>
+
+@if ((Model.Status == "0" || Model.Status == "3") && Model.JobManagerIDList.Contains((Session["Account"] as Models.Authenticated.Account).ID))
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            GetSelectedUserList();
+
+            InitSelectUserTree('@Model.AncestorOrganizationUniqueID');
+
+            $('#divSelectUserTreeWidget').hide();
+        });
+
+        function GetSelectedUserList() {
+            var list = $('#divSelectedUserList');
+
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: '@Url.Action("GetSelectedUserList")',
+                dataType: "html",
+                beforeSend: function () { list.Overlay('show'); },
+                success: function (data) { list.Overlay('show').html(data); },
+                error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+            });
+        }
+
+        function InitSelectUserTree(ancestorOrganizationUniqueID) {
+            var container = $('#divSelectUserTreeContainer');
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("InitSelectUserTree")',
+                data: { AncestorOrganizationUniqueID: ancestorOrganizationUniqueID },
+                dataType: "html",
+                beforeSend: function () { container.Overlay('show'); },
+                success: function (data) { container.Overlay('hide').html(data); },
+                error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+            });
+        }
+
+        var UserSelect = function () {
+            $('#divSelectedUserListWidget').hide();
+            $('#divSelectUserTreeWidget').show();
+        };
+
+        var CancelUserSelect = function () {
+            $('#divSelectedUserListWidget').show();
+            $('#divSelectUserTreeWidget').hide();
+        };
+
+        var AddUser = function () {
+            var data = [];
+
+            $("#divSelectUserTree").jstree("get_checked", null, true).each(function () {
+                data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.UserID"));
+            });
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("AddUser")',
+                data: { Selecteds: JSON.stringify(data) },
+                dataType: "json",
+                beforeSend: function () {
+                    $('#divSelectUserTreeWidget').hide();
+                    $('#divSelectedUserListWidget').show().Overlay('show');
+                },
+                success: function (data) {
+                    $('#divSelectedUserListWidget').Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        GetSelectedUserList();
+                        $("#divSelectUserTree").jstree("uncheck_all");
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $('#divSelectedUserListWidget').Overlay('hide');
+
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        };
+
+        var DeleteUser = function (userID) {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("DeleteUser")',
+                data: { UserID: userID, },
+                dataType: "json",
+                beforeSend: function () { $('#divSelectedUserListWidget').Overlay('show'); },
+                success: function (data) {
+                    $('#divSelectedUserListWidget').Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        GetSelectedUserList();
+                        $("#divSelectUserTree").jstree("uncheck_all");
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $('#divSelectedUserListWidget').Overlay('hide');
+
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        };
+    </script>
+    
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.JobUser</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main padding-4">
+                @Html.Partial("_UserSelect")
+            </div>
+        </div>
+    </div>
+    
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.RefuseReason</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.RefuseReason)</th>
+                        <td class="col-sm-11">@Html.TextBoxFor(x => x.RefuseReason, new { @class = "col-sm-11" })</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="space"></div>
+
+    if (!string.IsNullOrEmpty(Model.JobRefuseReason))
+    {
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.JobRefuseReason</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.JobRefuseReason)</th>
+                            <td class="col-sm-11">@Html.DisplayFor(x => x.JobRefuseReason)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+    }
+}
+else if (Model.Status == "2" && (Model.JobUsers.Contains((Session["Account"] as Models.Authenticated.Account).ID)||ViewBag.CanTakeJob))
+{
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.JobRefuseReason</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.JobRefuseReason)</th>
+                        <td class="col-sm-11">@Html.TextBoxFor(x => x.JobRefuseReason, new { @class = "col-sm-11" })</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="space"></div>
+}
+else if (Model.Status == "6" && Model.CurrentVerifyUser == (Session["Account"] as Models.Authenticated.Account).ID )
+{
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.VerifyComment</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1"><label>@Resources.Resource.VerifyComment</label></th>
+                        <td class="col-sm-11"><input type="text" id="Comment" class="col-sm-11" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="space"></div>
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.RepairForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>@Html.LabelFor(x => x.VHNO)</th>
+                    <td>
+                        @Html.DisplayFor(x => x.VHNO)
+                        @if (Model.StatusCode == "0" || Model.StatusCode == "2" || Model.StatusCode == "3")
+                        {
+                            <span class="label label-lg label-warning arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.StatusCode == "1" || Model.StatusCode == "8")
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.StatusCode == "4")
+                        {
+                            <span class="label label-lg label-info arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.StatusCode == "5" || Model.StatusCode == "7")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.StatusCode == "6" || Model.StatusCode == "9")
+                        {
+                            <span class="label label-lg label-purple arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else
+                        {
+                            <span>@Model.StatusDescription</span>
+                        }
+                    </td>
+                    <th>@Html.LabelFor(x => x.RepairFormType)</th>
+                    <td>@Html.DisplayFor(x => x.RepairFormType)</td>
+                </tr>
+                @if (Model.Status == "1")
+                {
+                    <tr>
+                        <th>@Html.LabelFor(x => x.RefuseReason)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.RefuseReason)</td>
+                    </tr>
+                }
+                <tr>
+                    <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.MaintenanceOrganizationFullDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.MaintenanceOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Subject)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Subject)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Description)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Description)</td>
+                </tr>
+                @if (!string.IsNullOrEmpty(Model.Equipment))
+                {
+                    <tr>
+                        <th>@Html.LabelFor(x => x.Equipment)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.Equipment)</td>
+                    </tr>
+                }
+                @if (Model.Status == "2" && (Model.JobUsers.Contains((Session["Account"] as Models.Authenticated.Account).ID)||ViewBag.CanTakeJob))
+                {
+                    <tr>
+                        <th class="col-sm-1"><label>預計修復日期(起)</label></th>
+                        <td class="col-sm-5">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.EstBeginDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                        <th class="col-sm-1"><label>預計修復日期(迄)</label></th>
+                        <td class="col-sm-5">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.EstEndDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1"><label>實際接案日期</label></th>
+                        <td class="col-sm-5">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.RealTakeJobDateString, new { @class = "form-control datepicker"})
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                        <th class="col-sm-1"><label>實際接案時間</label></th>
+                        <td class="col-sm-5">
+                            @Html.DropDownListFor(x => x.RealTakeJobHour, Model.HourSelectItemList)
+                            <label>分</label>
+                            @Html.DropDownListFor(x => x.RealTakeJobMin, Model.MinSelectItemList)
+                            <label>秒</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1"><label>實際接案人員</label></th>
+                        <td colspan="3">@Html.DropDownListFor(x => x.RealTakeJobUserID, Model.RealTakeJobUserSelectItemList)</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <th class="col-sm-1"><label>預計修復日期(起)</label></th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.EstBeginDateString)</td>
+                        <th class="col-sm-1"><label>預計修復日期(迄)</label></th>
+                        <td class="col-sm-5">
+                            @if (Model.Status == "5")
+                            {
+                                <span class="label label-lg label-danger">@Model.EstBeginDateString</span>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(x => x.EstEndDateString)
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1"><label>實際接案時間</label></th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.RealTakeJobTimeString)</td>
+                        <th class="col-sm-1"><label>實際接案人員</label></th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.RealTakeJobUser.User)</td>
+                    </tr>
+                }
+                <tr>
+                    <th>@Html.LabelFor(x => x.ClosedTimeString)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.ClosedTimeString)</td>
+                </tr>
+                @foreach (var item in Model.ColumnList)
+                {
+                    <tr>
+                        <th><label>@item.Description</label></th>
+                        @if (item.OptionList.Count > 0)
+                        {
+                            <td colspan="3">@item.OptionValue</td>
+                        }
+                        else
+                        {
+                            <td colspan="3">@item.Value</td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.Status!="0"&&Model.JobUserList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.JobUser</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:50px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Organization</th>
+                            <th>@Resources.Resource.UserID</th>
+                            <th>@Resources.Resource.UserName</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model.JobUserList)
+                        {
+                            <tr>
+                                <td>@item.OrganizationDescription</td>
+                                <td>@item.ID</td>
+                                <td>@item.Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.WorkingHourList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.WorkingHourRecord</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:50px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th class="col-sm-3">@Resources.Resource.MaintenanceUser</th>
+                            <th class="col-sm-3">@Resources.Resource.BeginDate</th>
+                            <th class="col-sm-3">@Resources.Resource.EndDate</th>
+                            <th class="col-sm-3">@Resources.Resource.WorkingHour</th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model.WorkingHourList)
+                    {
+                        <tr>
+                            <td>@item.User.User</td>
+                            <td>@item.BeginDateString</td>
+                            <td>@item.EndDateString</td>
+                            <td>@item.WorkingHour</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.MaterialList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.ChangeMaterialList</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:50px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th class="col-sm-4">@Resources.Resource.MaterialID</th>
+                            <th class="col-sm-5">@Resources.Resource.MaterialName</th>
+                            <th class="col-sm-2">@Resources.Resource.QTY</th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model.MaterialList)
+                    {
+                        <tr>
+                            <td>@item.ID</td>
+                            <td>@item.Name</td>
+                            <td>@item.Quantity</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.RepairForm @Resources.Resource.Flow</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.CreateUser)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.CreateUser.User)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.CreateTimeString)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.CreateTimeString)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.JobManagers)</th>
+                    <td>@Html.DisplayFor(x => x.JobManagers)</td>
+                    <th>@Html.LabelFor(x => x.JobTimeString)</th>
+                    <td>@Html.DisplayFor(x => x.JobTimeString)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.TakeJobUser)</th>
+                    <td>@Html.DisplayFor(x => x.TakeJobUser.User)</td>
+                    <th>@Html.LabelFor(x => x.TakeJobTimeString)</th>
+                    <td>@Html.DisplayFor(x => x.TakeJobTimeString)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.FlowLogList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.Verify @Resources.Resource.Flow</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.VerifyUser</th>
+                            <th>@Resources.Resource.NotifyTime</th>
+                            <th>@Resources.Resource.VerifyTime</th>
+                            <th>@Resources.Resource.VerifyResult</th>
+                            <th>@Resources.Resource.VerifyComment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FlowLogList)
+                        {
+                            <tr>
+                                <td>@item.User.User</td>
+                                <td>@item.NotifyTimeString</td>
+                                <td>@item.VerifyTimeString</td>
+                                <td>@item.Result</td>
+                                <td>@item.Remark</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.FileList != null && Model.FileList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.File</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th></th>
+                            <th>@Resources.Resource.FileName</th>
+                            <th>@Resources.Resource.FileSize</th>
+                            <th>@Resources.Resource.FileTime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FileList)
+                        {
+                            <tr>
+                                <td class="center">
+                                    <div class="action-buttons">
+                                        <a class="purple" href="@Url.Action("Download", new { RFormUniqueID=Model.UniqueID, Seq=item.Seq})" title="@Resources.Resource.Download">
+                                            <i class="ace-icon fa fa-cloud-download bigger-130"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>@item.Display</td>
+                                <td>@item.FileSize</td>
+                                <td>@item.UploadTimeString</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

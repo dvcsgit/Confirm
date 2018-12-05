@@ -1,0 +1,202 @@
+﻿@model Models.TankPatrol.PortManagement.CreateFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateForm");
+
+        $('#IslandList').hide();
+
+        $('#FormInput_StationUniqueID').change(function () {
+            var stationUniqueID = $(this).val();
+
+            $('#FormInput_IslandUniqueID').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>').prop('disabled', true);
+
+            if (stationUniqueID != '') {
+                $('#IslandList li').each(function () {
+                    if ($(this).data('stationuniqueid') == stationUniqueID) {
+                        $('#FormInput_IslandUniqueID').append('<option value="' + $(this).data('uniqueid') + '">' + $(this).data('display') + '</option>');
+                    }
+                });
+
+                $('#FormInput_IslandUniqueID').prop('disabled', false);
+            }
+        });
+
+        if ($('#FormInput_IslandUniqueID').find('option').length == 1)
+        {
+            $('#FormInput_IslandUniqueID').prop('disabled', true);
+        }
+    });
+
+    var Save = function () {
+        var form = $('#CreateForm');
+
+        if (form.valid()) {
+            if ($('#FormInput_StationUniqueID').val() == '')
+            {
+                $.InfoDialog('請選擇裝/卸料站');
+            }
+            else if ($('#FormInput_IslandUniqueID').val() == '')
+            {
+                $.InfoDialog('請選擇灌島');
+            }
+            else
+            {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Create")',
+                    data: form.serialize() + '&LBPageState=' + LBPageState() + '&LPPageState=' + LPPageState() + '&LAPageState=' + LAPageState() + '&LDPageState=' + LDPageState() + '&UBPageState=' + UBPageState() + '&UPPageState=' + UPPageState() + '&UAPageState=' + UAPageState() + '&UDPageState=' + UDPageState(),
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<ul id="IslandList">
+    @foreach (var island in Model.IslandList)
+    { 
+    <li data-stationuniqueid="@island.StationUniqueID" data-uniqueid="@island.UniqueID" data-display="@island.Display"></li>
+    }
+</ul>
+
+@using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm" }))
+{
+    @Html.HiddenFor(x => x.OrganizationUniqueID)
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create 灌口</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            
+                
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.StationUniqueID)</th>
+                        <td>@Html.DropDownListFor(x => x.FormInput.StationUniqueID, Model.StationSelectItemList)</td>
+                        <th>@Html.LabelFor(x => x.FormInput.IslandUniqueID)</th>
+                        <td>@Html.DropDownListFor(x => x.FormInput.IslandUniqueID, Model.IslandSelectItemList)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.ID)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.ID, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.ID)
+                        </td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.Description, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Description)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.TagID)</th>
+                        <td colspan="3">@Html.TextBoxFor(x => x.FormInput.TagID, new { @class = "col-sm-11" })</td>
+                    </tr>
+                </table>
+            
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="tabbable">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a data-toggle="tab" href="#Load">
+                裝料
+            </a>
+        </li>
+
+        <li>
+            <a data-toggle="tab" href="#UnLoad">
+                卸料
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="Load" class="tab-pane fade in active">
+            @Html.Partial("_LBSelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">裝料前至裝料中檢查需間隔 @Html.TextBoxFor(x => x.FormInput.LB2LPTimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_LPSelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">裝料中至裝料後檢查需間隔 @Html.TextBoxFor(x => x.FormInput.LP2LATimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_LASelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">裝料後至當日裝料完畢檢查需間隔 @Html.TextBoxFor(x => x.FormInput.LA2LDTimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_LDSelect")
+        </div>
+
+        <div id="UnLoad" class="tab-pane fade">
+            @Html.Partial("_UBSelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">卸料前至卸料中檢查需間隔 @Html.TextBoxFor(x => x.FormInput.UB2UPTimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_UPSelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">卸料中至卸料後檢查需間隔 @Html.TextBoxFor(x => x.FormInput.UP2UATimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_UASelect")
+
+            <div class="space"></div>
+            <div class="well well-sm" style="margin-bottom:0px;">卸料後至當日卸料完畢檢查需間隔 @Html.TextBoxFor(x => x.FormInput.UA2UDTimeSpan) 分鐘</div>
+            <div class="space"></div>
+
+            @Html.Partial("_UDSelect")
+        </div>
+    </div>
+</div>
+}

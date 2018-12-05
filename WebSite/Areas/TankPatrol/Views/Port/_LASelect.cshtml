@@ -1,0 +1,191 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedLAList();
+
+        InitSelectLATree();
+
+        $('#divSelectLATreeWidget').hide();
+    });
+
+    function GetSelectedLAList() {
+        var list = $('#divSelectedLAList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedLAList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitSelectLATree() {
+        var container = $('#divSelectLATreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitSelectLATree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectLA = function () {
+        $('#divSelectedLAListWidget').hide();
+        $('#divSelectLATreeWidget').show();
+    };
+
+    var CancelSelectLA = function () {
+        $('#divSelectedLAListWidget').show();
+        $('#divSelectLATreeWidget').hide();
+    };
+
+    var LAPageState = function () {
+        var pageState = [];
+
+        $('.IsInherit.LA').each(function () {
+            var isInherit = $(this).prop('checked') ? 'Y' : 'N';
+            var checkItemUniqueID = $(this).data('checkitemuniqueid');
+
+            var tagID = '';
+            var l = '';
+            var la = '';
+            var ua = '';
+            var u = '';
+            var a = '';
+            var unit = '';
+            var remark = '';
+
+            tagID = $(this).closest('tr').find('.TagID').val();
+
+            if (isInherit == 'N') {    
+                l = $(this).closest('tr').find('.LowerLimit').val();
+                la = $(this).closest('tr').find('.LowerAlertLimit').val();
+                ua = $(this).closest('tr').find('.UpperAlertLimit').val();
+                u = $(this).closest('tr').find('.UpperLimit').val();
+                a = $(this).closest('tr').find('.AccumulationBase').val();
+                unit = $(this).closest('tr').find('.Unit').val();
+                remark = $(this).closest('tr').find('.Remark').val();
+            }
+
+            pageState.push(isInherit + '@Utility.Define.Seperator' + checkItemUniqueID + '@Utility.Define.Seperator' + tagID + '@Utility.Define.Seperator' + l + '@Utility.Define.Seperator' + la + '@Utility.Define.Seperator' + ua + '@Utility.Define.Seperator' + u + '@Utility.Define.Seperator' + a + '@Utility.Define.Seperator' + unit + '@Utility.Define.Seperator' + remark);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddLA = function () {
+        var data = [];
+
+        $("#divSelectLATree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.CheckType") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.CheckItemUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddLA")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                PageStates: LAPageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divSelectLATreeWidget').hide();
+                $('#divSelectedLAListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedLAListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedLAList();
+                    $("#divSelectLATree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedLAListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteSelectedLA = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteSelectedLA")',
+            data: {
+                CheckItemUniqueID: uniqueID,
+                PageStates: LAPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedLAListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedLAListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedLAList();
+                    $("#divSelectLATree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedLAListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divSelectLATreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">裝料後 @Resources.Resource.CheckItem</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divSelectLATreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddLA(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectLA(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divSelectedLAListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">裝料後 @Resources.Resource.CheckItem</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="SelectLA(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            <div id="divSelectedLAList" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

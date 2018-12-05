@@ -1,0 +1,52 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitMaintenanceOrganizationTree('@Model');
+    });
+
+    function InitMaintenanceOrganizationTree(organizationUniqueID) {
+        var container = $('#divMaintenanceOrganizationTreeContainer');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("InitMaintenanceOrganizationTree")',
+            data: { OrganizationUniqueID: organizationUniqueID },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    function MaintenanceOrganizationSelect() {
+        $('#divMaintenanceOrganizationSelect').modal('show');
+    };
+
+    function ClearMaintenanceOrganization() {
+        $('#FormInput_MaintenanceOrganizationUniqueID').val('');
+        $('#MaintenanceOrganization').val('');
+    };
+
+    function SelectMaintenanceOrganization() {
+        var nodeType;
+        var maintenanceOrganizationUniqueID = '';
+        var maintenanceOrganization = '';
+
+        $("#divMaintenanceOrganizationTree").jstree("get_selected").each(function () {
+            nodeType = $(this).attr("@Utility.Define.EnumTreeAttribute.NodeType");
+            maintenanceOrganizationUniqueID = $(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID");
+            maintenanceOrganization = $(this).attr("@Utility.Define.EnumTreeAttribute.ToolTip");
+        });
+
+        if (nodeType == '@Utility.Define.EnumTreeNodeType.Organization') {
+            $('#FormInput_MaintenanceOrganizationUniqueID').val(maintenanceOrganizationUniqueID);
+            $('#MaintenanceOrganization').val(maintenanceOrganization);
+            $('#divMaintenanceOrganizationSelect').modal('hide');
+        }
+        else {
+            $.InfoDialog('@string.Format("{0} {1}", Resources.Resource.SelectOne, Resources.Resource.MaintenanceOrganization)');
+        }
+    };
+</script>

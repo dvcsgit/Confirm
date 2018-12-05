@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Models.ASE.QA.MSANotify.MSACharacteristicFormModel>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.MSACharacteristic').find('.UnitRemark').hide();
+
+        $('.UnitUniqueID').change(function () {
+            var unitUniqueID = $(this).val();
+
+            var unitRemark = $(this).next();
+
+            if (unitUniqueID == '@Utility.Define.OTHER') {
+                unitRemark.show();
+            }
+            else {
+                unitRemark.val('').hide();
+            }
+        });
+    });
+
+    var AddMSACharacteristic = function () {
+        $('#MSACharacteristicList tbody').append('<tr class="OtherMSACharacteristic"><td class="center"><div class="action-buttons"><a onclick="return false;" class="red RemoveMSACharacteristic" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a></div></td><td><input type="text" class="CharacteristicRemark" /></td><td><input type="text" class="UnitRemark" /></td><td><input type="text" class="LowerRange" /></td><td><input type="text" class="UpperRange" /></td></tr>');
+
+        BindMSACharacteristicItemEvent();
+    };
+
+    function BindMSACharacteristicItemEvent() {
+        $('.RemoveMSACharacteristic').click(function () {
+            $(this).closest('tr').remove();
+
+            return false;
+        });
+    }
+</script>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.MSA @Resources.Resource.Characteristic</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="AddMSACharacteristic(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table id="MSACharacteristicList" class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1 center"></th>
+                        <th class="col-sm-4">@Resources.Resource.Characteristic</th>
+                        <th class="col-sm-3">@Resources.Resource.Unit</th>
+                        <th class="col-sm-2">@Resources.Resource.MSALowerRange</th>
+                        <th class="col-sm-2">@Resources.Resource.MSAUpperRange</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count() > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr class="MSACharacteristic">
+                                <td class="center">
+                                    <label>
+                                        <input class="ace ace-checkbox-2 IsCharacteristicChecked" type="checkbox" checked="checked" value="@item.UniqueID">
+                                        <span class="lbl"></span>
+                                    </label>
+                                </td>
+                                <td>@item.Name</td>
+                                <td>
+                                    <select class="UnitUniqueID">
+                                        @foreach (var i in item.UnitSelectItemList)
+                                        {
+                                            <option value="@i.Value" selected="@i.Selected">@i.Text</option>
+                                        }
+                                    </select>
+                                    <input type="text" class="UnitRemark" />
+                                </td>
+                                <td><input type="text" class="LowerRange" /></td>
+                                <td><input type="text" class="UpperRange" /></td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr class="OtherMSACharacteristic">
+                            <td class="center">
+                                <div class="action-buttons">
+                                    <a onclick="return false;" class="red RemoveMSACharacteristic" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+                                </div>
+                            </td>
+                            <td><input type="text" class="CharacteristicRemark" /></td>
+                            <td><input type="text" class="UnitRemark" /></td>
+                            <td><input type="text" class="LowerRange" /></td>
+                            <td><input type="text" class="UpperRange" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

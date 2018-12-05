@@ -1,0 +1,138 @@
+﻿@model Report.EquipmentMaintenance.Models.CheckJobAnalyze.GridViewModel
+
+
+@*<p>
+    <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})" class="btn btn-app btn-primary" style="width:100%;">
+        <i class="ace-icon fa fa-file-excel-o bigger-230"></i>
+        Excel 2003
+    </a>
+</p>
+
+<p>
+    <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007 })" class="btn btn-app btn-primary" style="width:100%;">
+        <i class="ace-icon fa fa-file-excel-o bigger-230"></i>
+        Excel 2007
+    </a>
+</p>*@
+
+<div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">
+                @Resources.Resource.SearchResults
+            </h5>
+            <div class="widget-toolbar">
+                <div class="widget-menu">
+                    <a href="#" data-toggle="dropdown">
+                        <i class="ace-icon fa fa-cloud-download white"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                        <li>
+                            <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})">Excel 2003</a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007 })">Excel 2007</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    @*<thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Route</th>
+                            <th>@Resources.Resource.ControlPoint</th>
+                            <th>@Resources.Resource.Equipment</th>
+                            <th>@Resources.Resource.CheckItem</th>
+                            <th>@Resources.Resource.AbnormalCount</th>
+
+                        </tr>
+                    </thead>*@
+                    <tbody>
+                        @foreach (var item in Model.ItemList)
+                        {
+                            <tr>
+                                <th>@Resources.Resource.Route</th>
+                                <th>@Resources.Resource.UnSendJob</th>
+                                <th>@Resources.Resource.UnCheckResult</th>
+                                <th>@Resources.Resource.UnCompletelyCheckResult</th>
+                                <th>@Resources.Resource.NormalCheckResult</th>
+                                @if (Model.CheckTime.Count > 3)   //如果时间大于3天，会导致该行的单元格空白所以在这里需要判断是否需要增加单元格
+                                {
+                                    for (int i = 0; i < Model.CheckTime.Count-3; i++)
+                                    {
+                                        <th></th>
+                                    }
+                                }
+                            </tr>
+                            
+                              <tr>
+                                <td>@item.Route</td>
+                                <td>@item.UnSendJob</td>
+                                <td>@item.UnCheckResult</td>
+                                <td>@item.UnCompletelyCheckResult</td>
+                                <td>@item.NormalCheckResult</td>
+
+                                  @if (Model.CheckTime.Count > 3)
+                                  {
+                                      for (int i = 0; i < Model.CheckTime.Count - 3; i++)
+                                      {
+                                          <th></th>
+                                      }
+                                  }
+                            </tr>
+                            
+                            <tr>
+                                <td></td>
+                                <td>@Resources.Resource.Job</td>
+                                @foreach (var time in Model.CheckTime)
+                                {
+                                    <td>
+                                        @time
+                                    </td>
+                                }
+
+                                @if (Model.CheckTime.Count < 3)  //如果时间低于3天，会导致下方的单元格空白所以在这里需要判断是否需要增加单元格
+                                {
+                                    for (int i = Model.CheckTime.Count; i < 3; i++)
+                                    { 
+                                    
+                                    <td>
+                                    </td>
+                                    }
+                                }
+                            </tr>
+                            
+                            foreach (var checkResult in item.CheckResultList)
+                            { 
+                            <tr>
+                                <td></td>
+                                <td >@checkResult.JobDescription</td>
+                                @foreach(var result in checkResult.Result)
+                                { 
+                                    <td style="text-align:center">
+                                          @result
+                                    </td>
+                                    
+                                }
+
+                                @if (Model.CheckTime.Count < 3)
+                                {
+                                    for (int i = Model.CheckTime.Count; i < 3; i++)
+                                    {
+
+                                        <td>
+                                        </td>
+                                    }
+                                }
+                            </tr>
+                            } 
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

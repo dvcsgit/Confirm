@@ -1,0 +1,1572 @@
+﻿@model Models.ASE.QA.MSAForm_v2.DetailViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var file_input = $('#File');
+
+        file_input.ace_file_input({
+            style: 'well',
+            btn_choose: '請選擇檔案',
+            btn_change: '請選擇檔案',
+            droppable: false,
+            thumbnail: 'small'
+        }).on('change', function (e) {
+            var files = e.target.files;
+
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file" + x, files[x]);
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Import")' + '?UniqueID=' + '@Model.UniqueID',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () { $.Overlay('show'); },
+                        success: function (data) {
+                            $.Overlay('hide');
+                            file_input.ace_file_input('reset_input');
+                            if (data.IsSuccess) {
+                                Detail('@Model.UniqueID');
+                                $.SuccessDialog(data.Message);
+                            }
+                            else {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $.Overlay('hide');
+                            file_input.ace_file_input('reset_input');
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+                else {
+                    $.InfoDialog('無法上傳');
+                }
+            }
+            else {
+                $.InfoDialog('請選擇檔案');
+            }
+        });
+    });
+
+    var Submit = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Submit")',
+            data: { UniqueID: '@Model.UniqueID' },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var Return = function () {
+        $.ConfirmDialog('點選取消立案，同一儀器的其他量測特性MSA執行單也會一併取消立案，確認取消立案?', function (confirmed) {
+            if (confirmed) {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Return")',
+                    data: { UniqueID: '@Model.UniqueID' },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+    };
+</script>
+<p>
+@if ((Model.Status.Status == "1" || Model.Status.Status == "4") && Model.MSAResponsorID == (Session["Account"] as Models.Authenticated.Account).ID)
+{
+    <a class="btn btn-app btn-primary btn-xs" href="@Url.Action("Export", new { UniqueID = Model.UniqueID, VHNO = Model.VHNO })" >
+        <i class="ace-icon fa fa-cloud-download bigger-160"></i>
+        下載
+    </a>
+    
+    if (Model.Type == "1")
+    { 
+        if (Model.MSADate.HasValue && Model.StabilityResult != null && Model.StabilityResult.ResultDisplay == "PASS" && Model.BiasResult != null && Model.BiasResult.ResultDisplay == "PASS" && Model.LinearityResult != null && Model.LinearityResult.ResultDisplay == "PASS")
+    {
+        if (Model.GRRHResult != null && Model.GRRHResult.Result != "P")
+        { 
+        }
+        else if (Model.AnovaHResult != null && Model.AnovaHResult.Result != "P")
+        {
+        }
+        else if (Model.GRRMResult != null && Model.GRRMResult.Result != "P")
+        {
+        }
+        else if (Model.AnovaMResult != null && Model.AnovaMResult.Result != "P")
+        {
+        }
+        else if (Model.GRRLResult != null && Model.GRRLResult.Result != "P")
+        {
+        }
+        else if (Model.AnovaLResult != null && Model.AnovaLResult.Result != "P")
+        {
+        }
+        else
+        { 
+            <button class="btn btn-app btn-primary btn-xs" onclick="Submit();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Submit
+    </button>
+        }
+    }
+    }
+    
+    if(Model.Type=="2")
+    {
+        if (Model.MSADate.HasValue && Model.CountResult != null && Model.CountResult.Result == "P")
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Submit();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Submit
+    </button>
+    }
+    }
+    
+    <button class="btn btn-app btn-danger btn-xs" onclick="Return();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        取消立案
+    </button>
+    
+    }
+else { 
+    <a class="btn btn-app btn-primary btn-xs" href="@Url.Action("Export", new { UniqueID = Model.UniqueID, VHNO = Model.VHNO })" >
+        <i class="ace-icon fa fa-file-excel-o bigger-160"></i>
+        報表
+    </a>
+}
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+@if ((Model.Status.Status == "1" || Model.Status.Status == "4") && Model.MSAResponsorID == (Session["Account"] as Models.Authenticated.Account).ID)
+{ 
+    
+    <div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Upload @Resources.Resource.File</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-8">
+            <input type="file" name="File" id="File" />
+        </div>
+    </div>
+</div>
+    
+    
+    
+<div class="space"></div>
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">MSA執行單</h5>
+
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.VHNO)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.VHNO)</td>
+                    <th class="col-sm-1"><label>狀態</label></th>
+                    <td class="col-sm-5">
+                        @if (Model.Status.StatusCode == "2" || Model.Status.StatusCode == "4")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.Status.Display</span>
+                        }
+                        else if (Model.Status.StatusCode == "1")
+                        {
+                            <span class="label label-lg label-primary arrowed-right">@Model.Status.Display</span>
+                        }
+                        else if (Model.Status.StatusCode == "3")
+                        {
+                            <span class="label label-lg label-purple arrowed-right">@Model.Status.Display</span>
+                        }
+                        else if (Model.Status.StatusCode == "4")
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Model.Status.Display</span>
+                        }
+                        else if (Model.Status.StatusCode == "6")
+                        {
+                            <span class="label label-lg label-grey arrowed-right">@Model.Status.Display</span>
+                        }
+                        else
+                        {
+                            <span>@Model.Status.Display</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>類型</label></th>
+                    <td>@Html.DisplayFor(x => x.TypeDisplay)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Station)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Station)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>儀器名稱</label></th>
+                    <td colspan="3">@Html.DisplayFor(x => x.MSAIchi)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.MSACharacteristic)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.MSACharacteristic)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.MSARange)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.MSARange)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.CreateTimeString)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.CreateTimeString)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.MSAResponsor)</th>
+                    <td>@Html.DisplayFor(x => x.MSAResponsor)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>預計MSA日期</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.EstMSADateString)</td>
+                    <th class="col-sm-1"><label>實際MSA日期</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.MSADateString)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_Equipment", Model.Equipment)
+
+<div class="space"></div>
+
+@if (Model.Type == "1")
+{ 
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">Gage Stability Study</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            <table class="table table-bordered table-input">
+                @if (Model.StabilityResult != null)
+                {
+                    <tr>
+                        <th colspan="2">Result</th>
+                        <td colspan="3">
+                            @if (Model.StabilityResult.Result == "P")
+                            {
+                                <span class="label label-lg label-success">@Model.StabilityResult.ResultDisplay</span>
+                            }
+
+                            @if (Model.StabilityResult.Result == "F")
+                            {
+                                <span class="label label-lg label-danger">@Model.StabilityResult.ResultDisplay</span>
+                            }
+                        </td>
+                        <th colspan="2">Stability</th>
+                        <td colspan="3">@Model.StabilityResult.Stability</td>
+                        <th colspan="2">Stdev</th>
+                        <td colspan="20">@Model.StabilityResult.Stdev</td>
+                    </tr>
+                }
+                <tr>
+                    <th class="center" colspan="4">校驗編號</th>
+                    <th class="center" colspan="4">儀器名稱</th>
+                    <th class="center" colspan="3">儀器型號</th>
+                    <th class="center" colspan="5">站別</th>
+                    <th class="center" colspan="2">頻率</th>
+                    <th class="center" colspan="2">單位</th>
+                    <th class="center" colspan="2">規格下限</th>
+                    <th class="center" colspan="2">規格上限</th>
+                    <th class="center" colspan="2">準備日期</th>
+                    <th class="center" colspan="3">執行日期</th>
+                    <th class="center" colspan="3">執行者</th>
+                </tr>
+                <tr>
+                    <td class="center" colspan="4">@Model.Equipment.MSACalNo</td>
+                    <td class="center" colspan="4">@Model.Equipment.IchiDisplay</td>
+                    <td class="center" colspan="3">@Model.Equipment.Model</td>
+                    <td class="center" colspan="5">@Model.Station</td>
+                    <td class="center" colspan="2">5次/DAY</td>
+                    <td class="center" colspan="2">@Model.Unit</td>
+                    <td class="center" colspan="2">@Model.StabilityLowerRange</td>
+                    <td class="center" colspan="2">@Model.StabilityUpperRange</td>
+                    <td class="center" colspan="2">@Model.StabilityPrepareDateString</td>
+                    <td class="center" colspan="3">@Model.StabilityExeDate</td>
+                    <td class="center" colspan="3">@Model.MSAResponsor</td>
+                </tr>
+                <tr>
+                    <th colspan="2" class="center">Point</th>
+                    @for (int point = 1; point <= 30; point++)
+                    {
+                        <th class="center">@point</th>
+                    }
+                </tr>
+                <tr>
+                    <th rowspan="5" class="center">DATA</th>
+                    <th class="center">1</th>
+                    @for (int point = 1; point <= 30; point++)
+                    {
+                        <td class="center">@Model.StabilityList.First(x => x.Point == point).ValueList.First(x => x.Data == 1).Value</td>
+                    }
+                </tr>
+                @for (int data = 2; data <= 5; data++)
+                { 
+                    <tr>
+                        <th class="center">@data</th>
+                        @for (int point = 1; point <= 30; point++)
+                        {
+                            <td class="center">@Model.StabilityList.First(x => x.Point == point).ValueList.First(x => x.Data == data).Value</td>
+                        }
+                    </tr>
+                }
+                <tr>
+                    <th class="center" colspan="2">DATE</th>
+                    @for (int point = 1; point <= 30; point++)
+                    {
+                        <td class="center">@Model.StabilityList.First(x => x.Point == point).DateString</td>
+                    }
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+    
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">GAGE BIAS & LINEARITY STUDY</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="center" colspan="2">PERFORMED BY</th>
+                    <th class="center" colspan="2">DATE</th>
+                </tr>
+                <tr>
+                    <td class="center" colspan="2">@Model.MSAResponsor</td>
+                    <td class="center" colspan="2">@Model.BLDateString</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-3 center">EQUIPMENT NAME(儀器名稱)</th>
+                    <th class="col-sm-3 center">EQUIPMENT NO.(校驗編號)</th>
+                    <th class="col-sm-3 center">PART MEASURED(量測package type)</th>
+                    <th class="col-sm-3 center">CHARACTERISTIC MEASURED(量測特性)</th>
+                </tr>
+                <tr>
+                    <td class="center">@Model.Equipment.IchiDisplay</td>
+                    <td class="center">@Model.Equipment.MSACalNo</td>
+                    <td class="center">@Model.BLPackageType</td>
+                    <td class="center">@Model.MSACharacteristic</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+    
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">BIAS</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            <table class="table table-bordered table-input">
+                @if (Model.BiasResult != null) 
+                { 
+                    <tr>
+                        <th>Result</th>
+                        <td colspan="2">
+                            @if (Model.BiasResult.Result == "P")
+                            {
+                                <span class="label label-lg label-success">@Model.BiasResult.ResultDisplay</span>
+                            }
+
+                            @if (Model.BiasResult.Result == "F")
+                            {
+                                <span class="label label-lg label-danger">@Model.BiasResult.ResultDisplay</span>
+                            }
+                        </td>
+                        <th colspan="2">t statistic</th>
+                        <td colspan="3">@Model.BiasResult.TStatistic</td>
+                        <th colspan="3">Significant t value(2-tailed)</th>
+                        <td colspan="5">@Model.BiasResult.SignificantT</td>
+                    </tr>
+                }
+                <tr>
+                    <th>Ref. Value</th>
+                    <td colspan="15">@Model.BiasReferenceValue</td>
+                </tr>
+                <tr>
+                    <th>Trials</th>
+                    @for (int trials = 1; trials <= 15; trials++)
+                    {
+                        <th class="center" >@trials</th>
+                    }
+                </tr>
+                <tr>
+                    <th>Data</th>
+                    @for (int trials = 1; trials <= 15; trials++)
+                    {
+                        <td class="center">@Model.BiasList.First(x => x.Trials == trials).Value</td>
+                    }
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">Linearity</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+@if (Model.LinearityResult != null)
+            {
+                <tr>
+                    <th>Result</th>
+                    <td colspan="2">
+                        @if (Model.LinearityResult.Result == "P")
+                        {
+                            <span class="label label-lg label-success">@Model.LinearityResult.ResultDisplay</span>
+                        }
+
+                        @if (Model.LinearityResult.Result == "F")
+                        {
+                            <span class="label label-lg label-danger">@Model.LinearityResult.ResultDisplay</span>
+                        }
+                    </td>
+                    <th>t58,0.975</th>
+                    <td colspan="2">@Model.LinearityResult.t58</td>
+                </tr>
+                <tr>
+                    <th>ta</th>
+                    <td colspan="2">@Model.LinearityResult.ta</td>
+                    <th>tb</th>
+                    <td colspan="2">@Model.LinearityResult.tb</td>
+                </tr>
+}
+
+                <tr>
+                    <th class="col-sm-2">Ref. Value</th>
+                    @for (int i = 1; i <= 5; i++)
+                    { 
+                        <td class="col-sm-2 center">@Model.LinearityList.First(x => x.Trials == i).ReferenceValue</td>
+                    }
+                </tr>
+                <tr>
+                    <th class="col-sm-2">Trials</th>
+@for (int i = 1; i <= 5; i++)
+{
+    <th class="col-sm-2 center">@i</th>
+}
+                </tr>
+                @for (int data = 1; data <= 12; data++)
+                { 
+                <tr>
+                    <th class="col-sm-2">@data</th>
+                    @for (int trials = 1; trials <= 5; trials++)
+                    { 
+                        <td class="col-sm-2 center">@Model.LinearityList.First(x => x.Trials == trials).ValueList.First(x => x.Data == data).Value</td>
+                    }
+                </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">GAGE Repeatability & Reproducibility Study(高)</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            @{
+                var GRRH = Model.GRRList.First(x => x.Level == "H");
+                var GRRHAppraiserA = GRRH.AppraiserList.First(x => x.Appraiser == "A");
+                var GRRHAppraiserB = GRRH.AppraiserList.First(x => x.Appraiser == "B");
+                var GRRHAppraiserC = GRRH.AppraiserList.First(x => x.Appraiser == "C");
+            }
+
+@if (Model.GRRHResult != null)
+{
+            <table class="table table-bordered table-input">
+               
+                    <tr>
+                        <th class="col-sm-1">Result</th>
+                        <td class="col-sm-3">
+                            @if (Model.GRRHResult.Result == "P")
+                            {
+                                <span class="label label-lg label-success">PASS</span>
+                            }
+
+                            @if (Model.GRRHResult.Result == "I")
+                            {
+                                <span class="label label-lg label-warning">IMPROVE</span>
+                            }
+
+                            @if (Model.GRRHResult.Result == "R")
+                            {
+                                <span class="label label-lg label-danger">REJECT</span>
+                            }
+                        </td>
+                        <th class="col-sm-1">%GRR</th>
+                        <td class="col-sm-3">
+                            @if (Model.GRRHResult.GRR.HasValue)
+                            {
+                                <label>@(Model.GRRHResult.GRR.HasValue ? string.Format("{0:P2}", Model.GRRHResult.GRR.Value) : "") </label>
+                            }
+                        </td>
+                        <th class="col-sm-1">ndc</th>
+                        <td class="col-sm-3">@Model.GRRHResult.ndc</td>
+                    </tr>
+            </table>
+                }
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="center" colspan="2">PERFORMED BY</th>
+                        <th class="center" colspan="5">DATE</th>
+                    </tr>
+                    <tr>
+                        <td class="center" colspan="2">@Model.MSAResponsor</td>
+                        <td class="center" colspan="5">@GRRH.DateString</td>
+                    </tr>
+                    <tr>
+                        <th class="center">EQUIPMENT  NAME/No<br />(校驗名稱/編號)</th>
+                        <th class="center">PART MEASURED<br />(量測package type)</th>
+                        <th class="center">CHARACTERISTIC MEASURED<br />(量測特性)</th>
+                        <th class="center" colspan="2">SPEC<br />(製程/PACKABGE規格)</th>
+                        <th class="center" colspan="3">TV USED</th>
+                    </tr>
+                    <tr>
+                        <td class="center" rowspan="4">@Model.Equipment.MSACalNo</td>
+                        <td class="center" rowspan="4">@Model.GRRHPackageType</td>
+                        <td class="center" rowspan="4">@Model.MSACharacteristic</td>
+                        <th style="text-align:left;">USL</th>
+                        <td>@Model.GRRHUSL</td>
+                        <td class="center">
+                            @if (Model.GRRHTvUsed == "1")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">COMBINED GRR&PV</th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:left;">CL</th>
+                        <td>@Model.GRRHCL</td>
+                        <td class="center">
+                            @if (Model.GRRHTvUsed == "2")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">Ppk TARGET VALUE</th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:left;">LSL</th>
+                        <td>@Model.GRRHLSL</td>
+                        <td class="center">
+                            @if (Model.GRRHTvUsed == "3")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">STANDARD DEVIATION</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td class="center">
+                            @if (Model.GRRHTvUsed == "4")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">PART'S TOLERANCE/6</th>
+                    </tr>
+                </table>
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="center">Appraiser/<br />Trial #</th>
+                    <th class="center" colspan="10">PART</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <th class="center">@part</th>
+                    }
+                </tr>
+                <tr>
+                    <th class="center">Appraiser A</th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRHAppraiserA.ValueList.First(x => x.Trials == 1 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td class="center">@GRRHAppraiserA.UserID</td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRHAppraiserA.ValueList.First(x => x.Trials == 2 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td></td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRHAppraiserA.ValueList.First(x => x.Trials == 3 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <th class="center">Appraiser B</th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRHAppraiserB.ValueList.First(x => x.Trials == 1 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td class="center">@GRRHAppraiserB.UserID</td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRHAppraiserB.ValueList.First(x => x.Trials == 2 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td></td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRHAppraiserB.ValueList.First(x => x.Trials == 3 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <th class="center">Appraiser C</th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRHAppraiserC.ValueList.First(x => x.Trials == 1 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td class="center">@GRRHAppraiserC.UserID</td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRHAppraiserC.ValueList.First(x => x.Trials == 2 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td></td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRHAppraiserC.ValueList.First(x => x.Trials == 3 && x.Part == part).Value</td>
+                    }
+                </tr>
+            </table>
+</div>
+    </div>
+</div>
+
+                        if (Model.AnovaHResult != null)
+                        {
+        <div class="space"></div>
+    
+     <div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">ANOVA(高)</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-2">GR&R (%TV)<br />(Precision to Total Variation)</th>
+                    <td class="col-sm-4">
+                        @if (Model.AnovaHResult.TV.HasValue)
+                        {
+                            <label>@(Model.AnovaHResult.TV.HasValue ? string.Format("{0:P2}", Model.AnovaHResult.TV.Value) : "") </label>
+                        }
+                    </td>
+                    <th class="col-sm-2">GR&R (%PT)<br />(Precision to Tolerance )</th>
+                    <td class="col-sm-4">
+                        @if (Model.AnovaHResult.PT.HasValue)
+                        {
+                            <label>@(Model.AnovaHResult.PT.HasValue ? string.Format("{0:P2}", Model.AnovaHResult.PT.Value) : "") </label>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-sm-2">NDC</th>
+                    <td class="col-sm-4">@Model.AnovaHResult.NDC</td>
+                    <th class="col-sm-2">Result</th>
+                    <td class="col-sm-4">
+                        @if (Model.AnovaHResult.Result == "P")
+                        {
+                            <span class="label label-lg label-success arrowed-right">PASS</span>
+                        }
+
+                        @if (Model.AnovaHResult.Result == "F")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">FAIL</span>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+    
+
+                        }
+   
+    <div class="space"></div>
+    
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">GAGE Repeatability & Reproducibility Study(中)</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            @{
+                var GRRM = Model.GRRList.First(x => x.Level == "M");
+                var GRRMAppraiserA = GRRM.AppraiserList.First(x => x.Appraiser == "A");
+                var GRRMAppraiserB = GRRM.AppraiserList.First(x => x.Appraiser == "B");
+                var GRRMAppraiserC = GRRM.AppraiserList.First(x => x.Appraiser == "C");
+            }
+
+@if (Model.GRRMResult != null)
+{
+            <table class="table table-bordered table-input">
+               
+                    <tr>
+                        <th class="col-sm-1">Result</th>
+                        <td class="col-sm-3">
+                            @if (Model.GRRMResult.Result == "P")
+                            {
+                                <span class="label label-lg label-success">PASS</span>
+                            }
+
+                            @if (Model.GRRMResult.Result == "I")
+                            {
+                                <span class="label label-lg label-warning">IMPROVE</span>
+                            }
+
+                            @if (Model.GRRMResult.Result == "R")
+                            {
+                                <span class="label label-lg label-danger">REJECT</span>
+                            }
+                        </td>
+                        <th class="col-sm-1">%GRR</th>
+                        <td class="col-sm-3">
+                            @if (Model.GRRMResult.GRR.HasValue)
+                            {
+                                <label>@(Model.GRRMResult.GRR.HasValue ? string.Format("{0:P2}", Model.GRRMResult.GRR.Value) : "") </label>
+                            }
+                        </td>
+                        <th class="col-sm-1">ndc</th>
+                        <td class="col-sm-3">@Model.GRRMResult.ndc</td>
+                    </tr>
+            </table>
+                }
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="center" colspan="2">PERFORMED BY</th>
+                        <th class="center" colspan="5">DATE</th>
+                    </tr>
+                    <tr>
+                        <td class="center" colspan="2">@Model.MSAResponsor</td>
+                        <td class="center" colspan="5">@GRRM.DateString</td>
+                    </tr>
+                    <tr>
+                        <th class="center">EQUIPMENT  NAME/No<br />(校驗名稱/編號)</th>
+                        <th class="center">PART MEASURED<br />(量測package type)</th>
+                        <th class="center">CHARACTERISTIC MEASURED<br />(量測特性)</th>
+                        <th class="center" colspan="2">SPEC<br />(製程/PACKABGE規格)</th>
+                        <th class="center" colspan="3">TV USED</th>
+                    </tr>
+                    <tr>
+                        <td class="center" rowspan="4">@Model.Equipment.MSACalNo</td>
+                        <td class="center" rowspan="4">@Model.GRRMPackageType</td>
+                        <td class="center" rowspan="4">@Model.MSACharacteristic</td>
+                        <th style="text-align:left;">USL</th>
+                        <td>@Model.GRRMUSL</td>
+                        <td class="center">
+                            @if (Model.GRRMTvUsed == "1")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">COMBINED GRR&PV</th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:left;">CL</th>
+                        <td>@Model.GRRMCL</td>
+                        <td class="center">
+                            @if (Model.GRRMTvUsed == "2")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">Ppk TARGET VALUE</th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:left;">LSL</th>
+                        <td>@Model.GRRMLSL</td>
+                        <td class="center">
+                            @if (Model.GRRMTvUsed == "3")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">STANDARD DEVIATION</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td class="center">
+                            @if (Model.GRRMTvUsed == "4")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">PART'S TOLERANCE/6</th>
+                    </tr>
+                </table>
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="center">Appraiser/<br />Trial #</th>
+                    <th class="center" colspan="10">PART</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <th class="center">@part</th>
+                    }
+                </tr>
+                <tr>
+                    <th class="center">Appraiser A</th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRMAppraiserA.ValueList.First(x => x.Trials == 1 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td class="center">@GRRMAppraiserA.UserID</td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRMAppraiserA.ValueList.First(x => x.Trials == 2 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td></td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRMAppraiserA.ValueList.First(x => x.Trials == 3 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <th class="center">Appraiser B</th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRMAppraiserB.ValueList.First(x => x.Trials == 1 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td class="center">@GRRMAppraiserB.UserID</td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRMAppraiserB.ValueList.First(x => x.Trials == 2 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td></td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRMAppraiserB.ValueList.First(x => x.Trials == 3 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <th class="center">Appraiser C</th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRMAppraiserC.ValueList.First(x => x.Trials == 1 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td class="center">@GRRMAppraiserC.UserID</td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRMAppraiserC.ValueList.First(x => x.Trials == 2 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td></td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRMAppraiserC.ValueList.First(x => x.Trials == 3 && x.Part == part).Value</td>
+                    }
+                </tr>
+            </table>
+</div>
+    </div>
+</div>
+
+     if(Model.AnovaMResult!=null)
+    {
+        <div class="space"></div>
+    
+     <div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">ANOVA(中)</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-2">GR&R (%TV)<br />(Precision to Total Variation)</th>
+                    <td class="col-sm-4">
+                        @if (Model.AnovaMResult.TV.HasValue)
+                        {
+                            <label>@(Model.AnovaMResult.TV.HasValue ? string.Format("{0:P2}", Model.AnovaMResult.TV.Value) : "") </label>
+                        }
+                    </td>
+                    <th class="col-sm-2">GR&R (%PT)<br />(Precision to Tolerance )</th>
+                    <td class="col-sm-4">
+                        @if (Model.AnovaMResult.PT.HasValue)
+                        {
+                            <label>@(Model.AnovaMResult.PT.HasValue ? string.Format("{0:P2}", Model.AnovaMResult.PT.Value) : "") </label>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-sm-2">NDC</th>
+                    <td class="col-sm-4">@Model.AnovaMResult.NDC</td>
+                    <th class="col-sm-2">Result</th>
+                    <td class="col-sm-4">
+                        @if (Model.AnovaMResult.Result == "P")
+                        {
+                            <span class="label label-lg label-success arrowed-right">PASS</span>
+                        }
+
+                        @if (Model.AnovaMResult.Result == "F")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">FAIL</span>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+    
+
+    }
+    
+<div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">GAGE Repeatability & Reproducibility Study(低)</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            @{
+                var GRRL = Model.GRRList.First(x => x.Level == "L");
+                var GRRLAppraiserA = GRRL.AppraiserList.First(x => x.Appraiser == "A");
+                var GRRLAppraiserB = GRRL.AppraiserList.First(x => x.Appraiser == "B");
+                var GRRLAppraiserC = GRRL.AppraiserList.First(x => x.Appraiser == "C");
+            }
+
+@if (Model.GRRLResult != null)
+{
+            <table class="table table-bordered table-input">
+               
+                    <tr>
+                        <th class="col-sm-1">Result</th>
+                        <td class="col-sm-3">
+                            @if (Model.GRRLResult.Result == "P")
+                            {
+                                <span class="label label-lg label-success">PASS</span>
+                            }
+
+                            @if (Model.GRRLResult.Result == "I")
+                            {
+                                <span class="label label-lg label-warning">IMPROVE</span>
+                            }
+
+                            @if (Model.GRRLResult.Result == "R")
+                            {
+                                <span class="label label-lg label-danger">REJECT</span>
+                            }
+                        </td>
+                        <th class="col-sm-1">%GRR</th>
+                        <td class="col-sm-3">
+                            @if (Model.GRRLResult.GRR.HasValue)
+                            {
+                                <label>@(Model.GRRLResult.GRR.HasValue ? string.Format("{0:P2}", Model.GRRLResult.GRR.Value) : "") </label>
+                            }
+                        </td>
+                        <th class="col-sm-1">ndc</th>
+                        <td class="col-sm-3">@Model.GRRLResult.ndc</td>
+                    </tr>
+            </table>
+                }
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="center" colspan="2">PERFORMED BY</th>
+                        <th class="center" colspan="5">DATE</th>
+                    </tr>
+                    <tr>
+                        <td class="center" colspan="2">@Model.MSAResponsor</td>
+                        <td class="center" colspan="5">@GRRM.DateString</td>
+                    </tr>
+                    <tr>
+                        <th class="center">EQUIPMENT  NAME/No<br />(校驗名稱/編號)</th>
+                        <th class="center">PART MEASURED<br />(量測package type)</th>
+                        <th class="center">CHARACTERISTIC MEASURED<br />(量測特性)</th>
+                        <th class="center" colspan="2">SPEC<br />(製程/PACKABGE規格)</th>
+                        <th class="center" colspan="3">TV USED</th>
+                    </tr>
+                    <tr>
+                        <td class="center" rowspan="4">@Model.Equipment.MSACalNo</td>
+                        <td class="center" rowspan="4">@Model.GRRLPackageType</td>
+                        <td class="center" rowspan="4">@Model.MSACharacteristic</td>
+                        <th style="text-align:left;">USL</th>
+                        <td>@Model.GRRLUSL</td>
+                        <td class="center">
+                            @if (Model.GRRLTvUsed == "1")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">COMBINED GRR&PV</th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:left;">CL</th>
+                        <td>@Model.GRRLCL</td>
+                        <td class="center">
+                            @if (Model.GRRLTvUsed == "2")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">Ppk TARGET VALUE</th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:left;">LSL</th>
+                        <td>@Model.GRRLLSL</td>
+                        <td class="center">
+                            @if (Model.GRRLTvUsed == "3")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">STANDARD DEVIATION</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td class="center">
+                            @if (Model.GRRLTvUsed == "4")
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <th style="text-align:left;">PART'S TOLERANCE/6</th>
+                    </tr>
+                </table>
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="center">Appraiser/<br />Trial #</th>
+                    <th class="center" colspan="10">PART</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <th class="center">@part</th>
+                    }
+                </tr>
+                <tr>
+                    <th class="center">Appraiser A</th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRLAppraiserA.ValueList.First(x => x.Trials == 1 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td class="center">@GRRLAppraiserA.UserID</td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRLAppraiserA.ValueList.First(x => x.Trials == 2 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td></td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRLAppraiserA.ValueList.First(x => x.Trials == 3 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <th class="center">Appraiser B</th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRLAppraiserB.ValueList.First(x => x.Trials == 1 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td class="center">@GRRLAppraiserB.UserID</td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRLAppraiserB.ValueList.First(x => x.Trials == 2 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td></td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRLAppraiserB.ValueList.First(x => x.Trials == 3 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <th class="center">Appraiser C</th>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRLAppraiserC.ValueList.First(x => x.Trials == 1 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td class="center">@GRRLAppraiserC.UserID</td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRLAppraiserC.ValueList.First(x => x.Trials == 2 && x.Part == part).Value</td>
+                    }
+                </tr>
+                <tr>
+                    <td></td>
+                    @for (int part = 1; part <= 10; part++)
+                    {
+                        <td class="center">@GRRLAppraiserC.ValueList.First(x => x.Trials == 3 && x.Part == part).Value</td>
+                    }
+                </tr>
+            </table>
+</div>
+    </div>
+</div>
+    
+    if(Model.AnovaLResult!=null)
+    {
+        <div class="space"></div>
+    
+     <div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">ANOVA(低)</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-2">GR&R (%TV)<br />(Precision to Total Variation)</th>
+                    <td class="col-sm-4">
+                        @if (Model.AnovaLResult.TV.HasValue)
+                        {
+                            <label>@(Model.AnovaLResult.TV.HasValue ? string.Format("{0:P2}", Model.AnovaLResult.TV.Value) : "") </label>
+                        }
+                    </td>
+                    <th class="col-sm-2">GR&R (%PT)<br />(Precision to Tolerance )</th>
+                    <td class="col-sm-4">
+                        @if (Model.AnovaLResult.PT.HasValue)
+                        {
+                            <label>@(Model.AnovaLResult.PT.HasValue ? string.Format("{0:P2}", Model.AnovaLResult.PT.Value) : "") </label>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-sm-2">NDC</th>
+                    <td class="col-sm-4">@Model.AnovaLResult.NDC</td>
+                    <th class="col-sm-2">Result</th>
+                    <td class="col-sm-4">
+                        @if (Model.AnovaLResult.Result == "P")
+                        {
+                            <span class="label label-lg label-success arrowed-right">PASS</span>
+                        }
+
+                        @if (Model.AnovaLResult.Result == "F")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">FAIL</span>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+    
+
+    }
+    
+    }
+
+@if (Model.Type == "2")
+{
+      <div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title"></h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-2">Part No. & Measure item</th>
+                    <td class="col-sm-4">@string.Format("{0}/{1}", Model.CountPackageType, Model.MSACharacteristic)</td>
+                    <th class="col-sm-2">Date</th>
+                    <td class="col-sm-4">@Model.MSADateString</td>
+                </tr>
+                <tr>
+                    <th>Gauge Name/Code</th>
+                    <td>@string.Format("{0}/{1}", Model.MSAIchi, Model.Equipment.MSACalNo)</td>
+                    <th>Performed by</th>
+                    <td>@Model.MSAResponsor</td>
+                </tr>
+                </table>
+        </div>
+    </div>
+</div>
+         
+        <div class="space"></div>
+    
+     if (Model.CountResult != null)
+        { 
+         
+         <div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">Kappa</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class=" col-sm-4">Result</th>
+                    <td colspan="2">
+                        @if (Model.CountResult.KappaResult == "P")
+                        {
+                            <span class="label label-lg label-success">PASS</span>
+                        }
+
+                        @if (Model.CountResult.KappaResult == "F")
+                        {
+                            <span class="label label-lg label-danger">FAIL</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="center col-sm-4">A</th>
+                    <th class="center col-sm-4">B</th>
+                    <th class="center col-sm-4">C</th>
+                </tr>
+                <tr>
+                    <td class="center col-sm-4">@Model.CountResult.KappaA</td>
+                    <td class="center col-sm-4">@Model.CountResult.KappaB</td>
+                    <td class="center col-sm-4">@Model.CountResult.KappaC</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+         
+        <div class="space"></div>
+    
+    
+    
+      <div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">評價者的可否接受判定</h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-3">Result</th>
+                    <td colspan="3">
+                        @if (Model.CountResult.Result == "P")
+                        {
+                            <span class="label label-lg label-success arrowed-right">PASS</span>
+                        }
+
+                        @if (Model.CountResult.Result == "F")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">FAIL</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="center col-sm-3"></th>
+                    <th class="center col-sm-3">有效性</th>
+                    <th class="center col-sm-3">錯誤率</th>
+                    <th class="center col-sm-3">錯誤警報率</th>
+                </tr>
+                <tr>
+                    <th class="center col-sm-3">A</th>
+                    <td class="center col-sm-3">@(Model.CountResult.CountAEffective.HasValue ? string.Format("{0:P2}", Model.CountResult.CountAEffective.Value) : "")</td>
+                    <td class="center col-sm-3">@(Model.CountResult.CountAError.HasValue ? string.Format("{0:P2}", Model.CountResult.CountAError.Value) : "")</td>
+                    <td class="center col-sm-3">@(Model.CountResult.CountAAlarm.HasValue ? string.Format("{0:P2}", Model.CountResult.CountAAlarm.Value) : "")</td>
+                </tr>
+                <tr>
+                    <th class="center col-sm-3">B</th>
+                    <td class="center col-sm-3">@(Model.CountResult.CountBEffective.HasValue ? string.Format("{0:P2}", Model.CountResult.CountBEffective.Value) : "")</td>
+                    <td class="center col-sm-3">@(Model.CountResult.CountBError.HasValue ? string.Format("{0:P2}", Model.CountResult.CountBError.Value) : "")</td>
+                    <td class="center col-sm-3">@(Model.CountResult.CountBAlarm.HasValue ? string.Format("{0:P2}", Model.CountResult.CountBAlarm.Value) : "")</td>
+                </tr>
+                <tr>
+                    <th class="center col-sm-3">C</th>
+                    <td class="center col-sm-3">@(Model.CountResult.CountCEffective.HasValue ? string.Format("{0:P2}", Model.CountResult.CountCEffective.Value) : "")</td>
+                    <td class="center col-sm-3">@(Model.CountResult.CountCError.HasValue ? string.Format("{0:P2}", Model.CountResult.CountCError.Value) : "")</td>
+                    <td class="center col-sm-3">@(Model.CountResult.CountCAlarm.HasValue ? string.Format("{0:P2}", Model.CountResult.CountCAlarm.Value) : "")</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+         
+        <div class="space"></div>
+        }
+    
+     <div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">  </h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>APPRAISER</th>
+                    <td class="center" colspan="3">@Model.CountList.First(x => x.Appraiser == "A").UserID</td>
+                    <td class="center" colspan="3">@Model.CountList.First(x => x.Appraiser == "B").UserID</td>
+                    <td class="center" colspan="3">@Model.CountList.First(x => x.Appraiser == "C").UserID</td>
+                    <th class="center">參考</th>
+                    <th class="center">參考值</th>
+                </tr>
+                <tr>
+                    <th class="center" rowspan="2">SAMPLE #</th>
+                    <th class="center" colspan="9">TRIAL #</th>
+                    <th rowspan="2"></th>
+                    <th rowspan="2"></th>
+                </tr>
+                <tr>
+                    <th class="center">1</th>
+                    <th class="center">2</th>
+                    <th class="center">3</th>
+                    <th class="center">1</th>
+                    <th class="center">2</th>
+                    <th class="center">3</th>
+                    <th class="center">1</th>
+                    <th class="center">2</th>
+                    <th class="center">3</th>
+                </tr>
+
+                @for (int i = 1; i <= 50; i++)
+                {
+                    <tr>
+                        <td class="center">@i</td>
+                        <td class="center">@Model.CountList.First(x => x.Appraiser == "A").ValueList.First(x => x.Sample == i && x.Trials == 1).Value</td>
+                        <td class="center">@Model.CountList.First(x => x.Appraiser == "A").ValueList.First(x => x.Sample == i && x.Trials == 2).Value</td>
+                        <td class="center">@Model.CountList.First(x => x.Appraiser == "A").ValueList.First(x => x.Sample == i && x.Trials == 3).Value</td>
+                        <td class="center">@Model.CountList.First(x => x.Appraiser == "B").ValueList.First(x => x.Sample == i && x.Trials == 1).Value</td>
+                        <td class="center">@Model.CountList.First(x => x.Appraiser == "B").ValueList.First(x => x.Sample == i && x.Trials == 2).Value</td>
+                        <td class="center">@Model.CountList.First(x => x.Appraiser == "B").ValueList.First(x => x.Sample == i && x.Trials == 3).Value</td>
+                        <td class="center">@Model.CountList.First(x => x.Appraiser == "C").ValueList.First(x => x.Sample == i && x.Trials == 1).Value</td>
+                        <td class="center">@Model.CountList.First(x => x.Appraiser == "C").ValueList.First(x => x.Sample == i && x.Trials == 2).Value</td>
+                        <td class="center">@Model.CountList.First(x => x.Appraiser == "C").ValueList.First(x => x.Sample == i && x.Trials == 3).Value</td>
+                        <td class="center">@Model.CountReferenceValueList.First(x => x.Sample == i).Reference</td>
+                        <td class="center">@Model.CountReferenceValueList.First(x => x.Sample == i).ReferenceValue</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+}
+
+@if (Model.LogList != null && Model.LogList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.Verify @Resources.Resource.Flow</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Role</th>
+                            <th>@Resources.Resource.VerifyUser</th>
+                            <th>@Resources.Resource.NotifyTime</th>
+                            <th>@Resources.Resource.VerifyTime</th>
+                            <th>@Resources.Resource.VerifyResult</th>
+                            <th>@Resources.Resource.VerifyComment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.LogList)
+                        {
+                            <tr>
+                                <td>@item.Role</td>
+                                <td>@item.User</td>
+                                <td>@item.NotifyTimeString</td>
+                                <td>@item.VerifyTimeString</td>
+                                <td>@item.VerifyResultDescription</td>
+                                <td>@item.VerifyComment</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+

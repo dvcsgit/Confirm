@@ -1,0 +1,185 @@
+﻿@model Customized.CHIMEI.Models.TrendQuery.ChartViewModel
+
+<script type="text/javascript">
+    $(function () {
+        var lowerLimitData = [];
+        var lowerAlertLimitData = [];
+        var upperAlertLimitData = [];
+        var upperLimitData = [];
+
+        var data = [];
+
+        @if (Model.LowerLimit.Count > 0)
+        {
+            int i=0;
+
+            foreach (var lowerLimit in Model.LowerLimit)
+            {
+                  <text>
+        lowerLimitData[@i]=[];
+
+        </text>
+
+                <text>lowerLimitData[@i].push([(new Date(@Model.Min.Year, @Model.Min.Month - 1, @Model.Min.Day, @Model.Min.Hour, @Model.Min.Minute, @Model.Min.Second, 0)).getTime(), @lowerLimit]);</text>
+                <text>lowerLimitData[@i].push([(new Date(@Model.Max.Year, @Model.Max.Month-1, @Model.Max.Day, @Model.Max.Hour, @Model.Max.Minute, @Model.Max.Second, 0)).getTime(), @lowerLimit]);</text>
+
+            <text>  data.push({ label: "@string.Format("下限值：{0}", lowerLimit)", data: lowerLimitData[@i], color: '#d15b47' }); </text>
+
+                i++;
+            }
+        }
+
+        @if (Model.LowerAlertLimit.Count>0)
+        {
+            int i = 0;
+
+            foreach (var lowerAlertLimit in Model.LowerAlertLimit)
+            {
+                 <text>
+        lowerAlertLimitData[@i]=[];
+
+        </text>
+
+            <text>lowerAlertLimitData[@i].push([(new Date(@Model.Min.Year, @Model.Min.Month-1, @Model.Min.Day, @Model.Min.Hour, @Model.Min.Minute, @Model.Min.Second, 0)).getTime(), @lowerAlertLimit]);</text>
+            <text>lowerAlertLimitData[@i].push([(new Date(@Model.Max.Year, @Model.Max.Month-1, @Model.Max.Day, @Model.Max.Hour, @Model.Max.Minute, @Model.Max.Second, 0)).getTime(), @lowerAlertLimit]);</text>
+
+            <text>  data.push({ label: "@string.Format("下限警戒值：{0}", lowerAlertLimit)", data: lowerAlertLimitData[@i], color: '#f89406' }); </text>
+
+                i++;
+
+
+            }
+
+
+        }
+
+        @if (Model.UpperAlertLimit.Count>0)
+        {
+            int i = 0;
+
+            foreach (var upperAlertLimit in Model.UpperAlertLimit)
+            {
+                   <text>
+        upperAlertLimitData[@i]=[];
+        </text>
+
+            <text>upperAlertLimitData[@i].push([(new Date(@Model.Min.Year, @Model.Min.Month-1, @Model.Min.Day, @Model.Min.Hour, @Model.Min.Minute, @Model.Min.Second, 0)).getTime(), @upperAlertLimit]);</text>
+            <text>upperAlertLimitData[@i].push([(new Date(@Model.Max.Year, @Model.Max.Month - 1, @Model.Max.Day, @Model.Max.Hour, @Model.Max.Minute, @Model.Max.Second, 0)).getTime(), @upperAlertLimit]);</text>
+
+            <text>  data.push({ label:"@string.Format("上限警戒值：{0}", upperAlertLimit)", data: upperAlertLimitData[@i], color: '#f89406' }); </text>
+
+            i++;
+
+
+
+             }
+
+
+        }
+
+        @if (Model.UpperLimit.Count>0)
+        {
+            int i = 0;
+
+            foreach (var upperLimit in Model.UpperLimit)
+            {
+                           <text>
+        upperLimitData[@i]=[];
+        </text>
+
+            <text>upperLimitData[@i].push([(new Date(@Model.Min.Year, @Model.Min.Month-1, @Model.Min.Day, @Model.Min.Hour, @Model.Min.Minute, @Model.Min.Second, 0)).getTime(), @upperLimit]);</text>
+            <text>upperLimitData[@i].push([(new Date(@Model.Max.Year, @Model.Max.Month-1, @Model.Max.Day, @Model.Max.Hour, @Model.Max.Minute, @Model.Max.Second, 0)).getTime(), @upperLimit]);</text>
+
+            <text>  data.push({ label: "@string.Format("上限值：{0}", upperLimit)", data: upperLimitData[@i], color: '#d15b47' }); </text>
+
+             i++;
+
+
+
+              }
+
+
+        }
+
+        var checkResultData = [];
+
+        @if (Model.CheckItemList.Count > 0)
+        {
+            int i=0;
+
+            foreach (var checkItem in Model.CheckItemList)
+            {
+                <text>
+        checkResultData[@i]=[];
+
+        </text>
+
+                foreach (var item in checkItem.CheckResultList)
+                {
+                    <text>
+        checkResultData[@i].push([(new Date(@item.CheckDateTime.Year, @item.CheckDateTime.Month-1, @item.CheckDateTime.Day, @item.CheckDateTime.Hour, @item.CheckDateTime.Minute, @item.CheckDateTime.Second, 0)).getTime(), @item.Result]);
+        </text>
+                }
+
+                <text>
+        data.push({ label: "@checkItem.Display", data: checkResultData[@i], color: '@checkItem.Color' });
+        </text>
+
+                i++;
+            }
+        }
+
+        $.plot($("@string.Format("#Chart_{0}", Model.CheckType)"), data, {
+            series: {
+                lines: { show: true },
+                points: { show: true }
+            },
+            grid: { hoverable: true },
+            xaxis: {
+                mode: "time",
+                timeformat: "@Model.TimeFormat",
+                tickSize: [@Model.TickUnit, "@Model.TickSize"],
+                min: (new Date(@Model.Min.Year, @Model.Min.Month-1, @Model.Min.Day, @Model.Min.Hour, @Model.Min.Minute, @Model.Min.Second, 0)).getTime(),
+                max: (new Date(@Model.Max.Year, @Model.Max.Month-1, @Model.Max.Day, @Model.Max.Hour, @Model.Max.Minute, @Model.Max.Second, 0)).getTime()
+            }
+        });
+
+        $("<div id='tooltip'></div>").css({
+            position: "absolute",
+            display: "none",
+            border: "1px solid #fdd",
+            padding: "2px",
+            "background-color": "#fee",
+            opacity: 0.80
+        }).appendTo("body");
+
+        $("@string.Format("#Chart_{0}", Model.CheckType)").bind("plothover", function (event, pos, item) {
+            if (item) {
+                var x = item.datapoint[0].toFixed(2),
+                    y = item.datapoint[1].toFixed(2);
+
+                var date = new Date(item.datapoint[0]).toLocaleDateString();
+
+                $("#tooltip").html(item.series.label+ " : "+date+"("  + y+")")
+                    .css({ top: item.pageY + 5, left: item.pageX + 5 })
+                    .fadeIn(200);
+            } else {
+                $("#tooltip").hide();
+            }
+        });
+    });
+</script>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">
+            @Model.Display
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="@string.Format("Chart_{0}", Model.CheckType)" style="width: 100%; height: 300px;"></div>
+        </div>
+    </div>
+</div>

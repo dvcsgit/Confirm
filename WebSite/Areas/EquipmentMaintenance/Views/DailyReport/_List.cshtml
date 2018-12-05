@@ -1,0 +1,100 @@
+﻿@model Models.EquipmentMaintenance.DailyReport.ReportModel
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+           @Model.Date @Model.RouteName 
+        </h5>
+        <div class="widget-toolbar">
+            <div class="widget-menu">
+                <a href="#" data-toggle="dropdown">
+                    <i class="ace-icon fa fa-cloud-download white"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})">Excel 2003</a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007 })">Excel 2007</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:600px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        @if (Model.JobList.Count > 0)
+                        {
+                            <th rowspan="2" class="center">@Resources.Resource.Item</th>
+                            <th rowspan="2">@Resources.Resource.CheckItem</th>
+                            <th rowspan="2" class="center">@Resources.Resource.Limit</th>
+                            <th rowspan="2" class="center">@Resources.Resource.Unit</th>
+                            <th colspan="@Model.JobList.Count" class="center">@Resources.Resource.CheckResult</th>
+                            <th rowspan="3">@Resources.Resource.Remark</th>
+                        }
+                        else
+                        {
+                            <th class="center">@Resources.Resource.Item</th>
+                            <th>@Resources.Resource.CheckItem</th>
+                            <th class="center">@Resources.Resource.Limit</th>
+                            <th class="center">@Resources.Resource.Unit</th>
+                            <th class="center">@Resources.Resource.CheckResult</th>
+                            <th rowspan="2">@Resources.Resource.Remark</th>
+                        }
+                    </tr>
+                    @if (Model.JobList.Count > 0)
+                    {
+                        <tr>
+                            @foreach (var job in Model.JobList)
+                            {
+                                <th class="center">@job.Description</th>
+                            }
+                        </tr>
+                    }
+                    <tr>
+                        <th colspan="4" style="text-align:right;">@Resources.Resource.CheckUser</th>
+                        @if (Model.JobList.Count > 0)
+                        {
+                            foreach (var job in Model.JobList)
+                            {
+                                <td class="center">@job.Users</td>
+                            }
+                        }
+                        else
+                        { 
+                        <td></td>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemList)
+                    {
+                        <tr>
+                            <td class="center">@item.No</td>
+                            <td>@item.Description</td>
+                            <td class="center">@item.Limit</td>
+                            <td class="center">@item.Unit</td>
+                            @if (Model.JobList.Count > 0)
+                            {
+                                foreach (var job in Model.JobList)
+                                {
+                                    <td class="center">@item.Result[job.UniqueID]</td>
+                                }
+                            }
+                            else
+                            { 
+                            <td></td>
+                            }
+                            <td>@item.Remark</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

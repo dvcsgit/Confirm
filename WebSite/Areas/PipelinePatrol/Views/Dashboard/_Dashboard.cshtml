@@ -1,0 +1,281 @@
+﻿@model Models.PipelinePatrol.Dashboard.DashboardViewModel
+
+<script type="text/javascript">
+    var pointColor = ['#FB8C00', '#7CB342', '#FFB300', '#039BE5', '#8E24AA', '#F4511E', '#6D4C41'];
+
+    var map;
+    var pipelines = {};
+    var pipePoints = {};
+    var pipelineAbnormals = {};
+    var constructions = {};
+    var inspections = {};
+    var onlineUsers = {};
+
+    $(document).ready(function () {
+        InitGoogleMap();
+    });
+
+    function InitGoogleMap() {
+        var bounds = new google.maps.LatLngBounds();
+
+        bounds.extend(new google.maps.LatLng(@Model.Max.LAT, @Model.Max.LNG));
+        bounds.extend(new google.maps.LatLng(@Model.Min.LAT, @Model.Min.LNG));
+
+        var mapCenter = bounds.getCenter();
+
+        @if (Model.DefaultMapCenter != null)
+        {
+        <text>
+        mapCenter = new google.maps.LatLng(@Model.DefaultMapCenter.LAT, @Model.DefaultMapCenter.LNG);
+        </text>
+        }
+
+        var defaultZoom = '15';
+
+        @if (Model.DefaultZoom.HasValue)
+        {
+        <text>
+        defaultZoom = '@Model.DefaultZoom.Value';
+        </text>
+        }
+
+        var mapOptions = {
+            zoom: parseInt(defaultZoom),
+            center: mapCenter,
+            mapTypeControl: false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        @if (Model.DefaultMapCenter == null)
+        {
+        <text>
+        map.fitBounds(bounds);
+        </text>
+        }
+
+        @if (Model.PipelineList.Count > 0)
+        {
+            foreach (var item in Model.PipelineList)
+            {
+        <text>
+
+        var locus  = [
+        @foreach (var l in item.Locus)
+        {
+            <text>new google.maps.LatLng(@l.LAT, @l.LNG),</text>
+        }
+        ];
+
+        pipelines['@item.UniqueID'] = new google.maps.Polyline({
+            path: locus,
+            geodesic: true,
+            strokeColor: '#'+'@item.Color',
+            strokeOpacity: 1.0,
+            strokeWeight: 5
+        });
+
+        google.maps.event.addListener( pipelines['@item.UniqueID'], 'click', function(event) {
+            new google.maps.InfoWindow({
+                content: '<div><p>@item.OrganizationDescription</p><p>@item.ID</p></div>',
+                position:new google.maps.LatLng(@item.Locus.First().LAT, @item.Locus.First().LNG)
+            }).open(map);
+        });
+
+        pipelines['@item.UniqueID'].setMap(map);
+
+        </text>
+            }
+        }
+
+        var pointTypeSeq=0;
+        var color = pointColor[pointTypeSeq];
+
+        @if (Model.PipePointList.Count > 0)
+        {
+            foreach (var pointType in Model.PipePointTypeList)
+            {
+            <text>
+        color = pointColor[pointTypeSeq];
+
+        pointTypeSeq=pointTypeSeq+1;
+        </text>
+
+            foreach (var pipePoint in Model.GetPipePointList(pointType))
+            {
+                <text>
+        pipePoints['@pipePoint.UniqueID'] =  new google.maps.Marker({
+            position: new google.maps.LatLng(@pipePoint.Location.LAT,@pipePoint.Location.LNG),
+            label:'@pipePoint.PointType.First()',
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                fillColor: color,
+                fillOpacity: 1,
+                strokeColor: color,
+                strokeWeight: 3,
+                scale: 12
+            }
+        });
+
+        google.maps.event.addListener( pipePoints['@pipePoint.UniqueID'], 'click', function(event) {
+            new google.maps.InfoWindow({
+                content: '<div><p>@pipePoint.PointType</p><p>@string.Format("{0}/{1}", pipePoint.ID, pipePoint.Name)</p></div>'
+            }).open(map, pipePoints['@pipePoint.UniqueID']);
+        });
+
+        pipePoints['@pipePoint.UniqueID'].setMap(map);
+        </text>
+            }
+            }
+        }
+
+        @if (Model.OnlineUserList.Count > 0)
+        {
+            foreach (var onlineUser in Model.OnlineUserList)
+            {
+                <text>
+        onlineUsers['@onlineUser.ID'] =  new google.maps.Marker({
+            position: new google.maps.LatLng(@onlineUser.LAT,@onlineUser.LNG),
+            label:'@onlineUser.Name',
+            icon:{
+                url:'@Url.Content("~/Content/images/ic_chat_user.png")',
+                // This marker is 20 pixels wide by 32 pixels tall.
+                size: new google.maps.Size(48, 48),
+                // The origin for this image is 0,0.
+                origin: new google.maps.Point(0,0),
+                // The anchor for this image is the base of the flagpole at 0,32.
+                anchor: new google.maps.Point(0, 32)
+            }
+        });
+
+        google.maps.event.addListener( onlineUsers['@onlineUser.ID'], 'click', function(event) {
+            new google.maps.InfoWindow({
+                content: '<div><p>@onlineUser.ID</p><p>@onlineUser.Name</p><p>@onlineUser.UpdateTimeString</p></div>'
+            }).open(map, onlineUsers['@onlineUser.ID']);
+        });
+
+        onlineUsers['@onlineUser.ID'].setMap(map);
+        </text>
+            }
+        }
+
+        @if (Model.InspectedList.Count > 0)
+        {
+            foreach (var inspection in Model.InspectedList)
+            {
+                <text>
+        inspections['@inspection.UniqueID'] =  new google.maps.Marker({
+            position: new google.maps.LatLng(@inspection.LAT,@inspection.LNG),
+            icon:{
+                url:'@Url.Content("~/Content/images/ic_marker_form_prev_undone.png")',
+                // This marker is 20 pixels wide by 32 pixels tall.
+                size: new google.maps.Size(40, 60),
+                // The origin for this image is 0,0.
+                origin: new google.maps.Point(0,0),
+                // The anchor for this image is the base of the flagpole at 0,32.
+                anchor: new google.maps.Point(0, 32)
+            }
+        });
+
+        google.maps.event.addListener( inspections['@inspection.UniqueID'], 'click', function(event) {
+            new google.maps.InfoWindow({
+                content: '<div><p>@Resources.Resource.VHNO：@inspection.VHNO</p><p>@Resources.Resource.Description：@inspection.Description</p><p>@Resources.Resource.ConstructionType：@inspection.ConstructionType</p><p>@Resources.Resource.ConstructionFirm：@inspection.ConstructionFirm</p><p><a href="@Url.Action("Index", "Inspection", new { UniqueID = inspection.UniqueID })">詳細資料</a></p></div>'
+            }).open(map, inspections['@inspection.UniqueID']);
+        });
+
+        inspections['@inspection.UniqueID'].setMap(map);
+        </text>
+            }
+        }
+
+        @if (Model.InspectYetList.Count > 0)
+        {
+            foreach (var inspection in Model.InspectYetList)
+            {
+                <text>
+        inspections['@inspection.UniqueID'] =  new google.maps.Marker({
+            position: new google.maps.LatLng(@inspection.LAT,@inspection.LNG),
+            icon:{
+                url:'@Url.Content("~/Content/images/ic_marker_form_prev.png")',
+                // This marker is 20 pixels wide by 32 pixels tall.
+                size: new google.maps.Size(40, 60),
+                // The origin for this image is 0,0.
+                origin: new google.maps.Point(0,0),
+                // The anchor for this image is the base of the flagpole at 0,32.
+                anchor: new google.maps.Point(0, 32)
+            }
+        });
+
+        google.maps.event.addListener( inspections['@inspection.UniqueID'], 'click', function(event) {
+            new google.maps.InfoWindow({
+                content: '<div><p>@Resources.Resource.VHNO：@inspection.VHNO</p><p>@Resources.Resource.Description：@inspection.Description</p><p>@Resources.Resource.ConstructionType：@inspection.ConstructionType</p><p>@Resources.Resource.ConstructionFirm：@inspection.ConstructionFirm</p><p><a href="@Url.Action("Index", "Inspection", new { UniqueID = inspection.UniqueID })">詳細資料</a></p></div>'
+            }).open(map, inspections['@inspection.UniqueID']);
+        });
+
+        inspections['@inspection.UniqueID'].setMap(map);
+        </text>
+            }
+        }
+
+        @if (Model.ConstructionList.Count > 0)
+        {
+            foreach (var construction in Model.ConstructionList)
+            {
+                <text>
+        constructions['@construction.UniqueID'] =  new google.maps.Marker({
+            position: new google.maps.LatLng(@construction.LAT,@construction.LNG),
+            icon:{
+                url:'@Url.Content("~/Content/images/ic_marker_form_const.png")',
+                // This marker is 20 pixels wide by 32 pixels tall.
+                size: new google.maps.Size(40, 60),
+                // The origin for this image is 0,0.
+                origin: new google.maps.Point(0,0),
+                // The anchor for this image is the base of the flagpole at 0,32.
+                anchor: new google.maps.Point(0, 32)
+            }
+        });
+
+        google.maps.event.addListener( constructions['@construction.UniqueID'], 'click', function(event) {
+            new google.maps.InfoWindow({
+                content: '<div><p>@Resources.Resource.VHNO：@construction.VHNO</p><p>@Resources.Resource.Description：@construction.Description</p><p>@Resources.Resource.ConstructionType：@construction.ConstructionType</p><p>@Resources.Resource.ConstructionFirm：@construction.ConstructionFirm</p><p><a href="@Url.Action("Index", "Construction", new { UniqueID = construction.UniqueID })">詳細資料</a></p></div>'
+            }).open(map, constructions['@construction.UniqueID']);
+        });
+
+        constructions['@construction.UniqueID'].setMap(map);
+        </text>
+            }
+        }
+
+        @if (Model.PipelineAbnormalList.Count > 0)
+         {
+             foreach (var pipelineAbnormal in Model.PipelineAbnormalList)
+             {
+                 <text>
+        pipelineAbnormals['@pipelineAbnormal.UniqueID'] =  new google.maps.Marker({
+            position: new google.maps.LatLng(@pipelineAbnormal.LAT,@pipelineAbnormal.LNG),
+            icon:{
+                url:'@Url.Content("~/Content/images/ic_marker_form_pipe.png")',
+                // This marker is 20 pixels wide by 32 pixels tall.
+                size: new google.maps.Size(40, 60),
+                // The origin for this image is 0,0.
+                origin: new google.maps.Point(0,0),
+                // The anchor for this image is the base of the flagpole at 0,32.
+                anchor: new google.maps.Point(0, 32)
+            }
+        });
+
+        google.maps.event.addListener( pipelineAbnormals['@pipelineAbnormal.UniqueID'], 'click', function(event) {
+            new google.maps.InfoWindow({
+                content: '<div><p>@Resources.Resource.VHNO：@pipelineAbnormal.VHNO</p><p>@Resources.Resource.Description：@pipelineAbnormal.Description</p><p>@Resources.Resource.AbnormalReason：@pipelineAbnormal.AbnormalReason</p><p><a href="@Url.Action("Index", "PipelineAbnormal", new { UniqueID = pipelineAbnormal.UniqueID })">詳細資料</a></p></div>'
+            }).open(map, pipelineAbnormals['@pipelineAbnormal.UniqueID']);
+        });
+
+        pipelineAbnormals['@pipelineAbnormal.UniqueID'].setMap(map);
+        </text>
+             }
+         }
+    }
+</script>
+
+<div id="map-canvas" style="width:100%; height:100%;"></div>

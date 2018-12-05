@@ -1,0 +1,194 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model Customized.PFG.CN.Models.SubstationInspection.QueryParameters
+
+@section Styles
+{
+    <link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+    <link href="@Url.Content("~/assets/css/datepicker.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/css/colorbox.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-timepicker.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/jquery.maskedinput.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-datepicker.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/date-time/locales/bootstrap-datepicker."+ViewBag.Lang+".js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/select2.min.js")"></script>
+
+
+    <script type="text/javascript">
+    var Find = function (execl) {
+        //var y = $("#Year").val();
+        //var m = $("#Month").val();
+        //var todayDate = new Date();
+        //var nowdate = todayDate.getYear() + 1900;
+
+        //if (y > nowdate||y<1900||y=="") {
+        //    if (m > 12 || m < 1||m=="") {
+        //        $("#hint").text("年份和月份输入有误，请重新输入！");
+
+        //    }
+        //    else {
+        //        $("#hint").text("年份输入有误，请重新输入！");
+
+        //    }
+
+        //}
+        //else {
+        //    if (m > 12 || m < 1||m=="") {
+        //        $("#hint").text("月份输入有误，请重新输入！");
+
+        //    }
+        //    else {
+        //var year = $('#Year');
+
+
+        //if (year.valid()) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Validate")',
+            data: {
+                Year: $("#Year").val(),
+                Month: $("#Month").val(),
+            },
+            dataType: 'text',
+            success: function (data) {
+                var da = data.toString();
+                var data1=da[0];
+                var data2=da[1];
+
+                if(data1=="0")
+                {
+                    if(data2=="0")
+                    {
+                        $.ajax({
+                            type: 'POST',
+                            url: '@Url.Action("DateValue")',
+                            data: {
+                                Year: $("#Year").val(),
+                                Month: $("#Month").val(),
+                                Execl: execl
+                            },
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data == "0") {
+                                    document.getElementById("execl1").click();
+                                }
+                                else {
+                                    document.getElementById("execl2").click();
+                                }
+
+                            }
+                        });
+                    }
+                    else if(data2=="1"){
+                        $("#mon").text("提示");
+                    }
+                }
+                else if(data1=="1")
+                {
+                    if(data2=="0")
+                    {
+                        $("#ye").text("提示");
+                    }
+                    else if(data2=="1")
+                    {
+                        $("#ye").text("提示");
+                        $("#mon").text("提示");
+                    }
+                }
+            },
+            error: function () {
+                alert("出錯");
+            }
+        });
+
+        };
+
+
+        function Clear1() {
+            $("#ye").text(" ");
+            document.getElementById("Year").value = "";
+        }
+        function Clear2() {
+            $("#mon").text(" ");
+            document.getElementById("Month").value = "";
+        }
+
+    </script>
+}
+
+
+<div class="widget-box widget-color-dark" style="width:80%;margin:0 auto;">
+    <div class="widget-header" style="text-align: center;">
+        <h5 class="widget-title">必成廠電力分攤計算表</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <td>请输入：</td>
+                </tr>
+                <tr>
+
+                    <th style="width:10%; text-align:center;">年 份：</th>
+                    <td colspan="2">
+
+                        @Html.TextBoxFor(x => x.Year, new { @class = "col-sm-11", @style = "width:50%;float:left;", @maxLength = "4", @autocomplete = "off", onclick = "Clear1()" })
+                        <div style="float:right;height:32px;width:138px;line-height:30px;"><span id="ye" style="color:red;font-size:14px;margin-top:15px;"></span></div>
+
+                    </td>
+                    <th style="width:10%; text-align:center;">月 份：</th>
+                    <td colspan="2">
+                        @Html.TextBoxFor(x => x.Month, new { @class = "col-sm-11", @style = "width:50%;", @autocomplete = "off", @maxLength = "2", onclick = "Clear2()" })
+                        <div style="float:right;height:32px;width:138px;line-height:30px;"><span id="mon" style="color:red;font-size:14px;"></span></div>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td colspan='5'>
+                        <div>
+
+
+                            <a href="@Url.Action("Export", new {ExcelVersion = Utility.Define.EnumExcelVersion._2003})" id="execl1"></a>
+                            <a href="@Url.Action("Export", new {ExcelVersion = Utility.Define.EnumExcelVersion._2007})" id="execl2"></a>
+
+                            <div class="widget-toolbar" style="width:50px;height:40px;float:right;margin-right:8%;padding:0 0;">
+
+                                <a href="#" data-toggle="dropdown" style="float:right;margin-right:1px;">
+                                    <i class="btn btn-primary" style="border-radius:4px 4px;float:right;font-style:normal;font-family:Aharoni;margin-right:1%;">
+                                        整 档
+                                    </i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                                    <li>
+                                        <a href="javascript:Find(0)">Excel 2003</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:Find(1)">Excel 2007</a>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>

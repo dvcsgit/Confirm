@@ -1,0 +1,188 @@
+﻿@model Models.EquipmentMaintenance.MaterialSpecManagement.CreateFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateForm");
+
+        $('#MaterialType').change(function () {
+            var val = $(this).val();
+
+            if (val == '') {
+                $('#FormInput_MaterialType').val('').prop('readonly', true);
+            }
+            else if (val == '@Utility.Define.NEW') {
+                $('#FormInput_MaterialType').val('').prop('readonly', false);
+            }
+            else {
+                $('#FormInput_MaterialType').val(val).prop('readonly', true);
+            }
+        });
+
+        $('#OptionList tbody').sortable().disableSelection();
+
+        BindRemoveEvent();
+    });
+
+    var Save = function () {
+        var form = $('#CreateForm');
+
+        if (form.valid()) {
+            if ($('#FormInput_MaterialType').val() == '') {
+                $.InfoDialog('@Resources.Resource.MaterialTypeRequired');
+            }
+            else {
+                var data = [];
+
+                $('.Description').each(function () {
+                    if ($(this).val() != '') {
+                        data.push('' + '@Utility.Define.Seperator' + $(this).val());
+                    }
+                });
+
+                $('#FormInput_Options').val(JSON.stringify(data));
+
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Create")',
+                    data: form.serialize(),
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        }
+    };
+
+    var Add = function () {
+        $('#OptionList tbody').append('<tr><td class="col-sm-1 center"><div class="action-buttons"><a class="red Remove" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a></div></td><td class="col-sm-11"><input class="Description col-sm-6" type="text" /></td></tr>');
+
+        BindRemoveEvent();
+
+        $('#OptionList tbody').sortable().disableSelection();
+
+        return false;
+    }
+
+    function BindRemoveEvent() {
+        $('.Remove').click(function () {
+            $(this).closest('tr').remove();
+
+            return false;
+        });
+    };
+</script>
+
+<p>
+    @if (ViewBag.CanCreate)
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+            <i class="ace-icon fa fa-save bigger-160"></i>
+            @Resources.Resource.Save
+        </button>
+    }
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.MaterialSpec</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm" }))
+            {
+                @Html.HiddenFor(x => x.OrganizationUniqueID)
+                @Html.HiddenFor(x => x.FormInput.Options)
+                
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.MaterialType)</th>
+                        <td class="col-sm-5">@Html.DropDownList("MaterialType", Model.MaterialTypeSelectItemList)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.MaterialType)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.MaterialType, new { @class = "col-sm-11", @readonly = "readonly" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.MaterialType)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td colspan="3">
+                            @Html.TextBoxFor(x => x.FormInput.Description, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Description)
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.MaterialSpec @Resources.Resource.Option</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table id="OptionList" class="table table-bordered">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1"></th>
+                        <th class="col-sm-11">@Resources.Resource.Option @Resources.Resource.Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var option in Model.OptionList)
+                    {
+                        <tr>
+                            <td class="col-sm-1 center">
+                                <div class="action-buttons">
+                                    <a class="red Remove" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+                                </div>
+                            </td>
+                            <td class="col-sm-11">
+                                <input class="Description col-sm-6" type="text" value="@option.Description" data-uniqueid="@option.UniqueID" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="Add();">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Add
+            </button>
+        </div>
+    </div>
+</div>

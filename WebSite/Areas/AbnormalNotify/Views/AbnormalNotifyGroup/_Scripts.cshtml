@@ -1,0 +1,215 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedUserList();
+        GetSelectedCCUserList();
+
+        InitSelectUserTree();
+        InitSelectCCUserTree();
+
+        $('#divSelectUserTreeWidget').hide();
+        $('#divSelectCCUserTreeWidget').hide();
+    });
+
+    function GetSelectedUserList() {
+        var list = $('#divSelectedUserList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedUserList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function GetSelectedCCUserList() {
+        var list = $('#divSelectedCCUserList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedCCUserList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitSelectUserTree() {
+        var container = $('#divSelectUserTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitSelectUserTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitSelectCCUserTree() {
+        var container = $('#divSelectCCUserTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitSelectCCUserTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var UserSelect = function () {
+        $('#divSelectedUserListWidget').hide();
+        $('#divSelectUserTreeWidget').show();
+    };
+
+    var CCUserSelect = function () {
+        $('#divSelectedCCUserListWidget').hide();
+        $('#divSelectCCUserTreeWidget').show();
+    };
+
+    var CancelUserSelect = function () {
+        $('#divSelectedUserListWidget').show();
+        $('#divSelectUserTreeWidget').hide();
+    };
+
+    var CancelCCUserSelect = function () {
+        $('#divSelectedCCUserListWidget').show();
+        $('#divSelectCCUserTreeWidget').hide();
+    };
+
+    var AddUser = function () {
+        var data = [];
+
+        $("#divSelectUserTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.UserID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddUser")',
+            data: { Selecteds: JSON.stringify(data) },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divSelectUserTreeWidget').hide();
+                $('#divSelectedUserListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedUserListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedUserList();
+                    $("#divSelectUserTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedUserListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var AddCCUser = function () {
+        var data = [];
+
+        $("#divSelectCCUserTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.UserID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddCCUser")',
+            data: { Selecteds: JSON.stringify(data) },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divSelectCCUserTreeWidget').hide();
+                $('#divSelectedCCUserListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedCCUserListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedCCUserList();
+                    $("#divSelectCCUserTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedCCUserListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteUser = function (userID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteUser")',
+            data: { UserID: userID, },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedUserListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedUserListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedUserList();
+                    $("#divSelectUserTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedUserListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteCCUser = function (userID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteCCUser")',
+            data: { UserID: userID, },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedCCUserListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedCCUserListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedCCUserList();
+                    $("#divSelectCCUserTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedCCUserListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+

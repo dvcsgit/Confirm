@@ -1,0 +1,147 @@
+﻿@model Models.ASE.QS.CheckItemRemarkManagement.EditFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#EditForm");
+
+        $('.Remark').each(function () {
+            $(this).prop('checked', $(this).data('checked') == 'Y');
+        });
+    });
+
+    function Save() {
+        var data = [];
+
+        $('.Remark').each(function () {
+            if ($(this).prop('checked'))
+            {
+                data.push($(this).val());
+            }
+        });
+
+        $('#FormInput_Remarks').val(JSON.stringify(data));
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Edit")',
+            data: $('#EditForm').serialize(),
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Query();
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    }
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="bigger lighter">稽核項目</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Edit", null, FormMethod.Post, new { @ID = "EditForm" }))
+            {
+                @Html.HiddenFor(x => x.UniqueID)
+                @Html.HiddenFor(x => x.FormInput.Remarks)
+
+    <table class="table table-bordered table-input">
+        <tr>
+            <th class="col-sm-1">@Html.LabelFor(x => x.CheckTypeID)</th>
+            <td class="col-sm-11" colspan="3">@Html.DisplayFor(x => x.CheckTypeID)</td>
+        </tr>
+        <tr>
+            <th class="col-sm-1">@Html.LabelFor(x => x.CheckTypeCDescription)</th>
+            <td class="col-sm-11" colspan="3">@Html.DisplayFor(x => x.CheckTypeCDescription)</td>
+        </tr>
+        <tr>
+            <th class="col-sm-1">@Html.LabelFor(x => x.CheckTypeEDescription)</th>
+            <td class="col-sm-11" colspan="3">@Html.DisplayFor(x => x.CheckTypeEDescription)</td>
+        </tr>
+        <tr>
+            <th class="col-sm-1">@Html.LabelFor(x => x.CheckItemID)</th>
+            <td class="col-sm-11" colspan="3">@Html.DisplayFor(x => x.CheckItemID)</td>
+        </tr>
+        <tr>
+            <th class="col-sm-1">@Html.LabelFor(x => x.CheckItemCDescription)</th>
+            <td class="col-sm-11" colspan="3">@Html.DisplayFor(x => x.CheckItemCDescription)</td>
+        </tr>
+        <tr>
+            <th class="col-sm-1">@Html.LabelFor(x => x.CheckItemEDescription)</th>
+            <td class="col-sm-11" colspan="3">@Html.DisplayFor(x => x.CheckItemEDescription)</td>
+        </tr>
+        <tr>
+            <th class="col-sm-1">@Html.LabelFor(x => x.CheckTimes)</th>
+            <td class="col-sm-5">@Html.DisplayFor(x => x.CheckTimes)</td>
+            <th class="col-sm-1">@Html.LabelFor(x => x.Unit)</th>
+            <td class="col-sm-5">@Html.DisplayFor(x => x.Unit)</td>
+        </tr>
+    </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">備註</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+            <table id="CheckItemList" class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1 center"></th>
+                        <th class="col-sm-11">備註內容</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.RemarkList)
+                    {
+                        <tr>
+                            <td class="center">
+                                <label>
+                                    <input class="ace ace-checkbox-2 Remark" type="checkbox" value="@item.UniqueID" data-checked="@(Model.CheckItemRemarkList.Any(x => x == item.UniqueID) ? "Y" : "N")">
+                                    <span class="lbl"></span>
+                                </label>
+                            </td>
+                            <td>@item.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+

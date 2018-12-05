@@ -1,0 +1,147 @@
+﻿@model Models.EquipmentMaintenance.MaintenanceFormManagement.CreateWorkingHourFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateWorkingHourForm");
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        $("#FormInput_UserID").select2(select2GetUserOptions());
+    });
+
+    var CreateWorkingHour = function () {
+        var form = $('#CreateWorkingHourForm');
+
+        if ($('#FormInput_UserID').val() == '') {
+            $.InfoDialog('@Resources.Resource.MaintenanceUserRequired')
+        }
+        else {
+            if (form.valid()) {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("CreateWorkingHour")',
+                    data: form.serialize() ,
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            CancelCreateWorkingHour();
+                            GetWorkingHourList();
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        }
+    };
+
+    var CancelCreateWorkingHour = function () {
+        $('#divWorkingHourListWidget').show();
+        $('#divCreateWorkingHourWidget').hide();
+    };
+
+    function select2GetUserOptions() {
+        var url = '@Url.Action("GetUserOptions")';
+
+        var jsonOption = {
+            minimumInputLength: 0,
+            escapeMarkup: function (m) { return m; },
+            allowClear: true,
+            placeholder: '= @Resources.Resource.SelectOne =',
+            width: '90%',
+            ajax: {
+                url: url,
+                dataType: 'json',
+                quietMillis: 100,
+                data: function (term, page) {
+                    return {
+                        Term: term,
+                        PageSize: 10,
+                        PageIndex: page
+                    };
+                },
+                results: function (data, page) {
+                    var more = (page * 10) < data.Total;
+                    return { results: data.Data, more: more };
+                }
+            },
+            initSelection: function (element, callback) {
+                var id = $(element).val();
+                if (id !== "") {
+                    $.ajax(url, {
+                        data: {
+                            Term: id,
+                            IsInit: true
+                        },
+                        dataType: "json"
+                    }).done(function (data) {
+                        if (data.Data.length == 1) {
+                            callback(data.Data[0]);
+                        }
+                    });
+                }
+            }
+        };
+
+        return jsonOption;
+    }
+</script>
+
+<div class="widget-main no-padding">
+    @using (Html.BeginForm("CreateWorkingHour", null, FormMethod.Post, new { @ID = "CreateWorkingHourForm" }))
+    {
+        <table class="table table-bordered table-input">
+            <tr>
+                <th>@Html.LabelFor(x => x.FormInput.UserID)</th>
+                <td colspan="3">
+                    @Html.TextBoxFor(x => x.FormInput.UserID)
+                </td>
+            </tr>
+            <tr>
+                <th>@Html.LabelFor(x => x.FormInput.BeginDateString)</th>
+                <td>
+                    @Html.TextBoxFor(x => x.FormInput.BeginDateString, new { @class = "datepicker col-sm-11" })
+                    <br />
+                    @Html.ValidationMessageFor(x => x.FormInput.BeginDateString)
+                </td>
+                <th>@Html.LabelFor(x => x.FormInput.EndDateString)</th>
+                <td>
+                    @Html.TextBoxFor(x => x.FormInput.EndDateString, new { @class = "datepicker col-sm-11" })
+                    <br />
+                    @Html.ValidationMessageFor(x => x.FormInput.EndDateString)
+                </td>
+            </tr>
+            <tr>
+                <th>@Html.LabelFor(x => x.FormInput.WorkingHour)</th>
+                <td colspan="3">@Html.TextBoxFor(x => x.FormInput.WorkingHour, new { @class = "col-sm-3" })</td>
+            </tr>
+        </table>
+    }
+</div>
+<div class="widget-toolbox padding-8 clearfix">
+    <button class="btn btn-primary" onclick="CreateWorkingHour();">
+        <i class="ace-icon fa fa-save"></i>
+        @Resources.Resource.Save
+    </button>
+    <button class="btn btn-success" onclick="CancelCreateWorkingHour();">
+        <i class="ace-icon fa fa-ban"></i>
+        @Resources.Resource.Cancel
+    </button>
+</div>

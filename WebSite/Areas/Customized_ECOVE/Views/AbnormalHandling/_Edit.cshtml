@@ -1,0 +1,176 @@
+﻿@model Customized.ECOVE.Models.AbnormalHandlingManagement.EditFormModel
+
+<script type="text/javascript">
+    var Save = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Save")',
+            data: { Remark: $('#ClosedRemark').val(), VHNO: $('#VHNO').val() },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var Closed = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Closed")',
+            data: { Remark: $('#ClosedRemark').val(), VHNO: $('#VHNO').val() },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-danger btn-xs" onclick="Closed();" type="button">
+        <i class="ace-icon fa fa-check-circle-o bigger-160"></i>
+        @Resources.Resource.Closed
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Abnormal</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th><label>類別</label></th>
+                    <td colspan="3">@Html.DisplayFor(x => x.TypeDisplay)</td>
+                </tr>
+                <tr>
+                    <th><label>@Resources.Resource.Abnormal</label></th>
+                    <td>
+                        @if (Model.IsAbnormal)
+                        {
+                            <span class="label label-lg label-danger">@Resources.Resource.Abnormal</span>
+                        }
+                        else if (Model.IsAlert)
+                        {
+                            <span class="label label-lg label-warning">@Resources.Resource.Warning</span>
+                        }
+                    </td>
+                    <th><label>@Resources.Resource.Status</label></th>
+                    <td>
+                        @if (Model.IsClosed)
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Resources.Resource.CheckResultAbnormalStatus_1</span>
+                        }
+                        else
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Resources.Resource.CheckResultAbnormalStatus_2</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th><label>@Resources.Resource.Equipment</label></th>
+                    <td colspan="3">@Html.DisplayFor(x => x.EquipmentDisplay)</td>
+                </tr>
+                <tr>
+                    <th><label>@Resources.Resource.CheckItem</label></th>
+                    <td colspan="3">@Html.DisplayFor(x => x.CheckItemDisplay)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>@Resources.Resource.CheckTime</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.CheckTimeDisplay)</td>
+                    <th class="col-sm-1"><label>@Resources.Resource.CheckUser</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.CheckUser.User)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>@Resources.Resource.CheckResult</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Result)</td>
+                    <th class="col-sm-1"><label>@Resources.Resource.Unit</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Unit)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>@Resources.Resource.LowerAlertLimit</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.LowerAlertLimit)</td>
+                    <th class="col-sm-1"><label>@Resources.Resource.UpperAlertLimit</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.UpperAlertLimit)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>@Resources.Resource.LowerLimit</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.LowerLimit)</td>
+                    <th class="col-sm-1"><label>@Resources.Resource.UpperLimit</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.UpperLimit)</td>
+                </tr>
+                <tr>
+                    <th><label>@Resources.Resource.AbnormalReason @Resources.Resource.And @Resources.Resource.HandlingMethod</label></th>
+                    <td colspan="3">@Html.DisplayFor(x => x.AbnormalReasons)</td>
+                </tr>
+                <tr>
+                    <th><label>@Resources.Resource.ChargePerson</label></th>
+                    <td colspan="3">@Html.DisplayFor(x => x.ChargePersons)</td>
+                </tr>
+                <tr>
+                    <th><label>工單號碼</label></th>
+                    <td>
+                        @Html.TextBoxFor(x => x.VHNO)
+                    </td>
+                    <td colspan="2"><a href="#" onclick="window.open('@string.Format("http://erbo-ccc/WebMMS/Mobile/MMIS_EFM01.aspx?RouteID={0}&EquipmentID={1}&Desc={2}&CompanyID={3}&UniqueID={4}", Model.RouteID, Model.EquipmentID, Model.Description, Model.FactoryID, Model.CheckResultUniqueID)');">開立工單</a></td>
+                </tr>
+                <tr>
+                    <th><label>@Resources.Resource.Comment</label></th>
+                    <td colspan="3">@Html.TextBoxFor(x => x.ClosedRemark, new { @class="col-sm-11"})</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_BeforePhoto")
+
+<div class="space"></div>
+
+@Html.Partial("_AfterPhoto")
+
+<div class="space"></div>
+
+@Html.Partial("_File")

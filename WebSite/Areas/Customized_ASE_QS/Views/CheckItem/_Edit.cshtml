@@ -1,0 +1,201 @@
+﻿@model Models.ASE.QS.CheckItemManagement.EditFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#EditForm");
+
+        BindCheckItemRemoveEvent();
+    });
+
+    function Save() {
+        var form = $('#EditForm');
+
+        if (form.valid()) {
+            var valid = true;
+            var errMessage = '';
+
+            var data = [];
+
+            $('.CheckItemID').each(function () {
+                var uniqueID = $(this).data('uniqueid');
+                var checkItemID = $(this).val();
+                var cDescription = $(this).parent().parent().find('.CDescription').val();
+                var eDescription = $(this).parent().parent().find('.EDescription').val();
+                var checkTimes = $(this).parent().parent().find('.CheckTimes').val();
+                var unit = $(this).parent().parent().find('.Unit').val();
+
+                if (checkItemID == '') {
+                    valid = false;
+                    errMessage = '請輸入稽核項目代號';
+                }
+                else if (cDescription == '') {
+                    valid = false;
+                    errMessage = '請輸入稽核項目中文描述';
+                }
+                else if (eDescription == '') {
+                    valid = false;
+                    errMessage = '請輸入稽核項目英文描述';
+                }
+                else if (checkTimes == '') {
+                    valid = false;
+                    errMessage = '請輸入抽樣次數';
+                }
+                else if (unit == '') {
+                    valid = false;
+                    errMessage = '請輸入單位';
+                }
+                else {
+                    data.push(uniqueID + '@Utility.Define.Seperator' + checkItemID + '@Utility.Define.Seperator' + cDescription + '@Utility.Define.Seperator' + eDescription + '@Utility.Define.Seperator' + checkTimes + '@Utility.Define.Seperator' + unit);
+                }
+            });
+
+            if (!valid) {
+                $.InfoDialog(errMessage);
+            }
+            else {
+                $('#FormInput_CheckItems').val(JSON.stringify(data));
+
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Edit")',
+                    data: form.serialize(),
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        }
+    }
+
+    function AddCheckItem() {
+        var html = '<tr><td class="center"><div class="action-buttons"><a onclick="return false;" class="red RemoveCheckItem" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a></div></td><td><input type="text" class="CheckItemID col-sm-11" data-uniqueid="" /></td><td><input type="text" class="CDescription col-sm-11" /></td><td><input type="text" class="EDescription col-sm-11" /></td><td class="center"><input type="text" class="CheckTimes col-sm-11" /></td><td class="center"><input type="text" class="Unit col-sm-11" /></td></tr>';
+
+        $('#CheckItemList tbody').append(html);
+
+        BindCheckItemRemoveEvent();
+    }
+
+    function BindCheckItemRemoveEvent() {
+        $('.RemoveCheckItem').click(function () {
+            $(this).closest('tr').remove();
+
+            return false;
+        });
+    }
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Model.FormInput.ID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="bigger lighter">編輯稽核類別</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Edit", null, FormMethod.Post, new { @ID = "EditForm" }))
+            {
+                @Html.HiddenFor(x => x.FormInput.ID)
+                @Html.HiddenFor(x => x.FormInput.CheckItems)
+
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.ID)</th>
+                        <td class="col-sm-11">@Html.DisplayFor(x => x.FormInput.ID)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.CDescription)</th>
+                        <td class="col-sm-11">
+                            @Html.TextBoxFor(x => x.FormInput.CDescription, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.CDescription)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.EDescription)</th>
+                        <td class="col-sm-11">
+                            @Html.TextBoxFor(x => x.FormInput.EDescription, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.EDescription)
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">稽核項目</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="AddCheckItem(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+            <table id="CheckItemList" class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1 center"></th>
+                        <th class="col-sm-1">稽核項目代號</th>
+                        <th class="col-sm-4">稽核項目中文描述</th>
+                        <th class="col-sm-4">稽核項目英文描述</th>
+                        <th class="col-sm-1 center">抽樣次數</th>
+                        <th class="col-sm-1 center">單位</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemList)
+                    {
+                        <tr>
+                            <td class="center">
+                                <div class="action-buttons">
+                                    <a onclick="return false;" class="red RemoveCheckItem" href="#" title="@Resources.Resource.Delete"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+                                </div>
+                            </td>
+                            <td><input type="text" class="CheckItemID col-sm-11" data-uniqueid="@item.UniqueID" value="@item.ID" /></td>
+                            <td><input type="text" class="CDescription col-sm-11" value="@item.CDescription" /></td>
+                            <td><input type="text" class="EDescription col-sm-11" value="@item.EDescription" /></td>
+                            <td class="center"><input type="text" class="CheckTimes col-sm-11" value="@item.CheckTimes" /></td>
+                            <td class="center"><input type="text" class="Unit col-sm-11" value="@item.Unit" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+

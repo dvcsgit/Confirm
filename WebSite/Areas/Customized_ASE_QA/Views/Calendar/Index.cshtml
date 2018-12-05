@@ -1,0 +1,37 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles 
+{
+<link href="@Url.Content("~/assets/css/fullcalendar.css")" rel="stylesheet">
+}
+
+@section Scripts 
+{
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/moment.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/fullcalendar.min.js")"></script>
+
+@if (ViewBag.Lang != "en-us")
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/" + ViewBag.Lang + ".js")"></script>
+}
+
+    <script type="text/javascript">
+        $(function () {
+            $('#calendar').fullCalendar({
+                height: 5000,
+                header: {
+                    left: 'today prev,next',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultView: 'agendaDay',
+                events: "@Url.Action("GetEvents", new { s = Guid.NewGuid() })"
+            });
+        });
+    </script>
+}
+
+<div id="calendar"></div>
+

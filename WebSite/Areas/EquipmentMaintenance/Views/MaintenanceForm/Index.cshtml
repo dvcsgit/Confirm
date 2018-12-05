@@ -1,0 +1,338 @@
+﻿@model Models.EquipmentMaintenance.MaintenanceFormManagement.QueryFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+    <link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+    <link href="@Url.Content("~/assets/css/datepicker.css")" rel="stylesheet" />
+<link href="@Url.Content("~/assets/css/select2.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/jquery.maskedinput.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-datepicker.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/date-time/locales/bootstrap-datepicker."+ViewBag.Lang+".js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/select2.min.js")"></script>
+
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.dataTables.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.dataTables.bootstrap.js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $('.Status').each(function () {
+            if (!$(this).prop('checked')) {
+                $('#StatusCheckAll').prop('checked', false);
+            }
+        }).click(function () {
+            $('#StatusCheckAll').prop('checked', true);
+            $('.Status').each(function () {
+                if (!$(this).prop('checked')) {
+                    $('#StatusCheckAll').prop('checked', false);
+                }
+            });
+        });
+
+        $('#StatusCheckAll').click(function () {
+            var checked = $(this).prop('checked');
+            $('.Status').each(function () {
+                $(this).prop('checked', checked);
+            });
+        });
+
+
+        $('#Parameters_OrganizationUniqueID').val('@((Session["Account"] as Models.Authenticated.Account).UserRootOrganizationUniqueID)');
+
+        InitTree();
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+
+        $('#ExpandTree').click(function () {
+            var i = $(this).find('i');
+
+            if (i.hasClass('fa-chevron-down')) {
+                i.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                $('#divTree').jstree("open_all");
+            }
+            else {
+                i.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                $('#divTree').jstree("close_all");
+            }
+        });
+
+        //Query();
+    });
+
+    var InitTree = function () {
+        var container = $('#divTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Form = function (url, data) {
+        $('#divQueryFormContainer').hide();
+        $('#divFormContainer').show();
+
+        var form = $('#divForm');
+
+        form.empty();
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            data: data,
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Query = function () {
+        if ($('#Parameters_OrganizationUniqueID').val() != '') {
+            $('#divQueryFormContainer').show();
+            $('#divFormContainer').hide();
+            $('#divForm').empty();
+
+            var div = $('#divQueryResult');
+
+            var data = [];
+
+            $('.Status:checked').each(function () {
+                data.push($(this).val());
+            });
+
+            $('#Parameters_Status').val(JSON.stringify(data));
+
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: '@Url.Action("Query")',
+                data: $('#QueryForm').serialize(),
+                dataType: "html",
+                beforeSend: function () { div.Overlay('show'); },
+                success: function (data) { div.Overlay('show').html(data); },
+                error: function (x, h, r) { div.Overlay('hide').html(x.responseText); }
+            });
+        }
+        else {
+            Cancel();
+        }
+    };
+
+    var Detail = function (uniqueID) {
+        Form('@Url.Action("Detail")', { UniqueID: uniqueID });
+    };
+
+        var Extend = function (uniqueID) {
+            Form('@Url.Action("Extend")', { UniqueID: uniqueID });
+        };
+
+        var Edit = function (uniqueID) {
+            Form('@Url.Action("Edit")', { UniqueID: uniqueID });
+        };
+
+    var Cancel = function () {
+        $('#divForm').empty();
+        $('#divQueryResult').empty();
+
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+    };
+
+    var TakeJob = function () {
+        var data = [];
+
+        $('.TakeJob:checked').each(function () {
+            data.push($(this).val());
+        });
+
+        if (data.length > 0)
+        {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("TakeJob")',
+                data: { Selecteds: JSON.stringify(data) },
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Query();
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+        else
+        {
+            $.InfoDialog('請選擇預防保養作業單');
+        }
+    };
+    </script>
+
+    @if (!string.IsNullOrEmpty(Model.Parameters.Status) || !string.IsNullOrEmpty(Model.Parameters.VHNO))
+    { 
+    <script type="text/javascript">
+        $(function () {
+            Query();
+        });
+    </script>
+    }
+}
+
+<div class="row" id="divQueryFormContainer">
+    <div class="col-xs-3">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.ParentOrganization</h5>
+                <div class="widget-toolbar">
+                    <a href="#" id="ExpandTree" title="">
+                        <i class="ace-icon fa fa-chevron-down white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4" style="overflow-x:scroll;">
+                    <div id="divTreeContainer" style="min-height:200px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-9">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Search</h5>
+                <div class="widget-toolbar">
+                    <a href="#" onclick="Query();">
+                        <i class="ace-icon fa fa-search white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+                    {
+                        @Html.HiddenFor(x => x.Parameters.OrganizationUniqueID)
+                        @Html.HiddenFor(x => x.Parameters.Status)
+
+                        <table class="table table-bordered table-input">
+                            <tr>
+                                <th>@Html.LabelFor(x => x.Parameters.VHNO)</th>
+                                <td>@Html.TextBoxFor(x => x.Parameters.VHNO)</td>
+                                <th>@Html.LabelFor(x => x.Parameters.Subject)</th>
+                                <td>@Html.TextBoxFor(x => x.Parameters.Subject, new { @class = "col-sm-11" })</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.Status)</th>
+                                <td colspan="3">
+                                    <label>
+                                        <input class="ace ace-checkbox-2" type="checkbox" id="StatusCheckAll">
+                                        <span class="lbl"> 全選</span>
+                                    </label>
+                                    @foreach (var status in Model.StatusSelectItemList)
+                                    {
+                                        <label>
+                                            <input class="ace ace-checkbox-2 Status" type="checkbox" value="@status.Value" checked="@status.Selected">
+                                            <span class="lbl"> @status.Text</span>
+                                        </label>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1"><label>保養週期(起)</label></th>
+                                <td class="col-sm-5">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.CycleBeginDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <th class="col-sm-1"><label>保養週期(迄)</label></th>
+                                <td class="col-sm-5">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.CycleEndDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1"><label>預計保養日期(起)</label></th>
+                                <td class="col-sm-5">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.EstBeginDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <th class="col-sm-1"><label>預計保養日期(迄)</label></th>
+                                <td class="col-sm-5">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.EstEndDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+        <div id="divQueryResult" style="min-height:200px;"></div>
+    </div>
+</div>
+
+<div class="row" id="divFormContainer">
+    <div class="col-xs-12">
+        <div id="divForm" style="min-height:200px;"></div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+﻿@model Models.EquipmentMaintenance.MaterialSpecManagement.DetailViewModel
+
+<p>
+    @if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+    {
+        if (ViewBag.CanEdit)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-pencil bigger-160"></i>
+                @Resources.Resource.Edit
+            </button>
+        }
+
+        if (ViewBag.CanDelete)
+        {
+            <button class="btn btn-app btn-danger btn-xs" onclick="Delete('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-trash-o bigger-160"></i>
+                @Resources.Resource.Delete
+            </button>
+        }
+
+        if (ViewBag.CanCreate)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Copy('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-copy bigger-160"></i>
+                @Resources.Resource.Copy
+            </button>
+        }
+    }
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Back
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.MaterialSpec</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.MaterialType)</th>
+                    <td>@Html.DisplayFor(x => x.MaterialType)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Description)</th>
+                    <td>@Html.DisplayFor(x => x.Description)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Options)</th>
+                    <td>@Html.DisplayFor(x => x.Options)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,529 @@
+﻿<style>
+    .ace-file-multiple .ace-file-container:before {
+        content: none;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //AuditDate
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        //AuditorID
+        $("#FormInput_AuditorID").select2(select2GetUserOptions());
+
+        $("#FormInput_AuditorID").change(function () {
+            if ($("#FormInput_AuditorID").val() != '') {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetManagerID")',
+                    data: { UserID: $("#FormInput_AuditorID").val() },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            $("#FormInput_AuditorManagerID").val(data.Data);
+                            $("#FormInput_AuditorManagerID").select2(select2GetUserOptions());
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+
+        //AuditorManagerID
+        $("#FormInput_AuditorManagerID").select2(select2GetUserOptions());
+
+        //AuditStation
+        $('.AuditStation').each(function () {
+            $(this).val($(this).data('value'));
+        });
+
+        //ResDepartment
+        $('.ResDepartment option').each(function () {
+            if ($(this).data('selected') == 'Y') {
+                $(this).prop('selected', true);
+            }
+        });
+
+        $(".ResDepartment").select2();
+
+        //Result
+        $('.AuditResult').each(function () {
+            $(this).prop('checked', $(this).data('checked') == 'Y');
+        });
+
+        $('.AuditResult').click(function () {
+            var checkItemUniqueID = $(this).parent().parent().parent().data('checkitemuniqueid');
+            var seq = $(this).parent().parent().parent().data('seq');
+
+            var tr = $('.Abnormal[data-checkitemuniqueid="' + checkItemUniqueID + '"][data-seq="' + seq + '"]');
+
+            if ($(this).val() == 'N') {
+                tr.show();
+            }
+            else {
+                tr.hide();
+            }
+        });
+
+        //Remark
+        $('.RemarkList').hide();
+
+        $('.RemarkHelp').click(function () {
+            if ($(this).prev().is(":visible")) {
+                $(this).removeClass("btn-success").addClass("btn-primary");
+                $(this).find('i').removeClass("fa-times").addClass("fa-question");
+                $(this).prev().hide();
+                $(this).prev().prev().show();
+            }
+            else {
+                $(this).removeClass("btn-primary").addClass("btn-success");
+                $(this).find('i').removeClass("fa-question").addClass("fa-times");
+                $(this).prev().show();
+                $(this).prev().prev().hide();
+            }
+
+            return false;
+        });
+
+        $('.RemarkList').change(function () {
+            $(this).prev().val($(this).val()).show();
+            $(this).val('').hide();
+
+
+            $(this).next().removeClass("btn-success").addClass("btn-primary");
+            $(this).next().find('i').removeClass("fa-times").addClass("fa-question");
+        });
+
+        //Abnormal
+        $('.Abnormal').each(function () {
+            if ($(this).data('visible') == 'Y') {
+                $(this).show();
+            }
+            else {
+                $(this).hide();
+            }
+        });
+
+        ////IsRepeatedCase
+        //$('.IsRepeatedCase').each(function () {
+        //    $(this).prop('checked', $(this).data('checked') == 'Y');
+        //});
+
+        //AuditType
+        $('.AuditType').each(function () {
+            $(this).val($(this).data('value'));
+        });
+
+        //AuditorShift
+        $('.AuditorShift').each(function () {
+            $(this).val($(this).data('value'));
+        });
+
+        //BelongShift
+        $('.BelongShift').each(function () {
+            $(this).val($(this).data('value'));
+        });
+
+        //Risk
+        $('.Risk').each(function () {
+            $(this).val($(this).data('value'));
+        });
+
+        //Grade
+        $('.Grade').each(function () {
+            $(this).val($(this).data('value'));
+        });
+
+        //CarOwner
+        $(".CarOwner").select2(select2GetUserOptions());
+
+        $(".CarOwner").change(function () {
+            var carOwnerID = $(this).val();
+            if (carOwnerID != '') {
+                var carOwnerManager = $(this).parent().parent().find('.CarOwnerManager');
+
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetManagerID")',
+                    data: { UserID: carOwnerID },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            carOwnerManager.val(data.Data);
+                            carOwnerManager.select2(select2GetUserOptions());
+                            carOwnerManager.trigger('change');
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+
+        //CarOwnerManager
+        $(".CarOwnerManager").select2(select2GetUserOptions());
+
+        $(".CarOwnerManager").change(function () {
+            var carOwnerManagerID = $(this).val();
+            if (carOwnerManagerID != '') {
+                var departmentManager = $(this).parent().parent().find('.DepartmentManager');
+
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetManagerID")',
+                    data: { UserID: carOwnerManagerID },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            departmentManager.val(data.Data);
+                            departmentManager.select2(select2GetUserOptions());
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+
+        //DepartmentManager
+        $(".DepartmentManager").select2(select2GetUserOptions());
+
+        //ErrorUser
+        $(".ErrorUser").select2(select2GetUserOptions());
+
+        //IsBelongMO
+        $('.IsBelongMO').each(function () {
+            $(this).prop('checked', $(this).data('checked') == 'Y');
+        });
+
+        $('.PhotoUpload').ace_file_input({
+            style: 'well',
+            btn_choose: '',
+            btn_change: '',
+            droppable: false,
+            thumbnail: 'fit'
+        }).on('change', function (e) {
+            var checkItemUniqueID = $(this).data('checkitemuniqueid');
+            var checkItemSeq = $(this).data('checkitemseq');
+
+            var files = e.target.files;
+
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file" + x, files[x]);
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("UploadPhoto")' + '?CheckItemUniqueID=' + checkItemUniqueID + '&CheckItemSeq=' + checkItemSeq,
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            $('#divUploadPhoto_' + checkItemUniqueID + '_' + checkItemSeq).empty();
+                            $('#divUploadPhotoWidget_' + checkItemUniqueID + '_' + checkItemSeq).hide();
+                            $('#divPhotoListWidget_' + checkItemUniqueID + '_' + checkItemSeq).show().Overlay('show');
+                        },
+                        success: function (data) {
+                            $('#divPhotoListWidget_' + checkItemUniqueID + '_' + checkItemSeq).Overlay('hide');
+                            $('#Photo_' + checkItemUniqueID + '_' + checkItemSeq).ace_file_input('reset_input');
+                            if (data.IsSuccess) {
+                                GetPhotoList(checkItemUniqueID, checkItemSeq);
+                            }
+                            else {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $('#divPhotoListWidget_' + checkItemUniqueID + '_' + checkItemSeq).Overlay('hide');
+
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+                else {
+                    $.InfoDialog('無法上傳');
+                }
+            }
+            else {
+                $.InfoDialog('請選擇檔案');
+            }
+        });
+
+        $('.ace-file-name').find('i').each(function () {
+            $(this).removeClass('fa-upload').addClass('fa-camera').css({ 'font-size': '54px', 'margin': '0', 'line-height': '60px' });
+        });
+    });
+
+    function select2GetUserOptions() {
+        var url = '@Url.Action("GetUserOptions")';
+
+        var jsonOption = {
+            minimumInputLength: 0,
+            escapeMarkup: function (m) { return m; },
+            allowClear: true,
+            placeholder: '= 請選擇 =',
+            width: '90%',
+            ajax: {
+                url: url,
+                dataType: 'json',
+                quietMillis: 100,
+                data: function (term, page) {
+                    return {
+                        Term: term,
+                        PageSize: 10,
+                        PageIndex: page
+                    };
+                },
+                results: function (data, page) {
+                    var more = (page * 10) < data.Total;
+                    return { results: data.Data, more: more };
+                }
+            },
+            initSelection: function (element, callback) {
+                var id = $(element).val();
+                if (id !== "") {
+                    $.ajax(url, {
+                        data: {
+                            Term: id,
+                            IsInit: true
+                        },
+                        dataType: "json"
+                    }).done(function (data) {
+                        if (data.Data.length == 1) {
+                            callback(data.Data[0]);
+                        }
+                    });
+                }
+            }
+        };
+
+        return jsonOption;
+    }
+
+    function GetPhotoList(checkItemUniqueID, checkItemSeq) {
+        var list = $('#divPhotoList_' + checkItemUniqueID + '_' + checkItemSeq);
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            data: { CheckItemUniqueID: checkItemUniqueID, CheckItemSeq: checkItemSeq },
+            url: '@Url.Action("GetPhotoList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var UploadPhoto = function (checkItemUniqueID, checkItemSeq) {
+        //$('#divPhotoListWidget_' + checkItemUniqueID + '_' + checkItemSeq).hide();
+        //$('#divUploadPhotoWidget_' + checkItemUniqueID + '_' + checkItemSeq).show();
+
+        var form = $('#divUploadPhoto_' + checkItemUniqueID + '_' + checkItemSeq);
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("PhotoUpload")',
+            data: { CheckItemUniqueID: checkItemUniqueID, CheckItemSeq: checkItemSeq },
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) {
+                form.Overlay('show').html(data);
+            },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var CanelUploadPhoto = function (checkItemUniqueID, checkItemSeq) {
+        $('#divPhotoListWidget_' + checkItemUniqueID + '_' + checkItemSeq).show();
+        $('#divUploadPhoto_' + checkItemUniqueID + '_' + checkItemSeq).empty();
+        $('#divUploadPhotoWidget_' + checkItemUniqueID + '_' + checkItemSeq).hide();
+    };
+
+    var DeletePhoto = function (checkItemUniqueID, checkItemSeq, seq) {
+        var widget = $('#divPhotoListWidget_' + checkItemUniqueID + '_' + checkItemSeq);
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeletePhoto")',
+            data: { CheckItemUniqueID: checkItemUniqueID, CheckItemSeq: checkItemSeq, Seq: seq },
+            dataType: "json",
+            beforeSend: function () { widget.Overlay('show'); },
+            success: function (data) {
+                widget.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetPhotoList(checkItemUniqueID, checkItemSeq);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                widget.Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    function FormValid() {
+        if ($('#FormInput_AuditDateString').val() == '') {
+            $.InfoDialog('請選擇稽核日期');
+            return false;
+        }
+        else if ($('#FormInput_AuditorID').val() == '') {
+            $.InfoDialog('請選擇稽核人員');
+            return false;
+        }
+        else if ($('#FormInput_AuditorManagerID').val() == '') {
+            $.InfoDialog('請選擇稽核主管');
+            return false;
+        }
+            //else if ($('input[name="FormInput.FactoryUniqueID"]:checked').length == 0) {
+            //    $.InfoDialog('請選擇受稽廠別');
+            //    return false;
+            //}
+            //else if ($('#FormInput_FactoryRemark').is(':visible') && $('#FormInput_FactoryRemark').val() == '') {
+            //    $.InfoDialog('請輸入受稽廠別');
+            //    return false;
+            //}
+        else if ($('input[name="FormInput.ShiftUniqueID"]:checked').length == 0) {
+            $.InfoDialog('請選擇受稽班別');
+            return false;
+        }
+        else if ($('#FormInput_ShiftRemark').is(':visible') && $('#FormInput_ShiftRemark').val() == '') {
+            $.InfoDialog('請輸入受稽班別');
+            return false;
+        }
+        else {
+            var stations = [];
+
+            $('.Station').each(function () {
+                if ($(this).prop('checked')) {
+                    stations.push($(this).val());
+                }
+            });
+
+            if (stations.length == 0) {
+                $.InfoDialog('請選擇受稽站別');
+                return false;
+            }
+            else if ($('#FormInput_StationRemark').is(':visible') && $('#FormInput_StationRemark').val() == '') {
+                $.InfoDialog('請輸入受稽站別');
+                return false;
+            }
+            else {
+                
+
+                $('#FormInput_Stations').val(JSON.stringify(stations));
+
+                var data = [];
+
+                $('.CheckItem').each(function () {
+                    var checkItemUniqueID = $(this).data('checkitemuniqueid');
+                    var seq = $(this).data('seq');
+                    var station = $(this).find('.AuditStation').val();
+                    var object = $(this).find('.AuditObject').val();
+                    var resDepartment = $(this).find('.ResDepartment').select2('val');
+                    var result = '';
+
+                    var tmp = $(this).find('.AuditResult:checked');
+
+                    if (tmp.length > 0) {
+                        result = tmp.val();
+                    }
+
+                    var carNo = $(this).find('.CarNo').val();
+                    var remark = $(this).find('.Remark').val();
+
+                    var abnormal = $('.Abnormal[data-checkitemuniqueid="' + checkItemUniqueID + '"][data-seq="' + seq + '"]');
+                    var cpNo = abnormal.find('.CPNO').val();
+                    var weekly = abnormal.find('.Weekly').val();
+                    var auditType = abnormal.find('.AuditType').val();
+                    var auditorShift = abnormal.find('.AuditorShift').val();
+                    var belongShift = abnormal.find('.BelongShift').val();
+                    var carOwner = abnormal.find('.CarOwner').select2('val');
+                    var carOwnerManager = abnormal.find('.CarOwnerManager').select2('val');
+                    var departmentManager = abnormal.find('.DepartmentManager').select2('val');
+                    var risk = abnormal.find('.Risk').val();
+                    var grade = abnormal.find('.Grade').val();
+                    var isBelongMO = '';
+
+                    tmp = abnormal.find('.IsBelongMO:checked');
+
+                    if (tmp.length > 0) {
+                        isBelongMO = tmp.val();
+                    }
+
+                    var errorUser = abnormal.find('.ErrorUser').select2('val');
+                    var errorMachineNo = abnormal.find('.ErrorMachineNo').val();
+                    var errorArea = abnormal.find('.ErrorArea').val();
+
+                    data.push(checkItemUniqueID + '@Utility.Define.Seperator' +
+                        seq + '@Utility.Define.Seperator' +
+                        station + '@Utility.Define.Seperator' +
+                        object + '@Utility.Define.Seperator' +
+                        resDepartment + '@Utility.Define.Seperator' +
+                        result + '@Utility.Define.Seperator' +
+                        carNo + '@Utility.Define.Seperator' +
+                        remark + '@Utility.Define.Seperator' +
+                        cpNo + '@Utility.Define.Seperator' +
+                        weekly + '@Utility.Define.Seperator' +
+                        auditType + '@Utility.Define.Seperator' +
+                        auditorShift + '@Utility.Define.Seperator' +
+                        belongShift + '@Utility.Define.Seperator' +
+                        carOwner + '@Utility.Define.Seperator' +
+                        carOwnerManager + '@Utility.Define.Seperator' +
+                        departmentManager + '@Utility.Define.Seperator' +
+                        risk + '@Utility.Define.Seperator' +
+                        grade + '@Utility.Define.Seperator' +
+                        isBelongMO + '@Utility.Define.Seperator' +
+                        errorUser + '@Utility.Define.Seperator' +
+                        errorMachineNo + '@Utility.Define.Seperator' +
+                        errorArea + '@Utility.Define.Seperator');
+                });
+
+                $('#FormInput_CheckResults').val(JSON.stringify(data));
+
+                return true;
+            }
+        }
+    }
+</script>
+

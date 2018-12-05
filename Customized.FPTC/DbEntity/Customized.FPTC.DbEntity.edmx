@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Customized.FPTC.DbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'TPFPTC.dbo.veDispatchToEFPG' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+        <EntityType Name="veDispatchToEFPG">
+          <Key>
+            <PropertyRef Name="car_licence" />
+            <PropertyRef Name="disp_dt" />
+            <PropertyRef Name="corp" />
+            <PropertyRef Name="corp_name" />
+            <PropertyRef Name="dept" />
+            <PropertyRef Name="dept_name" />
+          </Key>
+          <Property Name="emp_name" Type="nvarchar" MaxLength="12" />
+          <Property Name="car_licence" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="disp_dt" Type="smalldatetime" Nullable="false" />
+          <Property Name="corp" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="corp_name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="dept" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="dept_name" Type="varchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="CustomizedFPTCDbModelStoreContainer">
+          <EntitySet Name="veDispatchToEFPG" EntityType="Self.veDispatchToEFPG" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [veDispatchToEFPG].[emp_name] AS [emp_name], 
+    [veDispatchToEFPG].[car_licence] AS [car_licence], 
+    [veDispatchToEFPG].[disp_dt] AS [disp_dt], 
+    [veDispatchToEFPG].[corp] AS [corp], 
+    [veDispatchToEFPG].[corp_name] AS [corp_name], 
+    [veDispatchToEFPG].[dept] AS [dept], 
+    [veDispatchToEFPG].[dept_name] AS [dept_name]
+    FROM [dbo].[veDispatchToEFPG] AS [veDispatchToEFPG]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Customized.FPTC.DbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="veDispatchToEFPG">
+          <Key>
+            <PropertyRef Name="car_licence" />
+            <PropertyRef Name="disp_dt" />
+            <PropertyRef Name="corp" />
+            <PropertyRef Name="corp_name" />
+            <PropertyRef Name="dept" />
+            <PropertyRef Name="dept_name" />
+          </Key>
+          <Property Name="emp_name" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="car_licence" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="disp_dt" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="corp" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="corp_name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="dept" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="dept_name" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="FPTCDbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="veDispatchToEFPG" EntityType="Self.veDispatchToEFPG" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CustomizedFPTCDbModelStoreContainer" CdmEntityContainer="FPTCDbEntities">
+          <EntitySetMapping Name="veDispatchToEFPG">
+            <EntityTypeMapping TypeName="Customized.FPTC.DbModel.veDispatchToEFPG">
+              <MappingFragment StoreEntitySet="veDispatchToEFPG">
+                <ScalarProperty Name="emp_name" ColumnName="emp_name" />
+                <ScalarProperty Name="car_licence" ColumnName="car_licence" />
+                <ScalarProperty Name="disp_dt" ColumnName="disp_dt" />
+                <ScalarProperty Name="corp" ColumnName="corp" />
+                <ScalarProperty Name="corp_name" ColumnName="corp_name" />
+                <ScalarProperty Name="dept" ColumnName="dept" />
+                <ScalarProperty Name="dept_name" ColumnName="dept_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

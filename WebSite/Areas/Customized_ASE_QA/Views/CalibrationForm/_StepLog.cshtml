@@ -1,0 +1,83 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetStepLogList();
+
+        $('#divCreateStepLogWidget').hide();
+    });
+
+    function GetStepLogList() {
+        var widget = $('#divStepLogListWidget');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetStepLogList")',
+            dataType: "html",
+            beforeSend: function () { widget.Overlay('show'); },
+            success: function (data) { widget.Overlay('show').html(data); },
+            error: function (x, h, r) { widget.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var CreateStepLog = function (step, calibrateUnit) {
+        $('#divStepLogListWidget').hide();
+        $('#divCreateStepLogWidget').show();
+
+        var form = $('#divCreateStepLog');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("CreateStepLog")',
+            data: { Step: step, CalibrateUnit: calibrateUnit },
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var CanelCreateStepLog = function () {
+        $('#divStepLogListWidget').show();
+        $('#divCreateStepLog').empty();
+        $('#divCreateStepLogWidget').hide();
+    };
+
+    var DeleteStepLog = function (seq) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteStepLog")',
+            data: { Seq: seq },
+            dataType: "json",
+            beforeSend: function () { $('#divStepLogListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divStepLogListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetStepLogList();
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divStepLogListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divStepLogListWidget" class="widget-box widget-color-dark"></div>
+
+<div id="divCreateStepLogWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">新增儀器收發件紀錄</h5>
+    </div>
+
+    <div class="widget-body">
+        <div id="divCreateStepLog"></div>
+    </div>
+</div>

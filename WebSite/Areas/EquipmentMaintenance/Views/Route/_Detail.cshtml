@@ -1,0 +1,156 @@
+﻿@model Models.EquipmentMaintenance.RouteManagement.DetailViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var container = $('#divDetailTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitDetailTree")',
+            data: { UniqueID: '@Model.UniqueID' },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    });
+</script>
+
+
+<p>
+    @if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+    { 
+        if (ViewBag.CanEdit)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Url.Action("Edit", "Route")', '@Model.UniqueID')" type="button">
+                <i class="ace-icon fa fa-pencil bigger-160"></i>
+                @Resources.Resource.Edit
+            </button>
+        }
+
+        if (ViewBag.CanDelete)
+        {
+            <button class="btn btn-app btn-danger btn-xs" onclick="DeleteRoute('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-trash-o bigger-160"></i>
+                @Resources.Resource.Delete
+            </button>
+        }
+
+        if (ViewBag.CanCreate)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Copy('@Url.Action("Copy", "Route")', '@Model.UniqueID')">
+                <i class="ace-icon fa fa-copy bigger-160"></i>
+                @Resources.Resource.Copy
+            </button>
+        }
+    }
+    
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Back
+    </button>
+
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Route</h5>
+        <div class="widget-toolbar">
+            <div class="widget-menu">
+                <a href="#" data-toggle="dropdown">
+                    <i class="ace-icon fa fa-calendar-check-o white"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                    @if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable && ViewBag.CanCreate)
+                    {
+                        <li>
+                            <a href="#" onclick="CreateJob('@Model.UniqueID')">@(string.Format("{0} {1}", Resources.Resource.Create, Resources.Resource.Job))</a>
+                        </li>
+                    }
+
+                    @foreach (var item in Model.JobList)
+                    {
+                        <li>
+                            <a href="#" onclick="Detail('@Url.Action("Detail", "Job")', '@item.UniqueID')">@(string.Format("{0} 【{1}】 {2}", Resources.Resource.Job, item.Description, Resources.Resource.Detail))</a>
+                        </li>
+                    }
+
+                    @*@if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable && ViewBag.CanEdit)
+                    {
+                        foreach (var item in Model.JobList)
+                        {
+                            <li>
+                                <a href="#" onclick="Edit('@Url.Action("Edit", "Job")', '@item.UniqueID')">@(string.Format("{0} {1} 【{2}】", Resources.Resource.Edit, Resources.Resource.Job, item.Description))</a>
+                            </li>
+                        }
+                    }*@
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th >@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ID)</th>
+                    <td class="col-sm-5"> @Html.DisplayFor(x => x.ID)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Name)</th>
+                    <td class="col-sm-5"> @Html.DisplayFor(x => x.Name)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.RouteManager</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th>@Resources.Resource.Organization</th>
+                        <th>@Resources.Resource.UserID</th>
+                        <th>@Resources.Resource.UserName</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.ManagerList)
+                    {
+                        <tr>
+                            <td>@user.OrganizationDescription</td>
+                            <td>@user.ID</td>
+                            <td>@user.Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Route @Resources.Resource.ControlPoint @Resources.Resource.Equipment @Resources.Resource.CheckItem</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4" style="overflow-x:scroll;">
+            <div id="divDetailTreeContainer" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

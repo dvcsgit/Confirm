@@ -1,0 +1,235 @@
+﻿@model Models.ASE.QA.EquipmentManagement.DetailViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Modal').hide();
+    });
+
+    var CalibrationApply = function (uniqueID) {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("CalibrationApply")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                $('#ModalContent').html(data);
+                $('#Modal').show().modal('show');
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+
+    var AbnormalForm = function (uniqueID) {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("AbnormalForm")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                $('#ModalContent').html(data);
+                $('#Modal').show().modal('show');
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+
+    var CalibrationNotify = function (uniqueID) {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("CalibrationNotify")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                $('#ModalContent').html(data);
+                $('#Modal').show().modal('show');
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+
+    var CalibrationForm = function (uniqueID) {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("CalibrationForm")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                $('#ModalContent').html(data);
+                $('#Modal').show().modal('show');
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+
+    var MSANotify = function (uniqueID) {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("MSANotify")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                $('#ModalContent').html(data);
+                $('#Modal').show().modal('show');
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+
+    var MSAForm = function (uniqueID) {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("MSAForm")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                $('#ModalContent').html(data);
+                $('#Modal').show().modal('show');
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+
+    var ChangeForm = function (uniqueID) {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("ChangeForm")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                $('#ModalContent').html(data);
+                $('#Modal').show().modal('show');
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+</script>
+
+<p>
+@if ((Session["Account"] as Models.Authenticated.Account).UserAuthGroupList.Contains("QA-Admin"))
+{
+    <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-edit bigger-160"></i>
+        @Resources.Resource.Edit
+    </button>
+}
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        返回
+    </button>
+
+    @if (Model.Equipment.IsQuatationExist)
+    { 
+    <a class="btn btn-app btn-primary btn-xs" style="width:100px;" href="@Url.Action("Quatation", new { UniqueID = Model.UniqueID })">
+        <i class="ace-icon fa fa-cloud-download bigger-160"></i>
+        報價單下載
+    </a>
+    }
+</p>
+
+@if (Model.Equipment != null)
+{ 
+    @Html.Partial("_Equipment", Model.Equipment)
+}
+
+@if (Model.AbnormalFormList != null && Model.AbnormalFormList.Count>0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_AbnormalFormList", Model.AbnormalFormList)
+}
+
+@if (Model.CalibrationApply != null)
+{
+    <div class="space"></div>
+    
+    @Html.Partial("_CalibrationApplyList", Model.CalibrationApply)
+}
+
+@if (Model.ChangeFormList != null && Model.ChangeFormList.Count>0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_ChangeFormList", Model.ChangeFormList)
+}
+
+@if (Model.CalibrationNotifyList != null && Model.CalibrationNotifyList.Count > 0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_CalibrationNotifyList", Model.CalibrationNotifyList)
+}
+
+@if (Model.CalibrationFormList != null && Model.CalibrationFormList.Count > 0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_CalibrationFormList", Model.CalibrationFormList)
+}
+
+@if (Model.MSANotifyList != null && Model.MSANotifyList.Count > 0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_MSANotifyList", Model.MSANotifyList)
+}
+
+@if (Model.MSAFormList != null && Model.MSAFormList.Count > 0)
+{
+    <div class="space"></div>
+
+    @Html.Partial("_MSAFormList", Model.MSAFormList)
+}
+
+<div class="modal" id="Modal">
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-body" id="ModalContent"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>

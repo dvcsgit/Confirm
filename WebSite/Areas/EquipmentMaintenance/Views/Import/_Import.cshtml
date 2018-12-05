@@ -1,0 +1,566 @@
+﻿@model Models.EquipmentMaintenance.Import.ImportModel
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnCancel').show();
+    });
+</script>
+
+@if (Model.CanImport)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#step2').removeClass('active').addClass('complete');
+            $('#step3').addClass('active');
+
+            $('#btnImport').show();
+        });
+    </script>
+}
+else
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#step2').removeClass('active').addClass('complete').addClass('error');
+        });
+    </script>
+}
+
+@if (Model.NoOrganizationItemList.Count > 0)
+{
+    <div class="space"></div>
+    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.ParentOrganization @Resources.Resource.NoMapping</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <table class="table table-striped table-bordered table-hover nowrap">
+                            <thead class="thin-border-bottom">
+                                <tr>
+                                    <th>@Resources.Resource.DataType</th>
+                                    <th>@Resources.Resource.OrganizationID</th>
+                                    <th>@Resources.Resource.ID</th>
+                                    <th>@Resources.Resource.Name / @Resources.Resource.Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.NoOrganizationItemList)
+                                {
+                                    <tr>
+                                        <td>@item.DataType</td>
+                                        <td>@item.OrganizationID</td>
+                                        <td>@item.ID</td>
+                                        <td>@item.Description</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.HaveNewUnRFIDReason)
+{
+    <div class="space"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.UnRFIDReason @string.Format(Resources.Resource.ImportStatus, Model.NewUnRFIDReasonCount, Model.ValidUnRFIDReasonCount, (Model.NewUnRFIDReasonCount - Model.ValidUnRFIDReasonCount))</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <table class="table table-striped table-bordered table-hover nowrap">
+                            <thead class="thin-border-bottom">
+                                <tr>
+                                    <th>@Resources.Resource.AbnormalReasonID</th>
+                                    <th>@Resources.Resource.AbnormalReasonDescription</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.UnRFIDReasonList)
+                                {
+                                    if (item.IsError)
+                                    {
+                                        <tr class="red">
+                                            <td>@item.ID</td>
+                                            <td>@item.Display</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr class="green">
+                                            <td>@item.ID</td>
+                                            <td>@item.Display</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.HaveNewOverTimeReason)
+{
+    <div class="space"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.OverTimeReason @string.Format(Resources.Resource.ImportStatus, Model.NewOverTimeReasonCount, Model.ValidOverTimeReasonCount, (Model.NewOverTimeReasonCount - Model.ValidOverTimeReasonCount))</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <table class="table table-striped table-bordered table-hover nowrap">
+                            <thead class="thin-border-bottom">
+                                <tr>
+                                    <th>@Resources.Resource.AbnormalReasonID</th>
+                                    <th>@Resources.Resource.AbnormalReasonDescription</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OverTimeReasonList)
+                                {
+                                    if (item.IsError)
+                                    {
+                                        <tr class="red">
+                                            <td>@item.ID</td>
+                                            <td>@item.Display</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr class="green">
+                                            <td>@item.ID</td>
+                                            <td>@item.Display</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.HaveNewUnPatrolReason)
+{
+    <div class="space"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.UnPatrolReason @string.Format(Resources.Resource.ImportStatus, Model.NewUnPatrolReasonCount, Model.ValidUnPatrolReasonCount, (Model.NewUnPatrolReasonCount - Model.ValidUnPatrolReasonCount))</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <table class="table table-striped table-bordered table-hover nowrap">
+                            <thead class="thin-border-bottom">
+                                <tr>
+                                    <th>@Resources.Resource.AbnormalReasonID</th>
+                                    <th>@Resources.Resource.AbnormalReasonDescription</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.UnPatrolReasonList)
+                                {
+                                    if (item.IsError)
+                                    {
+                                        <tr class="red">
+                                            <td>@item.ID</td>
+                                            <td>@item.Display</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr class="green">
+                                            <td>@item.ID</td>
+                                            <td>@item.Display</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.HaveNewOrganization)
+{ 
+<script type="text/javascript">
+    $(document).ready(function () {
+        var container = $('#divOrganizationTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitOrganizationTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    });
+</script>
+
+    <div class="space"></div>
+    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.Organization @string.Format(Resources.Resource.ImportStatus, Model.NewOrganizationCount, Model.ValidOrganizationCount, (Model.NewOrganizationCount - Model.ValidOrganizationCount))</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main padding-4" style="overflow-x:scroll;">
+                        <div id="divOrganizationTreeContainer" style="min-height:100px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.HaveNewUser)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var container = $('#divUserTreeContainer');
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("InitUserTree")',
+                dataType: "html",
+                beforeSend: function () { container.Overlay('show'); },
+                success: function (data) { container.Overlay('hide').html(data); },
+                error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+            });
+        });
+    </script>
+
+    <div class="space"></div>
+    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.User @string.Format(Resources.Resource.ImportStatus, Model.NewUserCount, Model.ValidUserCount, (Model.NewUserCount - Model.ValidUserCount))</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main padding-4" style="overflow-x:scroll;">
+                        <div id="divUserTreeContainer" style="min-height:100px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.HaveNewRoute)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var container = $('#divRouteTreeContainer');
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("InitRouteTree")',
+                dataType: "html",
+                beforeSend: function () { container.Overlay('show'); },
+                success: function (data) { container.Overlay('hide').html(data); },
+                error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+            });
+        });
+    </script>
+
+    <div class="space"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.Route @string.Format(Resources.Resource.ImportStatus, Model.NewRouteCount, Model.ValidRouteCount, (Model.NewRouteCount - Model.ValidRouteCount))</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main padding-4" style="overflow-x:scroll;">
+                        <div id="divRouteTreeContainer" style="min-height:100px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.HaveNewControlPoint)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var container = $('#divControlPointTreeContainer');
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("InitControlPointTree")',
+                dataType: "html",
+                beforeSend: function () { container.Overlay('show'); },
+                success: function (data) { container.Overlay('hide').html(data); },
+                error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+            });
+        });
+    </script>
+
+    <div class="space"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.ControlPoint @string.Format(Resources.Resource.ImportStatus, Model.NewControlPointCount, Model.ValidControlPointCount, (Model.NewControlPointCount - Model.ValidControlPointCount))</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main padding-4" style="overflow-x:scroll;">
+                        <div id="divControlPointTreeContainer" style="min-height:100px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.HaveNewEquipment)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var container = $('#divEquipmentTreeContainer');
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("InitEquipmentTree")',
+                dataType: "html",
+                beforeSend: function () { container.Overlay('show'); },
+                success: function (data) { container.Overlay('hide').html(data); },
+                error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+            });
+        });
+    </script>
+
+    <div class="space"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.Equipment @string.Format(Resources.Resource.ImportStatus, Model.NewEquipmentCount, Model.ValidEquipmentCount, (Model.NewEquipmentCount - Model.ValidEquipmentCount))</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main padding-4" style="overflow-x:scroll;">
+                        <div id="divEquipmentTreeContainer" style="min-height:100px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.HaveNewCheckItem)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var container = $('#divCheckItemTreeContainer');
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("InitCheckItemTree")',
+                dataType: "html",
+                beforeSend: function () { container.Overlay('show'); },
+                success: function (data) { container.Overlay('hide').html(data); },
+                error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+            });
+        });
+    </script>
+
+    <div class="space"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.CheckItem @string.Format(Resources.Resource.ImportStatus, Model.NewCheckItemCount, Model.ValidCheckItemCount, (Model.NewCheckItemCount - Model.ValidCheckItemCount))</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main padding-4" style="overflow-x:scroll;">
+                        <div id="divCheckItemTreeContainer" style="min-height:100px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.HaveNewAbnormalReason)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var container = $('#divAbnormalReasonTreeContainer');
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("InitAbnormalReasonTree")',
+                dataType: "html",
+                beforeSend: function () { container.Overlay('show'); },
+                success: function (data) { container.Overlay('hide').html(data); },
+                error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+            });
+        });
+    </script>
+
+    <div class="space"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.AbnormalReason @string.Format(Resources.Resource.ImportStatus, Model.NewAbnormalReasonCount, Model.ValidAbnormalReasonCount, (Model.NewAbnormalReasonCount - Model.ValidAbnormalReasonCount))</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main padding-4" style="overflow-x:scroll;">
+                        <div id="divAbnormalReasonTreeContainer" style="min-height:100px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.HaveNewHandlingMethod)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var container = $('#divHandlingMethodTreeContainer');
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("InitHandlingMethodTree")',
+                dataType: "html",
+                beforeSend: function () { container.Overlay('show'); },
+                success: function (data) { container.Overlay('hide').html(data); },
+                error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+            });
+        });
+    </script>
+
+    <div class="space"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">@Resources.Resource.HandlingMethod @string.Format(Resources.Resource.ImportStatus, Model.NewHandlingMethodCount, Model.ValidHandlingMethodCount, (Model.NewHandlingMethodCount - Model.ValidHandlingMethodCount))</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa white fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main padding-4" style="overflow-x:scroll;">
+                        <div id="divHandlingMethodTreeContainer" style="min-height:100px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

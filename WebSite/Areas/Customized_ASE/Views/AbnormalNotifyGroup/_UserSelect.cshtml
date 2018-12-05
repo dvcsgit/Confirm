@@ -1,0 +1,25 @@
+﻿<div id="divSelectUserTreeWidget">
+    <p>
+        <button class="btn btn-primary" onclick="AddUser(); return false;">
+            <i class="ace-icon fa fa-plus"></i>
+            @Resources.Resource.Select
+        </button>
+        <button class="btn btn-success" onclick="CancelUserSelect(); return false;">
+            <i class="ace-icon fa fa-ban"></i>
+            @Resources.Resource.Cancel
+        </button>
+    </p>
+
+    <div id="divSelectUserTreeContainer" style="min-height:200px;"></div>
+</div>
+
+<div id="divSelectedUserListWidget">
+    <p>
+        <button class="btn btn-primary" onclick="UserSelect(); return false;">
+            <i class="ace-icon fa fa-plus"></i>
+            @Resources.Resource.Create
+        </button>
+    </p>
+
+    <div id="divSelectedUserList" style="min-height:50px;"></div>
+</div>

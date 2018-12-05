@@ -1,0 +1,15 @@
+﻿@model Customized.PFG.Models.DailyReport.ReportModel
+
+<p>
+    <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})" class="btn btn-app btn-primary" style="width:100%;">
+        <i class="ace-icon fa fa-file-excel-o bigger-230"></i>
+        Excel 2003
+    </a>
+</p>
+
+<p>
+    <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007})" class="btn btn-app btn-primary" style="width:100%;">
+        <i class="ace-icon fa fa-file-excel-o bigger-230"></i>
+        Excel 2007
+    </a>
+</p>

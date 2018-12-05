@@ -1,0 +1,212 @@
+﻿@model Models.ASE.QA.CalibrationForm.StepLogCreateFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateStepLogForm");
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        if ($('#FormInput_OwnerID') != null && $('#FormInput_OwnerID').length > 0)
+        {
+            $('#FormInput_OwnerID').select2(select2GetUserOptions());
+        }
+    });
+
+    function select2GetUserOptions() {
+        var url = '@Url.Action("GetUserOptions")';
+
+        var jsonOption = {
+            minimumInputLength: 0,
+            escapeMarkup: function (m) { return m; },
+            allowClear: true,
+            placeholder: '= @Resources.Resource.SelectOne =',
+            width: '90%',
+            ajax: {
+                url: url,
+                dataType: 'json',
+                quietMillis: 100,
+                data: function (term, page) {
+                    return {
+                        Term: term,
+                        PageSize: 10,
+                        PageIndex: page
+                    };
+                },
+                results: function (data, page) {
+                    var more = (page * 10) < data.Total;
+                    return { results: data.Data, more: more };
+                }
+            },
+            initSelection: function (element, callback) {
+                var id = $(element).val();
+                if (id !== "") {
+                    $.ajax(url, {
+                        data: {
+                            Term: id,
+                            IsInit: true
+                        },
+                        dataType: "json"
+                    }).done(function (data) {
+                        if (data.Data.length == 1) {
+                            callback(data.Data[0]);
+                        }
+                    });
+                }
+            }
+        };
+
+        return jsonOption;
+    }
+
+    var SaveStepLog = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("CreateStepLog")',
+            data: $('#CreateStepLogForm').serialize(),
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    $('#divCreateStepLog').empty();
+                    $('#divCreateStepLogWidget').hide();
+                    $('#divStepLogListWidget').show();
+
+                    GetStepLogList();
+                    
+                    if ($('#divDetailItemListWidget') != null && $('#divDetailItemListWidget').length > 0) {
+                        GetDetailItemList();
+                    }
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+@if (Model.CalibrateUnit == "L")
+{
+    <div class="widget-main no-padding">
+        @using (Html.BeginForm("CreateStepLog", null, FormMethod.Post, new { @ID = "CreateStepLogForm" }))
+        {
+            @Html.HiddenFor(x => x.Step)
+
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">日期</th>
+                    <td class="col-sm-5">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.FormInput.DateString, new { @class = "form-control datepicker" })
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </td>
+                    <th class="col-sm-1"><label>時間</label></th>
+                    <td class="col-sm-5">
+                        @Html.DropDownListFor(x => x.FormInput.Hour, Model.HourSelectItemList) <label>點</label>
+                        @Html.DropDownListFor(x => x.FormInput.Minute, Model.MinuteSelectItemList) <label>分</label>
+                    </td>
+                </tr>
+                @if (Model.Step == "1" || Model.Step == "4")
+                {
+                    <tr>
+                        <th class="col-sm-1">
+                            @if (Model.Step == "1")
+                            {
+                                <label>交件人員</label>
+                            }
+                            else if (Model.Step == "4")
+                            {
+                                <label>取件人員</label>
+                            }
+                        </th>
+                        <td colspan="3">
+                            @Html.TextBoxFor(x => x.FormInput.OwnerID)
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <th>
+                        @if (Model.Step == "1")
+                        {
+                            <label>收件人員</label>
+                        }
+                        else if (Model.Step == "2")
+                        {
+                            <label>送件人員</label>
+                        }
+                        else if (Model.Step == "3")
+                        {
+                            <label>回件人員</label>
+                        }
+                        else if (Model.Step == "4")
+                        {
+                            <label>發件人員</label>
+                        }
+                    </th>
+                    <td>
+                        @Html.DropDownListFor(x => x.FormInput.QAID, Model.QASelectItemList)
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+}
+
+@if (Model.CalibrateUnit == "F")
+{
+    <div class="widget-main no-padding">
+        @using (Html.BeginForm("CreateStepLog", null, FormMethod.Post, new { @ID = "CreateStepLogForm" }))
+        {
+            @Html.HiddenFor(x => x.Step)
+            
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">日期</th>
+                    <td class="col-sm-5">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.FormInput.DateString, new { @class = "form-control datepicker" })
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </td>
+                    <th class="col-sm-1"><label>時間</label></th>
+                    <td class="col-sm-5">
+                        @Html.DropDownListFor(x => x.FormInput.Hour, Model.HourSelectItemList) <label>點</label>
+                        @Html.DropDownListFor(x => x.FormInput.Minute, Model.MinuteSelectItemList) <label>分</label>
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+}
+
+
+<div class="widget-toolbox padding-8 clearfix">
+    <button class="btn btn-primary" onclick="SaveStepLog();">
+        <i class="ace-icon fa fa-save"></i>
+        @Resources.Resource.Save
+    </button>
+    <button class="btn btn-success" onclick="CanelCreateStepLog(); return false;">
+        <i class="ace-icon fa fa-ban"></i>
+        @Resources.Resource.Cancel
+    </button>
+</div>

@@ -1,0 +1,124 @@
+﻿@model Models.EquipmentMaintenance.CheckItemManagement.DetailViewModel
+
+<p>
+    @if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+    { 
+        if (ViewBag.CanEdit)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-pencil bigger-160"></i>
+                @Resources.Resource.Edit
+            </button>
+        }
+
+        if (ViewBag.CanDelete)
+        {
+            <button class="btn btn-app btn-danger btn-xs" onclick="Delete('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-trash-o bigger-160"></i>
+                @Resources.Resource.Delete
+            </button>
+        }
+
+        if (ViewBag.CanCreate)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Copy('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-copy bigger-160"></i>
+                @Resources.Resource.Copy
+            </button>
+        }
+    }
+    
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Back
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.CheckItem</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.CheckType)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.CheckType)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ID)</th>
+                    <td colspan="3" class="col-sm-11">@Html.DisplayFor(x => x.ID)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Description)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Description)</td>
+                </tr>
+                <tr>
+                    <th><label>檢查項目類別</label></th>
+                    <td colspan="3">@Model.IsFeelItemDisplay</td>
+                </tr>
+                @if (!Model.IsFeelItem)
+                {
+                    <tr>
+                        <th><label>輸入值類別</label></th>
+                        <td colspan="3">@Model.TextValueTypeDisplay</td>
+                    </tr>
+                    if (Model.TextValueType == 1)
+                    {
+                        if (Model.IsAccumulation)
+                        {
+                            <tr>
+                                <th>@Html.LabelFor(x => x.IsAccumulation)</th>
+                                <td>
+                                    @if (Model.IsAccumulation)
+                                    {
+                                        <i class="ace-icon fa fa-check bigger-110 red"></i>
+                                    }
+                                </td>
+                                <th>@Html.LabelFor(x => x.AccumulationBase)</th>
+                                <td>@Html.DisplayFor(x => x.AccumulationBase)</td>
+                            </tr>
+                        }
+
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.LowerAlertLimit)</th>
+                            <td class="col-sm-5">@Html.DisplayFor(x => x.LowerAlertLimit)</td>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.UpperAlertLimit)</th>
+                            <td class="col-sm-5">@Html.DisplayFor(x => x.UpperAlertLimit)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.LabelFor(x => x.LowerLimit)</th>
+                            <td>@Html.DisplayFor(x => x.LowerLimit)</td>
+                            <th>@Html.LabelFor(x => x.UpperLimit)</th>
+                            <td>@Html.DisplayFor(x => x.UpperLimit)</td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <th>@Html.LabelFor(x => x.Unit)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Unit)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Remark)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Remark)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.AbnormalReasons)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.AbnormalReasons)</td>
+                </tr>
+                @if (Model.IsFeelItem) 
+                { 
+                <tr>
+                    <th>@Html.LabelFor(x => x.FeelOptions)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FeelOptions)</td>
+                </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

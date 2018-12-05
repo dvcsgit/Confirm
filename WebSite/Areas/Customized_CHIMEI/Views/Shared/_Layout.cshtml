@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>@Utility.Config.SystemName[ViewBag.Lang]</title>
+
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <link rel="stylesheet" href="@Url.Content("~/assets/css/bootstrap.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/font-awesome.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/assets/css/ace-fonts.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/assets/css/ace.min.css")" />
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="@Url.Content("~/assets/css/ace-part2.min.css")" />
+    <![endif]-->
+    <link rel="stylesheet" href="@Url.Content("~/assets/css/ace-skins.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/assets/css/ace-rtl.min.css")" />
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="@Url.Content("~/assets/css/ace-ie.min.css")" />
+    <![endif]-->
+    <link rel="stylesheet" href="@Url.Content("~/Content/msgGrowl.css")" />
+    <link href="@Url.Content("~/Content/custom.css")" rel="stylesheet" />
+
+    @RenderSection("Styles", false)
+
+    <script src="@Url.Content("~/assets/js/ace-extra.min.js")"></script>
+    <!--[if lte IE 8]>
+        <script src="@Url.Content("~/Scripts/ie8/html5shiv.min.js")"></script>
+        <script src="@Url.Content("~/Scripts/ie8/respond.min.js")"></script>
+    <![endif]-->
+</head>
+<body class="no-skin skin-3">
+    <div id="navbar" class="navbar navbar-default">
+        <script type="text/javascript">
+            try { ace.settings.check('navbar', 'fixed') } catch (e) { }
+        </script>
+
+        <div class="navbar-container" id="navbar-container">
+            <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler">
+                <span class="sr-only">Toggle sidebar</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <div class="navbar-header pull-left">
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+                    <img alt="@Utility.Config.SystemName[ViewBag.Lang]" src="@Url.Content(string.Format("~/Content/images/{0}", Utility.Config.SystemLogoImage[ViewBag.Lang]))" />
+                </a>
+            </div>
+
+            @if (Session["Account"] != null)
+            {
+                @Html.Partial("_UserMenu", Session["Account"] as Models.Authenticated.Account)
+            }
+        </div>
+    </div>
+
+    <div class="main-container" id="main-container">
+        <script type="text/javascript">
+            try { ace.settings.check('main-container', 'fixed') } catch (e) { }
+        </script>
+
+        @if (Session["Account"] != null)
+        {
+            <div id="sidebar" class="sidebar responsive">
+                <script type="text/javascript">
+                    try { ace.settings.check('sidebar', 'fixed') } catch (e) { }
+                </script>
+
+                @Html.Partial("_MainMenu", Session["Account"] as Models.Authenticated.Account)
+
+                <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+                    <i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+                </div>
+
+                <script type="text/javascript">
+                    try { ace.settings.check('sidebar', 'collapsed') } catch (e) { }
+                </script>
+            </div>
+        }
+        <div class="main-content">
+            @if (Session["Account"] != null)
+            {
+                @Html.Partial("_BreadCrumb")
+            }
+
+
+            <div class="page-content">
+                <div class="page-content-area">
+                    <div class="row">
+                        <div class="col-xs-12">@RenderBody()</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-inner">
+                <div class="footer-content">
+                    <span style="float:left;">
+                        <label style="color:#e18822;">Formosa Technologies Corporation.</label> &copy; @DateTime.Today.Year
+                    </span>
+
+                    <span style="float:right;">
+                        <img alt="Formosa Technologies Corporation" src="@Url.Content("~/Content/images/FTC.png")" />
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+        </a>
+    </div>
+
+    <!--[if !IE]> -->
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='@Url.Content("~/assets/js/jquery.min.js")'>" + "<" + "/script>");
+    </script>
+    <!-- <![endif]-->
+    <!--[if IE]>
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='@Url.Content("~/Scripts/ie8/jquery1x.min.js")'>"+"<"+"/script>");
+    </script>
+    <![endif]-->
+    <script type="text/javascript">
+        if ('ontouchstart' in document.documentElement) document.write("<script src='@Url.Content("~/assets/js/jquery.mobile.custom.min.js")'>" + "<" + "/script>");
+    </script>
+    <script src="@Url.Content("~/assets/js/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/ace-elements.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/ace.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/json2.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/msgGrowl.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/App.js")"></script>
+
+    @Html.Partial("_Dialog")
+
+    @if (ViewBag.CurrentAncestorID != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#sidebar li.Level1Menu[data-id="@ViewBag.CurrentAncestorID"]').addClass('open').find('ul:first').removeClass('nav-hide').addClass('nav-show').css('display', 'block');
+            });
+        </script>
+    }
+
+    @if (ViewBag.CurrentParentID != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#sidebar li.Level2Menu[data-id="@ViewBag.CurrentParentID"]').addClass('open').find('ul:first').removeClass('nav-hide').addClass('nav-show').css('display', 'block');
+            });
+        </script>
+    }
+
+    @if (ViewBag.CurrentPageID != null)
+    {
+        if (ViewBag.CurrentParentID != null)
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('li.Level3Menu[data-id="@ViewBag.CurrentPageID"]').addClass('active');
+                });
+            </script>
+        }
+        else
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('li.Level2Menu[data-id="@ViewBag.CurrentPageID"]').addClass('active');
+                });
+            </script>
+        }
+    }
+
+    @RenderSection("Scripts", false)
+</body>
+</html>

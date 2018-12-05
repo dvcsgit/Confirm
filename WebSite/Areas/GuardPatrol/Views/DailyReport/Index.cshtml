@@ -1,0 +1,184 @@
+﻿@model Models.GuardPatrol.DailyReport.QueryFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+<link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+<link href="@Url.Content("~/assets/css/datepicker.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.maskedinput.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-datepicker.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/locales/bootstrap-datepicker."+ViewBag.Lang+".js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        InitTree();
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').change(function () { Query(); }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        $('#Parameters_IsOnlyAbnormal').click(function () {
+            if ($(this).prop('checked'))
+            {
+                $('#Parameters_IsOnlyChecked').prop({ disabled: true, checked: true });
+            }
+            else
+            {
+                $('#Parameters_IsOnlyChecked').prop({ disabled: false });
+            }
+        });
+    });
+
+    var InitTree = function () {
+        var container = $('#divTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Query = function () {
+        if ($('#Parameters_BeginDateString').val()=='')
+        {
+            $.InfoDialog('請選擇巡邏日期(起)');
+        }
+        else if ($('#Parameters_EndDateString').val() == '')
+        {
+            $.InfoDialog('請選擇巡邏日期(迄)');
+        }
+        else
+        {
+            var form = $('#divForm');
+
+            form.empty();
+
+            var data = [];
+
+            $("#divTree").jstree("get_checked", null, true).each(function () {
+                data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.JobUniqueID"));
+            });
+
+            if (data.length > 0) {
+                $('#Parameters_Jobs').val(JSON.stringify(data));
+
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: '@Url.Action("Query")',
+                    data: $('#QueryForm').serialize(),
+                    dataType: "html",
+                    beforeSend: function () { form.Overlay('show'); },
+                    success: function (data) { form.Overlay('show').html(data); },
+                    error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+                });
+            }
+            else {
+                $.InfoDialog('請選擇查詢條件');
+            }
+        }
+    }
+</script>
+}
+
+<div class="row">
+    <div class="col-xs-3">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">查詢條件</h5>
+                <div class="widget-toolbar">
+                    <a href="#" title="" onclick="Query();">
+                        <i class="ace-icon fa fa-search white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+                    {
+                        @Html.HiddenFor(x => x.Parameters.Jobs)
+
+                        <table class="table table-bordered table-input">
+                            <tr>
+                                <th class="col-sm-1"><label>巡邏日期(起)</label></th>
+                                <td class="col-sm-11">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.BeginDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1"><label>巡邏日期(迄)</label></th>
+                                <td class="col-sm-11">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.EndDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-12" colspan="2">
+                                    <label>
+                                        <input id="Parameters_IsOnlyChecked" name="Parameters.IsOnlyChecked" class="ace ace-checkbox-2" type="checkbox" value="true" checked="checked">
+                                        <span class="lbl"> 只查詢已巡邏紀錄</span>
+                                    </label>
+                                    <label>
+                                        <input id="Parameters_IsOnlyAbnormal" name="Parameters.IsOnlyAbnormal" class="ace ace-checkbox-2" type="checkbox" value="true">
+                                        <span class="lbl"> 只顯示異常紀錄</span>
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Route @Resources.Resource.Job</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4" style="overflow-x:scroll;">
+                    <div id="divTreeContainer" style="min-height:200px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-9">
+        <div id="divForm" style="min-height:200px;"></div>
+    </div>
+</div>

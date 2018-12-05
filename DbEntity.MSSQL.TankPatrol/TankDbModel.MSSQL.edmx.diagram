@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ab17e22f2a6b40278a1e464c578b2101" Name="Diagram1">
+        <EntityTypeShape EntityType="TankDbModel.AbnormalReason" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TankDbModel.AbnormalReasonHandlingMethod" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TankDbModel.ArriveRecord" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TankDbModel.ArriveRecordPhoto" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TankDbModel.CheckItemAbnormalReason" Width="1.5" PointX="4.75" PointY="5.75" />
+        <EntityTypeShape EntityType="TankDbModel.CheckItemFeelOption" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TankDbModel.CheckResult" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TankDbModel.CheckResultAbnormalReason" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TankDbModel.CheckResultHandlingMethod" Width="1.5" PointX="2.75" PointY="8.75" />
+        <EntityTypeShape EntityType="TankDbModel.CheckResultPhoto" Width="1.5" PointX="8.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TankDbModel.HandlingMethod" Width="1.5" PointX="8.75" PointY="6.75" />
+        <EntityTypeShape EntityType="TankDbModel.Island" Width="1.5" PointX="8.75" PointY="9.75" />
+        <EntityTypeShape EntityType="TankDbModel.Port" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TankDbModel.PortCheckItem" Width="1.5" PointX="10.75" PointY="4.75" />
+        <EntityTypeShape EntityType="TankDbModel.Station" Width="1.5" PointX="10.75" PointY="9.75" />
+        <EntityTypeShape EntityType="TankDbModel.UnRFIDReason" Width="1.5" PointX="0.75" PointY="11.75" />
+        <EntityTypeShape EntityType="TankDbModel.UploadLog" Width="1.5" PointX="2.75" PointY="11.75" />
+        <EntityTypeShape EntityType="TankDbModel.Version" Width="1.5" PointX="4.75" PointY="11.75" />
+        <EntityTypeShape EntityType="TankDbModel.Option" Width="1.5" PointX="7.375" PointY="12.75" />
+        <EntityTypeShape EntityType="TankDbModel.CheckItem" Width="1.5" PointX="9.375" PointY="12.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

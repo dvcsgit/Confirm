@@ -1,0 +1,195 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedList('');
+
+        InitEquipmentSelectTree();
+
+        $('#divEquipmentSelectTreeWidget').hide();
+    });
+
+    function GetSelectedList() {
+        var list = $('#divSelectedList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) {
+                list.Overlay('show').html(data);
+            },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitEquipmentSelectTree() {
+        var container = $('#divEquipmentSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitEquipmentSelectTree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectEquipment = function () {
+        $('#divSelectedListWidget').hide();
+        $('#divEquipmentSelectTreeWidget').show();
+    };
+
+    var CancelSelectEquipment = function () {
+        $('#divSelectedListWidget').show();
+        $('#divEquipmentSelectTreeWidget').hide();
+    };
+
+    var EquipmentStandardPageState = function () {
+        var pageState = [];
+
+        $('.EquipmentStandard').each(function () {
+            var chk = $(this);
+            var checked = chk.prop('checked') ? 'Y' : 'N';
+            var equipmentUniqueID = chk.data('equipmentuniqueid');
+            var partUniqueID = chk.data('partuniqueid');
+            var standardUniqueID = chk.data('standarduniqueid');
+
+            pageState.push(equipmentUniqueID + '@Utility.Define.Seperator' + partUniqueID + '@Utility.Define.Seperator' + standardUniqueID + '@Utility.Define.Seperator' + checked);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var EquipmentMaterialPageState = function () {
+        var pageState = [];
+
+        $('.EquipmentMaterial').each(function () {
+            var chk = $(this);
+            var checked = chk.prop('checked') ? 'Y' : 'N';
+            var equipmentUniqueID = chk.data('equipmentuniqueid');
+            var partUniqueID = chk.data('partuniqueid');
+            var materialUniqueID = chk.data('materialUniqueID');
+            var qty = chk.parent().parent().find('.Quantity').val();
+
+            pageState.push(equipmentUniqueID + '@Utility.Define.Seperator' + partUniqueID + '@Utility.Define.Seperator' + materialUniqueID + '@Utility.Define.Seperator' + qty + '@Utility.Define.Seperator' + checked);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddEquipment = function () {
+        var data = [];
+
+        $("#divEquipmentSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.EquipmentUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.PartUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddEquipment")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                EquipmentStandardPageStates: EquipmentStandardPageState(),
+                EquipmentMaterialPageStates: EquipmentMaterialPageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divEquipmentSelectTreeWidget').hide();
+                $('#divSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedList();
+                    $("#divEquipmentSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteEquipment = function (equipmentUniqueID, partUniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteEquipment")',
+            data: {
+                EquipmentUniqueID: equipmentUniqueID,
+                PartUniqueID: partUniqueID,
+                EquipmentStandardPageStates: EquipmentStandardPageState(),
+                EquipmentMaterialPageStates: EquipmentMaterialPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedList();
+                    $("#divEquipmentSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divEquipmentSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Equipment</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divEquipmentSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddEquipment(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectEquipment(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Equipment @Resources.Resource.Standard @Resources.Resource.And @Resources.Resource.ChangeMaterialList</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="SelectEquipment(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divSelectedList" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

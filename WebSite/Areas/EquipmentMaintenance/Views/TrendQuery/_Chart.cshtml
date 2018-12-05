@@ -1,0 +1,210 @@
+﻿@model Models.EquipmentMaintenance.TrendQuery.ChartViewModel
+
+@{
+    var all = new List<double>();
+
+    foreach (var r in Model.CheckResultList)
+    {
+        if (r.NetValue.HasValue)
+        {
+            all.Add(r.NetValue.Value);
+        }
+        else
+        {
+            all.Add(r.Value.Value);
+        }
+    }
+}
+
+<script type="text/javascript">
+    $(function () {
+        var lowerLimitData = [];
+        var lowerAlertLimitData = [];
+        var upperAlertLimitData = [];
+        var upperLimitData = [];
+        var checkResultData = [];
+
+        @{
+            var min = DateTime.Parse(Model.Min);
+            var max = DateTime.Parse(Model.Max);
+         }
+
+        @if (Model.LowerLimit.HasValue)
+        {
+            <text>lowerLimitData.push([(new Date(@min.Year, @min.Month-1, @min.Day, @min.Hour, @min.Minute, @min.Second, 0)).getTime(), @Model.LowerLimit.Value]);</text>
+            <text>lowerLimitData.push([(new Date(@max.Year, @max.Month-1, @max.Day, @max.Hour, @max.Minute, @max.Second, 0)).getTime(), @Model.LowerLimit.Value]);</text>
+        }
+
+        @if (Model.LowerAlertLimit.HasValue)
+        {
+            <text>lowerAlertLimitData.push([(new Date(@min.Year, @min.Month-1, @min.Day, @min.Hour, @min.Minute, @min.Second, 0)).getTime(), @Model.LowerAlertLimit.Value]);</text>
+            <text>lowerAlertLimitData.push([(new Date(@max.Year, @max.Month-1, @max.Day, @max.Hour, @max.Minute, @max.Second, 0)).getTime(), @Model.LowerAlertLimit.Value]);</text>
+        }
+
+        @if (Model.UpperAlertLimit.HasValue)
+        {
+            <text>upperAlertLimitData.push([(new Date(@min.Year, @min.Month-1, @min.Day, @min.Hour, @min.Minute, @min.Second, 0)).getTime(), @Model.UpperAlertLimit.Value]);</text>
+            <text>upperAlertLimitData.push([(new Date(@max.Year, @max.Month-1, @max.Day, @max.Hour, @max.Minute, @max.Second, 0)).getTime(), @Model.UpperAlertLimit.Value]);</text>
+        }
+
+        @if (Model.UpperLimit.HasValue)
+        {
+            <text>upperLimitData.push([(new Date(@min.Year, @min.Month-1, @min.Day, @min.Hour, @min.Minute, @min.Second, 0)).getTime(), @Model.UpperLimit.Value]);</text>
+            <text>upperLimitData.push([(new Date(@max.Year, @max.Month-1, @max.Day, @max.Hour, @max.Minute, @max.Second, 0)).getTime(), @Model.UpperLimit.Value]);</text>
+        }
+
+        @if (Model.CheckResultList.Count > 0)
+        {
+            foreach (var item in Model.CheckResultList)
+            {
+                var checkDateTime = DateTime.Parse(item.CheckDateTime);
+
+                <text>
+        checkResultData.push([(new Date(@checkDateTime.Year, @checkDateTime.Month-1, @checkDateTime.Day, @checkDateTime.Hour, @checkDateTime.Minute, @checkDateTime.Second, 0)).getTime(), @item.Result]);
+        </text>
+            }
+        }
+
+        var data = [];
+
+        @if (Model.LowerLimit.HasValue)
+        {
+            <text>  data.push({ label: "@Resources.Resource.LowerLimit" + "@Model.LowerLimit.Value", data: lowerLimitData, color: '#d15b47' }); </text>
+        }
+
+        @if (Model.LowerAlertLimit.HasValue)
+        {
+            <text>  data.push({ label: "@Resources.Resource.LowerAlertLimit" + "@Model.LowerAlertLimit.Value", data: lowerAlertLimitData, color: '#f89406' }); </text>
+        }
+
+        @if (Model.UpperAlertLimit.HasValue)
+        {
+            <text>  data.push({ label: "@Resources.Resource.UpperAlertLimit" + "@Model.UpperAlertLimit.Value", data: lowerAlertLimitData, color: '#f89406' }); </text>
+        }
+
+        @if (Model.UpperLimit.HasValue)
+         {
+            <text>  data.push({ label: "@Resources.Resource.UpperLimit" + "@Model.UpperLimit.Value", data: upperLimitData, color: '#d15b47' }); </text>
+        }
+
+        data.push({ label: "@Model.CheckItemDescription", data: checkResultData, color: '#3a87ad' });
+
+        $.plot($("@string.Format("#Chart_{0}", Model.CheckItemUniqueID)"), data, {
+            series: {
+                lines: { show: true },
+                points: { show: true }
+            },
+            grid: { hoverable: true },
+            xaxis: {
+                mode: "time",
+                timeformat: "@Model.TimeFormat",
+                tickSize: [@Model.TickUnit, "@Model.TickSize"],
+                min: (new Date(@min.Year, @min.Month-1, @min.Day, @min.Hour, @min.Minute, @min.Second, 0)).getTime(),
+                max: (new Date(@max.Year, @max.Month-1, @max.Day, @max.Hour, @max.Minute, @max.Second, 0)).getTime()
+            }
+        });
+
+        $("<div id='tooltip'></div>").css({
+            position: "absolute",
+            display: "none",
+            border: "1px solid #fdd",
+            padding: "2px",
+            "background-color": "#fee",
+            opacity: 0.80
+        }).appendTo("body");
+
+        $("@string.Format("#Chart_{0}", Model.CheckItemUniqueID)").bind("plothover", function (event, pos, item) {
+            if (item) {
+                var x = item.datapoint[0].toFixed(2),
+                    y = item.datapoint[1].toFixed(2);
+
+                $("#tooltip").html(y)
+                    .css({ top: item.pageY + 5, left: item.pageX + 5 })
+                    .fadeIn(200);
+            } else {
+                $("#tooltip").hide();
+            }
+        });
+    });
+</script>
+
+<div class="widget-box widget-color-dark TrendChart" data-type="@Model.Type">
+    <div class="widget-header">
+        <h5 class="widget-title">
+            @Model.Display
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="@string.Format("Chart_{0}", Model.CheckItemUniqueID)" style="width: 100%; height: 300px;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="space TrendChart" data-type="@Model.Type"></div>
+
+<div class="widget-box widget-color-dark TrendChart" data-type="@Model.Type">
+    <div class="widget-header">
+        <h5 class="widget-title">
+            @Resources.Resource.Detail
+        </h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:300px;">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>平均值</th>
+                    <td colspan="3">@all.Average()</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">最小值</th>
+                    <td class="col-sm-5">@all.Min()</td>
+                    <th class="col-sm-1">最大值</th>
+                    <td class="col-sm-5">@all.Max()</td>
+                </tr>
+                @if (Model.LowerAlertLimit.HasValue || Model.UpperAlertLimit.HasValue)
+                {
+                    <tr>
+                        <th>下限警戒值</th>
+                        <td>@Model.LowerAlertLimit</td>
+                        <th>上限警戒值</th>
+                        <td>@Model.UpperAlertLimit</td>
+                    </tr>
+                }
+                @if (Model.LowerLimit.HasValue || Model.UpperLimit.HasValue)
+                { 
+                <tr>
+                    <th>下限值</th>
+                    <td>@Model.LowerLimit</td>
+                    <th>上限值</th>
+                    <td>@Model.LowerLimit</td>
+                </tr>
+                }
+                </table>
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-6">@Resources.Resource.CheckTime</th>
+                        <th class="col-sm-6">@Resources.Resource.CheckResult</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CheckResultList)
+                    {
+                        <tr>
+                            <td>@item.CheckDateTime</td>
+                            <td>@item.Result</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+</div>
+    </div>
+</div>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3fe5c0c58de64d72a35f917b66499d49" Name="Diagram1" ZoomLevel="69">
+        <EntityTypeShape EntityType="EDbModel.MSSQL.Abnormal" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.AbnormalCheckResult" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.AbnormalFile" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.AbnormalMFormStandardResult" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.AbnormalPhoto" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.AbnormalReason" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.AbnormalReasonHandlingMethod" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.AbnormalRForm" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.ArriveRecord" Width="1.5" PointX="2.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.ArriveRecordPhoto" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.CheckItem" Width="1.5" PointX="4.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.CheckItemAbnormalReason" Width="1.5" PointX="6.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.CheckItemFeelOption" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.CheckResultAbnormalReason" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.CheckResultHandlingMethod" Width="1.5" PointX="10.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.CheckResultPhoto" Width="1.5" PointX="10.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.CHIMEI_JOB" Width="1.5" PointX="10.75" PointY="9.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.ControlPoint" Width="1.5" PointX="4.75" PointY="11.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.ControlPointCheckItem" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.DeviceStatus" Width="1.5" PointX="12.75" PointY="4.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.Equipment" Width="1.5" PointX="6.75" PointY="12.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.EquipmentCheckItem" Width="1.5" PointX="12.75" PointY="7.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.EquipmentMaterial" Width="1.5" PointX="12.75" PointY="11.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.EquipmentPart" Width="1.5" PointX="0.75" PointY="13.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.EquipmentSpec" Width="1.5" PointX="8.75" PointY="13.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.EquipmentSpecOption" Width="1.5" PointX="14.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.EquipmentSpecValue" Width="1.5" PointX="14.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.EquipmentStandard" Width="1.5" PointX="14.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.File" Width="1.5" PointX="14.75" PointY="10.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.Folder" Width="1.5" PointX="10.75" PointY="14.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.HandlingMethod" Width="1.5" PointX="2.75" PointY="15.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.Job" Width="1.5" PointX="12.75" PointY="15.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.JobControlPoint" Width="1.5" PointX="14.75" PointY="15.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.JobControlPointCheckItem" Width="1.5" PointX="16.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.JobEquipment" Width="1.5" PointX="16.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.JobEquipmentCheckItem" Width="1.5" PointX="4.75" PointY="16.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.JobResult" Width="1.5" PointX="16.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.JobResultFlow" Width="1.5" PointX="6.75" PointY="16.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.JobResultFlowLog" Width="1.5" PointX="16.75" PointY="13.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.JobUser" Width="1.5" PointX="16.75" PointY="17.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.Material" Width="1.5" PointX="18.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MaterialSpec" Width="1.5" PointX="0.75" PointY="18.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MaterialSpecOption" Width="1.5" PointX="18.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MaterialSpecValue" Width="1.5" PointX="18.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MForm" Width="1.5" PointX="8.75" PointY="18.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MFormExtend" Width="1.5" PointX="18.75" PointY="9.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MFormExtendFlow" Width="1.5" PointX="18.75" PointY="13.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MFormExtendFlowLog" Width="1.5" PointX="18.75" PointY="16.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MFormFile" Width="1.5" PointX="2.75" PointY="19.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MFormFlow" Width="1.5" PointX="4.75" PointY="19.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MFormFlowLog" Width="1.5" PointX="20.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MFormMaterialResult" Width="1.5" PointX="20.75" PointY="4.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MFormResult" Width="1.5" PointX="20.75" PointY="8.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MFormStandardResult" Width="1.5" PointX="10.75" PointY="20.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MFormWorkingHour" Width="1.5" PointX="20.75" PointY="12.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MJob" Width="1.5" PointX="12.75" PointY="20.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MJobEquipment" Width="1.5" PointX="14.75" PointY="20.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MJobEquipmentMaterial" Width="1.5" PointX="20.75" PointY="15.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MJobEquipmentStandard" Width="1.5" PointX="16.75" PointY="20.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.MJobUser" Width="1.5" PointX="20.75" PointY="18.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.OverTimeReason" Width="1.5" PointX="18.75" PointY="21.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.QForm" Width="1.5" PointX="20.75" PointY="21.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.QFormManager" Width="1.5" PointX="22.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.QFormRForm" Width="1.5" PointX="0.75" PointY="22.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RForm" Width="1.5" PointX="22.75" PointY="2.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormColumn" Width="1.5" PointX="2.75" PointY="22.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormColumnOption" Width="1.5" PointX="4.75" PointY="22.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormColumnValue" Width="1.5" PointX="22.75" PointY="10.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormFile" Width="1.5" PointX="22.75" PointY="13.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormFlow" Width="1.5" PointX="22.75" PointY="16.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormFlowLog" Width="1.5" PointX="22.75" PointY="19.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormJobUser" Width="1.5" PointX="14.75" PointY="23.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormMaterial" Width="1.5" PointX="22.75" PointY="23.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormSubject" Width="1.5" PointX="24.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormType" Width="1.5" PointX="24.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormTypeColumn" Width="1.5" PointX="24.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormTypeSubject" Width="1.5" PointX="6.75" PointY="24.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RFormWorkingHour" Width="1.5" PointX="24.75" PointY="9.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.Route" Width="1.5" PointX="24.75" PointY="12.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RouteControlPoint" Width="1.5" PointX="24.75" PointY="15.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RouteControlPointCheckItem" Width="1.5" PointX="16.75" PointY="24.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RouteEquipment" Width="1.5" PointX="24.75" PointY="18.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RouteEquipmentCheckItem" Width="1.5" PointX="24.75" PointY="21.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.RouteManager" Width="1.5" PointX="24.75" PointY="24.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.Standard" Width="1.5" PointX="0.75" PointY="25.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.StandardAbnormalReason" Width="1.5" PointX="2.75" PointY="25.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.StandardFeelOption" Width="1.5" PointX="26.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.TimeSpanAbnormalReason" Width="1.5" PointX="26.75" PointY="3.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.UnPatrolReason" Width="1.5" PointX="26.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.UnRFIDReason" Width="1.5" PointX="26.75" PointY="9.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.UploadLog" Width="1.5" PointX="26.75" PointY="12.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.Version" Width="1.5" PointX="12.75" PointY="26.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.View_ControlPointCheckItem" Width="1.5" PointX="26.75" PointY="15.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.View_EquipmentCheckItem" Width="1.5" PointX="18.75" PointY="26.75" />
+        <EntityTypeShape EntityType="EDbModel.MSSQL.CheckResult" Width="1.5" PointX="21.375" PointY="26.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

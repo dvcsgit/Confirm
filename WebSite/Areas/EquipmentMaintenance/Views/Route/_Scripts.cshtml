@@ -1,0 +1,195 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedUserList();
+
+        InitSelectUserTree('@Model');
+
+        $('#divSelectUserTreeWidget').hide();
+    });
+
+    function GetSelectedUserList() {
+        var list = $('#divSelectedUserList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedUserList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitSelectUserTree(ancestorOrganizationUniqueID) {
+        var container = $('#divSelectUserTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitSelectUserTree")',
+            data: { AncestorOrganizationUniqueID: ancestorOrganizationUniqueID },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var UserSelect = function () {
+        $('#divSelectedUserListWidget').hide();
+        $('#divSelectUserTreeWidget').show();
+    };
+
+    var CancelUserSelect = function () {
+        $('#divSelectedUserListWidget').show();
+        $('#divSelectUserTreeWidget').hide();
+    };
+
+    var AddUser = function () {
+        var data = [];
+
+        $("#divSelectUserTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.UserID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddUser")',
+            data: { Selecteds: JSON.stringify(data) },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divSelectUserTreeWidget').hide();
+                $('#divSelectedUserListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedUserListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedUserList();
+                    $("#divSelectUserTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedUserListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteUser = function (userID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteUser")',
+            data: { UserID: userID, },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedUserListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedUserListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedUserList();
+                    $("#divSelectUserTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedUserListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    @*var ControlPointPageState = function () {
+        var pageState = [];
+
+        $('.tabLink').each(function () {
+            var controlPointUniqueID = $(this).data('controlpointuniqueid');
+
+            var timeSpan = $('.TimeSpan[data-controlpointuniqueid="' + controlPointUniqueID + '"]');
+
+            pageState.push(controlPointUniqueID + '@Utility.Define.Seperator' + timeSpan + '@Utility.Define.Seperator' + $(this).index());
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var ControlPointCheckItemPageState = function () {
+        var pageState = [];
+
+        $('.ControlPointCheckItem').each(function () {
+            var chk = $(this);
+            var checked = chk.prop('checked') ? 'Y' : 'N';
+            var controlPointUniqueID = chk.data('controlpointuniqueid');
+            var checkItemUniqueID = chk.data('checkitemuniqueid');
+            var seq = chk.parent().parent().parent().index();
+
+            pageState.push(controlPointUniqueID + '@Utility.Define.Seperator' + checkItemUniqueID + '@Utility.Define.Seperator' + seq + '@Utility.Define.Seperator' + checked);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var EquipmentPageState = function () {
+        var pageState = [];
+
+        $('.accordionContainer').each(function () {
+            var controlPointUniqueID = $(this).data('controlpointuniqueid');
+
+            $(this).find('.accordionEquipment').each(function () {
+                var equipmentUniqueID = $(this).data('equipmentuniqueid');
+                var partUniqueID = $(this).data('partuniqueid');
+
+                pageState.push(controlPointUniqueID + '@Utility.Define.Seperator' + equipmentUniqueID + '@Utility.Define.Seperator' + partUniqueID + '@Utility.Define.Seperator' + $(this).index());
+            });
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var EquipmentCheckItemPageState = function () {
+        var pageState = [];
+
+        $('.EquipmentCheckItem').each(function () {
+            var chk = $(this);
+            var checked = chk.prop('checked') ? 'Y' : 'N';
+            var controlPointUniqueID = chk.data('controlpointuniqueid');
+            var equipmentUniqueID = chk.data('equipmentuniqueid');
+            var partUniqueID = $(this).data('partuniqueid');
+            var checkItemUniqueID = chk.data('checkitemuniqueid');
+            var seq = chk.parent().parent().parent().index();
+
+            pageState.push(controlPointUniqueID + '@Utility.Define.Seperator' + equipmentUniqueID + '@Utility.Define.Seperator' + partUniqueID + '@Utility.Define.Seperator' + checkItemUniqueID + '@Utility.Define.Seperator' + seq + '@Utility.Define.Seperator' + checked);
+        });
+
+        return JSON.stringify(pageState);
+    };*@
+
+    var ClearBeginTime = function () {
+        $('#BeginTimePicker, #FormInput_BeginTime').val('');
+    };
+
+    var ClearEndTime = function () {
+        $('#EndTimePicker, #FormInput_EndTime').val('');
+    };
+
+    var ClearBeginDate = function () {
+        $('#FormInput_BeginDateString').val('');
+    };
+
+    var ClearEndDate = function () {
+        $('#FormInput_EndDateString').val('');
+    };
+</script>
+

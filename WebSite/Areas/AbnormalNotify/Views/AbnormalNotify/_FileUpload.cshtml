@@ -1,0 +1,68 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        var file_input = $('#File');
+
+        file_input.ace_file_input({
+            style: 'well',
+            btn_choose: '請選擇檔案',
+            btn_change: '請選擇檔案',
+            droppable: false,
+            thumbnail: 'small'
+        }).on('change', function (e) {
+            var files = e.target.files;
+
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file" + x, files[x]);
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Upload")',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            $('#divUploadFile').empty();
+                            $('#divUploadFileWidget').hide();
+                            $('#divFileListWidget').show().Overlay('show');
+                        },
+                        success: function (data) {
+                            $('#divFileListWidget').Overlay('hide');
+
+                            if (data.IsSuccess) {
+                                GetFileList();
+                            }
+                            else {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $('#divFileListWidget').Overlay('hide');
+
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+                else {
+                    $.InfoDialog('無法上傳');
+                }
+            }
+            else {
+                $.InfoDialog('請選擇檔案');
+            }
+        });
+    });
+</script>
+
+<div class="widget-main padding-8">
+    <input type="file" name="File" id="File" />
+</div>
+
+
+    
+

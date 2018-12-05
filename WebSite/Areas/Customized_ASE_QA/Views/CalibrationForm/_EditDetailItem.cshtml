@@ -1,0 +1,158 @@
+﻿@model Models.ASE.QA.CalibrationForm.DetailItemEditFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#EditDetailItemForm");
+
+        @*$('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });*@
+
+        $('#PhotoUpload').ace_file_input({
+            style: 'well',
+            btn_choose: '',
+            btn_change: '',
+            droppable: false,
+            thumbnail: 'fit'
+        }).on('change', function (e) {
+            var files = e.target.files;
+
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file" + x, files[x]);
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("UploadPhoto")',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            $('#divUploadPhoto').empty();
+                            $('#divUploadPhotoWidget').hide();
+                            $('#divPhotoListWidget').show().Overlay('show');
+                        },
+                        success: function (data) {
+                            $('#divPhotoListWidget').Overlay('hide');
+                            $('#PhotoUpload').ace_file_input('reset_input');
+                            if (data.IsSuccess) {
+                                GetPhotoList();
+                            }
+                            else {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $('#divPhotoListWidget').Overlay('hide');
+
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+                else {
+                    $.InfoDialog('無法上傳');
+                }
+            }
+            else {
+                $.InfoDialog('請選擇檔案');
+            }
+        });
+    });
+
+    var SaveDetailItem = function () {
+        var form = $('#EditDetailItemForm');
+
+        if (form.valid()) {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("EditDetailItem")',
+                data: form.serialize(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        $('#divEditDetailItem').empty();
+                        $('#divEditDetailItemWidget').hide();
+                        $('#divDetailItemListWidget').show();
+
+                        GetDetailItemList();
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+</script>
+
+<div class="widget-main no-padding">
+    @using (Html.BeginForm("EditDetailItem", null, FormMethod.Post, new { @ID = "EditDetailItemForm" }))
+    {
+        @Html.HiddenFor(x => x.Seq)
+        
+        <table class="table table-bordered table-input">
+            <tr>
+                <th class="col-sm-1">@Html.LabelFor(x => x.Characteristic)</th>
+                <td colspan="3">@Html.DisplayFor(x => x.Characteristic)</td>
+            </tr>
+            <tr>
+                <th class="col-sm-1">@Html.LabelFor(x => x.UsingRange)</th>
+                <td class="col-sm-5">@Html.DisplayFor(x => x.UsingRange)</td>
+                <th class="col-sm-1">@Html.LabelFor(x => x.RangeTolerance)</th>
+                <td class="col-sm-5">@Html.DisplayFor(x => x.RangeTolerance)</td>
+            </tr>
+            <tr>
+                <th class="col-sm-1">@Html.LabelFor(x => x.CalibrationPoint)</th>
+                <td class="col-sm-5">@Html.DisplayFor(x => x.CalibrationPoint)</td>
+                <th class="col-sm-1">@Html.LabelFor(x => x.Tolerance)</th>
+                <td class="col-sm-5">@Html.DisplayFor(x => x.Tolerance)</td>
+            </tr>
+            <tr>
+                <th class="col-sm-1"><label>標準值</label></th>
+                <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.Standard)</td>
+                <th class="col-sm-1"><label>量測值</label></th>
+                <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.ReadingValue)</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="padding:0px;">
+                    @Html.Partial("_Photo")
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <input type="file" id="PhotoUpload" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+
+<div class="widget-toolbox padding-8 clearfix">
+    <button class="btn btn-primary" onclick="SaveDetailItem();">
+        <i class="ace-icon fa fa-save"></i>
+        @Resources.Resource.Save
+    </button>
+    <button class="btn btn-success" onclick="CanelEditDetailItem(); return false;">
+        <i class="ace-icon fa fa-ban"></i>
+        @Resources.Resource.Cancel
+    </button>
+</div>

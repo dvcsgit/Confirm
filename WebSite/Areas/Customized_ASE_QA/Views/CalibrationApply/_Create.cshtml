@@ -1,0 +1,259 @@
+﻿@model Models.ASE.QA.CalibrationApply.CreateFormModel
+
+<ul id="IchiList">
+    @foreach (var ichi in Model.IchiList)
+    {
+        <li data-ichitype="@ichi.Type" data-uniqueid="@ichi.UniqueID" data-name="@ichi.Name"></li>
+    }
+</ul>
+
+<ul id="CharacteristicTypeList">
+    @foreach (var characteristicType in Model.CharacteristicTypeList)
+    {
+        <li data-ichiuniqueid="@characteristicType.IchiUniqueID" data-type="@characteristicType.Type"></li>
+    }
+</ul>
+
+@Html.Partial("_FormScripts")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateForm");
+    });
+
+    var Save = function () {
+        var form = $('#CreateForm');
+
+        if (form.valid()) {
+            if ($('#FormInput_FactoryID').val() == '') {
+                $.InfoDialog('@Resources.Resource.FactoryIDRequired');
+            }
+            else if ($('#FormInput_IchiType').val() == '') {
+                $.InfoDialog('@Resources.Resource.IchiTypeRequired');
+            }
+            else if ($('#FormInput_IchiUniqueID').val() == '' || ($('#FormInput_IchiUniqueID').val() == '@Utility.Define.OTHER' && $('#FormInput_IchiRemark').val() == '')) {
+                $.InfoDialog('@Resources.Resource.IchiRequired');
+            }
+            else if ($('#FormInput_CharacteristicType').val() == '')
+            {
+                $.InfoDialog('請選擇量類');
+            }
+            else {
+                var valid = true;
+
+                var cal = $('#FormInput_CAL').prop('checked');
+                var msa = $('#FormInput_MSA').prop('checked');
+
+                if (cal) {
+                    if ($('#FormInput_CalCycle').val() == '') {
+                        valid = false;
+                        $.InfoDialog('請輸入校正頻率(月)');
+                    }
+                    else if (msa && $('#FormInput_MSACycle').val() == '') {
+                        valid = false;
+                        $.InfoDialog('請輸入MSA頻率(月)');
+                    }
+                    else if ($('#FormInput_OwnerID').val() == '') {
+                        valid = false;
+                        $.InfoDialog('@Resources.Resource.EquipmentOwnerRequired');
+                    }
+                    else if ($('#FormInput_OwnerManagerID').val() == '') {
+                        valid = false;
+                        $.InfoDialog('@Resources.Resource.EquipmentOwnerManagerRequired');
+                    }
+                    else if ($('#FormInput_PEID').val() == '') {
+                        valid = false;
+                        $.InfoDialog('@Resources.Resource.PERequired');
+                    }
+                    else if ($('#FormInput_PEManagerID').val() == '') {
+                        valid = false;
+                        $.InfoDialog('@Resources.Resource.PEManagerRequired');
+                    }
+                }
+                else {
+                    if (msa) {
+                        if ($('#FormInput_MSACycle').val() == '') {
+                            valid = false;
+                            $.InfoDialog('請輸入MSA頻率(月)');
+                        }
+                        else if ($('#FormInput_PEID').val() == '') {
+                            valid = false;
+                            $.InfoDialog('@Resources.Resource.PERequired');
+                        }
+                        else if ($('#FormInput_PEManagerID').val() == '') {
+                            valid = false;
+                            $.InfoDialog('@Resources.Resource.PEManagerRequired');
+                        }
+                        else if ($('#FormInput_OwnerID').val() != '' && $('#FormInput_OwnerManagerID').val() == '') {
+                            valid = false;
+                            $.InfoDialog('@Resources.Resource.EquipmentOwnerManagerRequired');
+                        }
+                    }
+                    else {
+                        if ($('#FormInput_OwnerID').val() == '') {
+                            valid = false;
+                            $.InfoDialog('@Resources.Resource.EquipmentOwnerRequired');
+                        }
+                        else if ($('#FormInput_OwnerManagerID').val() == '') {
+                            valid = false;
+                            $.InfoDialog('@Resources.Resource.EquipmentOwnerManagerRequired');
+                        }
+                        else if ($('#FormInput_PEID').val() != '' && $('#FormInput_PEManagerID').val() == '') {
+                            valid = false;
+                            $.InfoDialog('@Resources.Resource.PEManagerRequired');
+                        }
+                    }
+                }
+
+                if (valid) {
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: '@Url.Action("Create")',
+                        data: form.serialize(),
+                        dataType: "json",
+                        beforeSend: function () { $.Overlay('show'); },
+                        success: function (data) {
+                            $.Overlay('hide');
+
+                            if (data.IsSuccess) {
+                                Query();
+                                $.SuccessDialog(data.Message);
+                            }
+                            else {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $.Overlay('hide');
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+            }
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Apply
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.CalibrationApply</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm" }))
+            {
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.IchiType)</th>
+                        <td colspan="3">
+                            @Html.DropDownListFor(x => x.FormInput.FactoryID, Model.FactorySelectItemList)
+                            @Html.DropDownListFor(x => x.FormInput.IchiType, Model.IchiTypeSelectItemList)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.IchiUniqueID)</th>
+                        <td colspan="3">
+                            @Html.DropDownListFor(x => x.FormInput.IchiUniqueID, Model.IchiSelectItemList)
+                            @Html.TextBoxFor(x => x.FormInput.IchiRemark)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1"><label>量類</label></th>
+                        <td class="col-sm-5">@Html.DropDownListFor(x => x.FormInput.CharacteristicType, Model.CharacteristicTypeSelectItemList)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Spec)</th>
+                        <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.Spec)</td>
+
+
+                        
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.MachineNo)</th>
+                        <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.MachineNo)</td>
+                        <th class="col-sm-1"><label>儀器序號</label></th>
+                        <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.SerialNo)</td>
+                        
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Brand)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.Brand)
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Brand)
+                        </td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Model)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.Model)
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Model)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1"><label>免校驗</label></th>
+                        <td colspan="3">
+                            <label>
+                                <input id="NOCAL" name="NOCAL" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(!Model.FormInput.CAL && !Model.FormInput.MSA ? "Y" : "N")">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr class="CAL">
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.CAL)</th>
+                        <td class="col-sm-5">
+                            <label>
+                                <input id="FormInput_CAL" name="FormInput.CAL" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.CAL ? "Y" : "N")">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.MSA)</th>
+                        <td class="col-sm-5">
+                            <label>
+                                <input id="FormInput_MSA" name="FormInput.MSA" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.MSA ? "Y" : "N")">
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr class="CAL">
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.CalCycle)</th>
+                        <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.CalCycle)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.MSACycle)</th>
+                        <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.MSACycle)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.OwnerID)</th>
+                        <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.OwnerID)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.PEID)</th>
+                        <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.PEID)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.OwnerManagerID)</th>
+                        <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.OwnerManagerID)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.PEManagerID)</th>
+                        <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.PEManagerID)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Remark)</th>
+                        <td colspan="3">@Html.TextBoxFor(x => x.FormInput.Remark, new { @class="col-sm-11"})</td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_DetailItem")

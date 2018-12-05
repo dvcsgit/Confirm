@@ -1,0 +1,226 @@
+﻿@model Models.ASE.QA.ChangeForm.GridViewModel
+
+@{var account = Session["Account"] as Models.Authenticated.Account;}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#All').click(function () {
+            if ($(this).prop('checked')) {
+                $('.Equipment').prop('checked', true);
+            }
+            else {
+                $('.Equipment').prop('checked', false);
+            }
+        });
+    });
+
+    var QRCode = function () {
+        var selecteds = [];
+        $('.Equipment').each(function () {
+            if ($(this).prop('checked')) {
+                selecteds.push($(this).val());
+            }
+        });
+        if (selecteds.length == 0) {
+            $.InfoDialog('@string.Format("{0} {1}", Resources.Resource.SelectOne, Resources.Resource.CalNo)')
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("ExportQRCode")',
+                data: { Selecteds: JSON.stringify(selecteds) },
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+                    if (data.success) {
+                        $("body").append("<iframe src='" + data.data + "' style='display: none;' ></iframe>");
+                        Query();
+                    }
+                    else {
+                        $.ErrorDialog(data.errors);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                }
+            });
+
+
+        }
+    };
+</script>
+
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Resources.Resource.CalibrationChangeForm
+        </h5>
+        <div class="widget-toolbar">
+            <div class="widget-menu">
+                <a href="#" data-toggle="dropdown">
+                    <i class="ace-icon fa fa-plus white"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                    <li>
+                        <a href="#" onclick="Create('1'); return false;">@Resources.Resource.ChangeFormChangeType_1</a>
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="Create('2'); return false;">@Resources.Resource.ChangeFormChangeType_2</a>
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="Create('3'); return false;">@Resources.Resource.ChangeFormChangeType_3</a>
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="Create('4'); return false;">@Resources.Resource.ChangeFormChangeType_4</a>
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="Create('5'); return false;">@Resources.Resource.ChangeFormChangeType_5</a>
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="Create('6'); return false;">@Resources.Resource.ChangeFormChangeType_6</a>
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="Create('7'); return false;">@Resources.Resource.ChangeFormChangeType_7</a>
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="Create('8'); return false;">免MSA</a>
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="Create('9'); return false;">變更(校正)週期</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="Create('A'); return false;">變更(MSA)週期</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="Create('B'); return false;">新增校驗</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="Create('C'); return false;">新增MSA</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        @if (account.UserAuthGroupList.Contains("QA") || account.UserAuthGroupList.Contains("QA-Verify"))
+        {
+            <div class="widget-toolbar">
+                <a href="#" onclick="QRCode(); return false;">
+                    <i class="ace-icon fa fa-qrcode white"></i>
+                </a>
+            </div>
+        }
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1 center"></th>
+@if (account.UserAuthGroupList.Contains("QA") || account.UserAuthGroupList.Contains("QA-Verify"))
+        {
+                        <th class="col-sm-1 center">
+                            <label>
+                                <input id="All" class="ace ace-checkbox-2" type="checkbox">
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
+                        
+}
+                        <th>列印註記</th>
+                        <th>@Resources.Resource.VHNO</th>
+                        <th>@Resources.Resource.Status</th>
+                        <th>@Resources.Resource.ChangeType</th>
+                        <th>廠別</th>
+                        <th>@Resources.Resource.Department</th>
+                        <th>@Resources.Resource.EquipmentOwner</th>
+                        <th>@Resources.Resource.EquipmentOwnerManager</th>
+                        <th>@Resources.Resource.CreateTime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemList)
+                    { 
+                    <tr>
+                        <td class="center">
+                            <div class="action-buttons">
+@if (item.Status == "1" && (item.LogList.Any(x => x.UserID == account.ID) || item.LogList.Any(x => x.FlowSeq == 8) && account.UserAuthGroupList.Contains("QA-Verify")))
+{
+        <a class="purple" href="#" onclick="Detail('@item.UniqueID');" title="@Resources.Resource.Detail">
+                                    <i class="ace-icon fa fa-gavel bigger-130"></i>
+                                </a>
+}
+else
+{ 
+                                    <a class="blue" href="#" onclick="Detail('@item.UniqueID');" title="@Resources.Resource.Detail">
+                                    <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                </a>
+}
+                            </div>
+                        </td>
+@if (account.UserAuthGroupList.Contains("QA") || account.UserAuthGroupList.Contains("QA-Verify"))
+        {
+                        <td class="center">
+                            @if (item.Status == "3" && (item.ChangeType == "3" || item.ChangeType == "4" || item.ChangeType == "6" || item.ChangeType == "7"))
+                            {
+                                <label>
+                                    <input class="ace ace-checkbox-2 Equipment" type="checkbox" value="@item.UniqueID">
+                                    <span class="lbl"></span>
+                                </label>
+                            }
+                        </td>
+                       
+}
+                        <td class="center">
+                            @if (item.IsQRCoded)
+                            {
+                                <i class="ace-icon fa fa-check bigger-110 red"></i>
+                            }
+                        </td>
+                        <td>@item.VHNO</td>
+                        <td>
+                            @if (item.Status == "1")
+                            {
+                                <span class="label label-lg label-primary arrowed-right">@item.StatusDescription</span>
+                            }
+                            else if (item.Status == "2")
+                            {
+                                <span class="label label-lg label-danger arrowed-right">@item.StatusDescription</span>
+                            }
+                            else if (item.Status == "3")
+                            {
+                                <span class="label label-lg label-success arrowed-right">@item.StatusDescription</span>
+                            }
+                            else
+                            {
+                                <span>@item.StatusDescription</span>
+                            }
+                        </td>
+                        <td>@item.ChangeTypeDescription</td>
+                        <td>@item.Factory</td>
+                        <td>@item.OrganizationDescription</td>
+                        <td>@item.Owner</td>
+                        <td>@item.OwnerManager</td>
+                        <td>@item.CreateTimeString</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+

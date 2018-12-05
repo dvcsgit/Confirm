@@ -1,0 +1,151 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetQueryableOrganizationSelectedList();
+
+        InitQueryableOrganizationSelectTree();
+
+        $('#divQueryableOrganizationSelectTreeWidget').hide();
+    });
+
+    function GetQueryableOrganizationSelectedList() {
+        var list = $('#divQueryableOrganizationSelectedList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetQueryableOrganizationSelectedList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitQueryableOrganizationSelectTree() {
+        var container = $('#divQueryableOrganizationSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitQueryableOrganizationSelectTree")',
+            data: { EditableAncestorOrganizationUniqueID: $('#UniqueID').val(), AncestorOrganizationUniqueID: '@Model' },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var QueryableOrganizationSelect = function () {
+        $('#divQueryableOrganizationSelectedListWidget').hide();
+        $('#divQueryableOrganizationSelectTreeWidget').show();
+    };
+
+    var CancelSelectQueryableOrganization = function () {
+        $('#divQueryableOrganizationSelectedListWidget').show();
+        $('#divQueryableOrganizationSelectTreeWidget').hide();
+    };
+
+    var AddQueryableOrganization = function () {
+        var data = [];
+
+        $("#divQueryableOrganizationSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddQueryableOrganization")',
+            data: { Selecteds: JSON.stringify(data) },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divQueryableOrganizationSelectTreeWidget').hide();
+                $('#divQueryableOrganizationSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divQueryableOrganizationSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetQueryableOrganizationSelectedList();
+                    $("#divQueryableOrganizationSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divQueryableOrganizationSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteQueryableOrganization = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteQueryableOrganization")',
+            data: { UniqueID: uniqueID, },
+            dataType: "json",
+            beforeSend: function () { $('#divQueryableOrganizationSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divQueryableOrganizationSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetQueryableOrganizationSelectedList();
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divQueryableOrganizationSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divQueryableOrganizationSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.QueryableOrganization</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divQueryableOrganizationSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddQueryableOrganization(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectQueryableOrganization(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divQueryableOrganizationSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.QueryableOrganization</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="QueryableOrganizationSelect(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:200px;">
+            <div id="divQueryableOrganizationSelectedList" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

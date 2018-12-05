@@ -1,0 +1,74 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetRepairFormList();
+
+        $('#divCreateRepairFormWidget').hide();
+    });
+
+    function GetRepairFormList() {
+        var list = $('#divRepairFormList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetRepairFormList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var CreateRepairForm = function () {
+        $('#divRepairFormListWidget').hide();
+        $('#divCreateRepairFormWidget').show();
+
+        var form = $('#divCreateRepairForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("CreateRepairForm")',
+            data: { UniqueID: '@Model' },
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var CanelCreateRepairForm = function () {
+        $('#divRepairFormListWidget').show();
+        $('#divCreateRepairForm').empty();
+        $('#divCreateRepairFormWidget').hide();
+    };
+</script>
+
+<div id="divRepairFormListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.RepairForm</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="CreateRepairForm(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+            <div id="divRepairFormList"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divCreateRepairFormWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.RepairForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div id="divCreateRepairForm"></div>
+    </div>
+</div>

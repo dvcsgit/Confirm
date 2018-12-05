@@ -1,0 +1,230 @@
+﻿@model Models.ASE.QA.CalibrationNotify.EditFormModel
+
+<ul id="CharacteristicTypeList">
+    @foreach (var characteristicType in Model.CharacteristicTypeList)
+    {
+        <li data-ichiuniqueid="@characteristicType.IchiUniqueID" data-type="@characteristicType.Type"></li>
+    }
+</ul>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#CharacteristicTypeList').hide();
+
+        if ($('#FormInput_IchiUniqueID').val() == '@Utility.Define.OTHER') {
+            $('#FormInput_IchiRemark').show();
+        }
+        else {
+            $('#FormInput_IchiRemark').val('').hide();
+        }
+
+        $('#FormInput_IchiUniqueID').change(function () {
+            var ichiUniqueID = $(this).val();
+
+            if (ichiUniqueID == '@Utility.Define.OTHER') {
+                $('#FormInput_IchiRemark').show();
+            }
+            else {
+                $('#FormInput_IchiRemark').val('').hide();
+            }
+
+            $('#FormInput_CharacteristicType').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+            $('#FormInput_CharacteristicType').prop('disabled', true);
+
+            if (ichiUniqueID != '') {
+                var characteristicTypeCount = 0;
+                var characteristicType = '';
+
+                $('#CharacteristicTypeList li').each(function () {
+                    if ($(this).data('ichiuniqueid') == ichiUniqueID) {
+                        characteristicType = $(this).data('type');
+                        characteristicTypeCount++;
+                        $('#FormInput_CharacteristicType').append('<option value="' + characteristicType + '">' + characteristicType + '</option>');
+                    }
+                });
+
+                $('#FormInput_CharacteristicType').prop('disabled', false);
+
+                if (characteristicTypeCount == 1) {
+                    $('#FormInput_CharacteristicType').val(characteristicType);
+                }
+            }
+        });
+    });
+
+    var Save = function () {
+        if ($('#FormInput_IchiUniqueID').val() == '' || ($('#FormInput_IchiUniqueID').val() == '@Utility.Define.OTHER' && $('#FormInput_IchiRemark').val() == '')) {
+            $.InfoDialog('@Resources.Resource.IchiRequired');
+        }
+        else if ($('#FormInput_CharacteristicType').val() == '') {
+            $.InfoDialog('請選擇量類');
+        }
+        else
+        {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Edit")',
+                data: $('#EditForm').serialize(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Query();
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Apply
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+
+    @if (Model.Equipment!=null&& Model.Equipment.IsQuatationExist)
+    {
+        <a class="btn btn-app btn-primary btn-xs" style="width:100px;" href="@Url.Action("Quatation", new { UniqueID = Model.UniqueID })">
+            <i class="ace-icon fa fa-cloud-download bigger-160"></i>
+            報價單下載
+        </a>
+    }
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">儀器校驗通知單</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+
+@using (Html.BeginForm("Edit", null, FormMethod.Post, new { @ID = "EditForm" }))
+            {
+    @Html.HiddenFor(x => x.UniqueID)
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.VHNO)</th>
+                    <td>@Html.DisplayFor(x => x.VHNO)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.StatusDisplay)</th>
+                    <td>
+                        @if (Model.Status == "1")
+                        {
+                            <span class="label label-lg label-purple arrowed-right">@Model.StatusDisplay</span>
+                        }
+                        else if (Model.Status == "0" || Model.Status == "2")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.StatusDisplay</span>
+                        }
+                        else if (Model.Status == "3")
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Model.StatusDisplay</span>
+                        }
+                        else
+                        {
+                            <span>@Model.StatusDisplay</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.CalNo)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.CalNo)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.CreateTimeString)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.CreateTimeString)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.IchiUniqueID)</th>
+                    <td colspan="3">
+                        @Html.DropDownListFor(x => x.FormInput.IchiUniqueID, Model.IchiSelectItemList)
+                        @Html.TextBoxFor(x => x.FormInput.IchiRemark)
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>量類</label></th>
+                    <td class="col-sm-5">@Html.DropDownListFor(x => x.FormInput.CharacteristicType, Model.CharacteristicTypeSelectItemList)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Spec)</th>
+                    <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.Spec)</td>
+                </tr>
+                @if (!string.IsNullOrEmpty(Model.FormVHNO))
+                {
+                    <tr>
+                        <th><label>執行單號</label></th>
+                        <td colspan="3">
+                            <a class="blue" onclick="CalibrationForm('@Model.FormUniqueID')" title="@Resources.Resource.Detail">
+                                @Model.FormVHNO
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </table>
+}
+        </div>
+    </div>
+
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_Equipment", Model.Equipment)
+
+<div class="space"></div>
+
+@Html.Partial("_DetailItem")
+
+@if (Model.LogList != null && Model.LogList.Count > 0)
+{
+    <div class="space"></div>
+    
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">簽核流程</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Role</th>
+                            <th>@Resources.Resource.VerifyUser</th>
+                            <th>@Resources.Resource.NotifyTime</th>
+                            <th>@Resources.Resource.VerifyTime</th>
+                            <th>@Resources.Resource.VerifyResult</th>
+                            <th>@Resources.Resource.VerifyComment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.LogList)
+                        {
+                            <tr>
+                                <td>@item.Role</td>
+                                <td>@item.User</td>
+                                <td>@item.NotifyTimeString</td>
+                                <td>@item.VerifyTimeString</td>
+                                <td>@item.VerifyResultDescription</td>
+                                <td>@item.VerifyComment</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

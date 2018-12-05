@@ -1,0 +1,167 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetColumnSelectedList();
+
+        InitColumnSelectTree();
+
+        $('#divColumnSelectTreeWidget').hide();
+    });
+
+    function GetColumnSelectedList() {
+        var list = $('#divColumnSelectedList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetColumnSelectedList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); $('#tableColumn tbody').sortable().disableSelection(); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitColumnSelectTree() {
+        var container = $('#divColumnSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitColumnSelectTree")',
+            data: { AncestorOrganizationUniqueID: $('#AncestorOrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectColumn = function () {
+        $('#divColumnSelectedListWidget').hide();
+        $('#divColumnSelectTreeWidget').show();
+    };
+
+    var CancelSelectColumn = function () {
+        $('#divColumnSelectedListWidget').show();
+        $('#divColumnSelectTreeWidget').hide();
+    };
+
+    var ColumnPageState = function () {
+        var pageState = [];
+
+        $('.Column').each(function () {
+            pageState.push($(this).val());
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddColumn = function () {
+        var data = [];
+
+        $("#divColumnSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.RepairFormColumnUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddColumn")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                PageStates: ColumnPageState()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divColumnSelectTreeWidget').hide();
+                $('#divColumnSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divColumnSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetColumnSelectedList();
+                    $("#divColumnSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divColumnSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteColumn = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteColumn")',
+            data: {
+                'ColumnUniqueID': uniqueID,
+                'PageStates': ColumnPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divColumnSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divColumnSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetColumnSelectedList();
+                    $("#divColumnSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divColumnSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+
+<div id="divColumnSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.RepairFormColumn</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divColumnSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddColumn(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectColumn(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divColumnSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.RepairFormColumn</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="SelectColumn(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:50px;">
+            <div id="divColumnSelectedList"></div>
+        </div>
+    </div>
+</div>

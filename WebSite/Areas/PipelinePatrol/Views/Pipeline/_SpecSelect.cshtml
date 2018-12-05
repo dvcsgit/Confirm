@@ -1,0 +1,181 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetSpecSelectedList();
+
+        InitSpecSelectTree();
+
+        $('#divSpecSelectTreeWidget').hide();
+    });
+
+    function GetSpecSelectedList() {
+        var list = $('#divSpecSelectedList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSpecSelectedList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); $('#tableSpec tbody').sortable().disableSelection(); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitSpecSelectTree() {
+        var container = $('#divSpecSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitSpecSelectTree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectSpec = function () {
+        $('#divSpecSelectedListWidget').hide();
+        $('#divSpecSelectTreeWidget').show();
+    };
+
+    var CancelSelectSpec = function () {
+        $('#divSpecSelectedListWidget').show();
+        $('#divSpecSelectTreeWidget').hide();
+    };
+
+    var SpecPageState = function () {
+        var pageState = [];
+
+        $('.Spec').each(function () {
+            var specUniqueID = $(this).val();
+            var optionUniqueID = '';
+            var value = '';
+
+            var isselect = $(this).data('isselect');
+
+            if (isselect == 'Y') {
+                optionUniqueID = $(this).siblings().val();
+            }
+            else {
+                value = $(this).siblings().val();
+            }
+
+            pageState.push(specUniqueID + '@Utility.Define.Seperator' + optionUniqueID + '@Utility.Define.Seperator' + value);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddSpec = function () {
+        var data = [];
+
+        $("#divSpecSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.SpecType") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.PipelineSpecUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddSpec")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                PageStates: SpecPageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divSpecSelectTreeWidget').hide();
+                $('#divSpecSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSpecSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSpecSelectedList();
+                    $("#divSpecSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSpecSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteSpec = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteSpec")',
+            data: {
+                'SpecUniqueID': uniqueID,
+                'PageStates': SpecPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divSpecSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSpecSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSpecSelectedList();
+                    $("#divSpecSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSpecSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+
+<div id="divSpecSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.PipelineSpec</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divSpecSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddSpec(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectSpec(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divSpecSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.PipelineSpec</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="SelectSpec(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:50px;">
+            <div id="divSpecSelectedList"></div>
+        </div>
+    </div>
+</div>

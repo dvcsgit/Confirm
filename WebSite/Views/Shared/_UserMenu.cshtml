@@ -1,0 +1,96 @@
+﻿@model Models.Authenticated.Account
+
+<div class="navbar-buttons navbar-header pull-right" role="navigation">
+    <ul class="nav ace-nav">
+        @if (Model != null)
+        {
+            <li class="light-blue">
+                <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                    <img alt="" class="nav-user-photo" src="@(!string.IsNullOrEmpty(Model.Photo) ? Url.Content(string.Format("~/{0}/{1}", Utility.Config.UserPhotoVirtualPath, Model.Photo)) : Url.Content("~/Content/images/ic_chat_user.png"))">
+
+                    <span class="user-info">
+                        <small>@Model.ID</small>
+                        @Model.Name
+                    </span>
+
+                    <i class="ace-icon fa fa-caret-down"></i>
+                </a>
+
+                <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                    <li>
+                        <a href="#">@string.Format("{0}【{1}】", Resources.Resource.Version, Utility.Define.Version)</a>
+                    </li>
+
+                    <li class="divider"></li>
+
+                    <li>
+                        <a href="@Url.Action("ChangePassword", "Home", new { area = "" })">
+                            <i class="ace-icon fa fa-key"></i>
+                            @Resources.Resource.ChangePassword
+                            @*變更App登入密碼*@
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("ChangeUserPhoto", "Home", new { area = "" })">
+                            <i class="ace-icon fa fa-file-photo-o"></i>
+                            @Resources.Resource.ChangeUserPhoto
+                        </a>
+                    </li>
+
+                    <li class="divider"></li>
+
+                    @if (ViewBag.Lang != "zh-tw")
+                    {
+                        <li>
+                                <a href="@Url.Action("Index", "Home", new { lang = "zh-tw", area = "" })">
+                                    <img alt="zh-tw" src="@Url.Content("~/Content/images/country-icon-tw.png")" />
+                                    <label style="margin-left:5px;">繁體中文</label>
+                                </a>
+                        </li>
+                    }
+
+                    @if (ViewBag.Lang != "zh-cn")
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "Home", new { lang = "zh-cn", area = "" })">
+                                <img alt="zh-cn" src="@Url.Content("~/Content/images/country-icon-cn.png")" />
+                                <label style="margin-left:5px;">简体中文</label>
+                            </a>
+                        </li>
+                    }
+                    
+                    @if (ViewBag.Lang != "en-us")
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "Home", new { lang = "en-us", area = "" })">
+                                <img alt="zh-cn" src="@Url.Content("~/Content/images/country-icon-us.png")" />
+                                <label style="margin-left:5px;">English</label>
+                            </a>
+                        </li>
+                    }
+
+                    <li class="divider"></li>
+
+                    <li>
+                        <a href="@Url.Action("Signout", "Home", new { area = "" })">
+                            <i class="ace-icon fa fa-power-off"></i>
+                            @Resources.Resource.SignOut
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        }
+        else
+        {
+            <li class="light-red">
+                <a href="@Url.Action("Login", "Home", new { area = "" })">
+                    <span class="user-info">
+                        <small>@Resources.Resource.SessionTimeout</small>
+                        @Resources.Resource.SignIn
+                    </span>
+                </a>
+            </li>
+        }
+    </ul>
+</div>

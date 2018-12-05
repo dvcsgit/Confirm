@@ -1,0 +1,208 @@
+﻿@model Models.ASE.QA.ChangeForm.CreateFormModel
+
+@if (Model.ChangeType == "4")
+{
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+    });
+    </script>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateForm");
+    });
+
+    var Save = function () {
+        if ($('#FormInput_Reason').val() == '') {
+            $.InfoDialog('@Resources.Resource.ChangeReasonRequired');
+        }
+        else if ($('#ChangeType').val() == '4' && $('#FormInput_FixFinishedDateString').val() == '') {
+            $.InfoDialog('@Resources.Resource.FixFinishedDateRequired');
+        }
+        else {
+            var equipments = [];
+
+            $('.Equipment').each(function () {
+                var val = $(this).val();
+
+                if (val != '') {
+                    equipments.push(val);
+                }
+            });
+
+            $('#FormInput_Equipments').val(JSON.stringify(equipments));
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Create")',
+                data: $('#CreateForm').serialize(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Detail('@Model.AbnormalFormUniqueID');
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Submit
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Model.AbnormalFormUniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+@using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm" }))
+{
+    @Html.HiddenFor(x => x.AbnormalFormUniqueID)
+    @Html.HiddenFor(x => x.ChangeType)
+    @Html.HiddenFor(x => x.FormInput.Equipments)
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.ChangeReason</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Reason)</th>
+                        <td class="col-sm-11">@Html.TextBoxFor(x => x.FormInput.Reason, new { @class = "col-sm-11" })</td>
+                    </tr>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="space"></div>
+
+    if (Model.ChangeType == "4")
+    {
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.FixFinishedDate</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.FixFinishedDateString)</th>
+                            <td class="col-sm-11">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(x => x.FormInput.FixFinishedDateString, new { @class = "form-control datepicker" })
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar bigger-110"></i>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+    }
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.CalibrationChangeForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ChangeTypeDescription)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.ChangeTypeDescription)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">異動設備</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="min-height:30px;">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>@Resources.Resource.Department</th>
+                        <th>@Resources.Resource.CalNo</th>
+                        <th>@Resources.Resource.Status</th>
+                        <th>@Resources.Resource.SerialNo</th>
+                        <th>@Resources.Resource.IchiName</th>
+                        <th>@Resources.Resource.Brand</th>
+                        <th>@Resources.Resource.Model</th>
+                        <th>@Resources.Resource.EquipmentOwner</th>
+                        <th>@Resources.Resource.EquipmentOwnerManager</th>
+                        <th>@Resources.Resource.PE</th>
+                        <th>@Resources.Resource.PEManager</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.EquipmentList)
+                    {
+                        <tr>
+                            <td>@item.OrganizationDescription</td>
+                            <td>
+                                <input type="hidden" class="Equipment" value="@item.UniqueID"/>
+                                @item.CalNo
+                            </td>
+                            <td>@item.StatusDescription</td>
+                            <td>@item.SerialNo</td>
+                            <td>@item.IchiDisplay</td>
+                            <td>@item.Brand</td>
+                            <td>@item.Model</td>
+                            <td>@item.Owner</td>
+                            <td>@item.OwnerManager</td>
+                            <td>@item.PE</td>
+                            <td>@item.PEManager</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

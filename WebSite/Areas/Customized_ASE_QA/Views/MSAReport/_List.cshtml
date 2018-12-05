@@ -1,0 +1,634 @@
+﻿@model Models.ASE.QA.MSAReport.GridViewModel
+
+<script type="text/javascript">
+    var Export = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Export")',
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+                if (data.success) {
+                    $("body").append("<iframe src='" + data.data + "' style='display: none;' ></iframe>");
+                }
+                else {
+                    $.ErrorDialog(data.errors);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+</script>
+
+@if (Model.ItemCount > 0)
+{ 
+    <p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Export();" type="button">
+        <i class="ace-icon fa fa-cloud-download bigger-160"></i>
+        匯出
+    </button>
+</p>
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            Avg and R
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th rowspan="2"><label>MSA Date</label></th>
+                        <th rowspan="2"><label>MSA No</label></th>
+                        <th rowspan="2"><label>Description</label></th>
+                        <th rowspan="2"><label>Characteristic Measured</label></th>
+                        <th rowspan="2"><label>Model</label></th>
+                        <th rowspan="2"><label>Serail No</label></th>
+                        <th rowspan="2"><label>Brand</label></th>
+                        <th rowspan="2"><label>Dept</label></th>
+                        <th rowspan="2"><label>Responsible</label></th>
+                        <th rowspan="2"><label>Manager</label></th>
+                        <th colspan="3"><label>GR&R</label></th>
+                        <th colspan="3"><label>Bias</label></th>
+                        <th colspan="4"><label>Linearity</label></th>
+                        <th colspan="3"><label>Stability</label></th>
+                        <th rowspan="2"><label>Due Date</label></th>
+                    </tr>
+                    <tr>
+                        <th><label>%R&R < 10%</label></th>
+                        <th><label>ndc=>5</label></th>
+                        <th><label>%R&R < 10% ndc=>5</label></th>
+                        <th><label>t statistic</label></th>
+                        <th><label>Significant t value(2-tailed)</label></th>
+                        <th><label>t statistic < Significant t</label></th>
+                        <th><label>ta</label></th>
+                        <th><label>tb</label></th>
+                        <th><label>t58,0.975</label></th>
+                        <th><label>ta & tb < t58,0.975</label></th>
+                        <th><label>Stability</label></th>
+                        <th><label>Stdev</label></th>
+                        <th><label>Stability < STDEV</label></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.AvgAndRItemList)
+                    {
+                        if (item.GRRHResult != null)
+                        {
+                            <tr>
+                                <td>@item.MSADateString</td>
+                                <td>@item.MSACalNo</td>
+                                <td>@item.MSAIchi</td>
+                                <td>@item.MSACharacteristic</td>
+                                <td>@item.Model</td>
+                                <td>@item.SerialNo</td>
+                                <td>@item.Brand</td>
+                                <td>@item.Factory</td>
+                                <td>@item.MSAResponsor</td>
+                                <td>@item.Manager</td>
+                                <td>@item.GRRHResult.GRRDisplay</td>
+                                <td>@item.GRRHResult.ndc</td>
+                                <td>@item.GRRHResult.ResultDisplay</td>
+
+                                @if (item.BiasResult != null)
+                                {
+                                    <td>@item.BiasResult.TStatistic</td>
+                                    <td>@item.BiasResult.SignificantT</td>
+                                    <td>@item.BiasResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.LinearityResult != null)
+                                {
+                                    <td>@item.LinearityResult.ta</td>
+                                    <td>@item.LinearityResult.tb</td>
+                                    <td>@item.LinearityResult.t58</td>
+                                    <td>@item.LinearityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.StabilityResult != null)
+                                {
+                                    <td>@item.StabilityResult.Stability</td>
+                                    <td>@item.StabilityResult.Stdev</td>
+                                    <td>@item.StabilityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+                                <td>@item.DueDateString</td>
+                            </tr>
+                        }
+
+
+                        if (item.GRRMResult != null)
+                        {
+                            <tr>
+                                <td>@item.MSADateString</td>
+                                <td>@item.MSACalNo</td>
+                                <td>@item.MSAIchi</td>
+                                <td>@item.MSACharacteristic</td>
+                                <td>@item.Model</td>
+                                <td>@item.SerialNo</td>
+                                <td>@item.Brand</td>
+                                <td>@item.Factory</td>
+                                <td>@item.MSAResponsor</td>
+                                <td>@item.Manager</td>
+                                <td>@item.GRRMResult.GRRDisplay</td>
+                                <td>@item.GRRMResult.ndc</td>
+                                <td>@item.GRRMResult.ResultDisplay</td>
+
+                                @if (item.BiasResult != null)
+                                {
+                                    <td>@item.BiasResult.TStatistic</td>
+                                    <td>@item.BiasResult.SignificantT</td>
+                                    <td>@item.BiasResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.LinearityResult != null)
+                                {
+                                    <td>@item.LinearityResult.ta</td>
+                                    <td>@item.LinearityResult.tb</td>
+                                    <td>@item.LinearityResult.t58</td>
+                                    <td>@item.LinearityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.StabilityResult != null)
+                                {
+                                    <td>@item.StabilityResult.Stability</td>
+                                    <td>@item.StabilityResult.Stdev</td>
+                                    <td>@item.StabilityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+                                <td>@item.DueDateString</td>
+                            </tr>
+                        }
+
+                        if (item.GRRLResult != null)
+                        {
+                            <tr>
+                                <td>@item.MSADateString</td>
+                                <td>@item.MSACalNo</td>
+                                <td>@item.MSAIchi</td>
+                                <td>@item.MSACharacteristic</td>
+                                <td>@item.Model</td>
+                                <td>@item.SerialNo</td>
+                                <td>@item.Brand</td>
+                                <td>@item.Factory</td>
+                                <td>@item.MSAResponsor</td>
+                                <td>@item.Manager</td>
+                                <td>@item.GRRLResult.GRRDisplay</td>
+                                <td>@item.GRRLResult.ndc</td>
+                                <td>@item.GRRLResult.ResultDisplay</td>
+
+                                @if (item.BiasResult != null)
+                                {
+                                    <td>@item.BiasResult.TStatistic</td>
+                                    <td>@item.BiasResult.SignificantT</td>
+                                    <td>@item.BiasResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.LinearityResult != null)
+                                {
+                                    <td>@item.LinearityResult.ta</td>
+                                    <td>@item.LinearityResult.tb</td>
+                                    <td>@item.LinearityResult.t58</td>
+                                    <td>@item.LinearityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.StabilityResult != null)
+                                {
+                                    <td>@item.StabilityResult.Stability</td>
+                                    <td>@item.StabilityResult.Stdev</td>
+                                    <td>@item.StabilityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+                                <td>@item.DueDateString</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            ANOVA
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th rowspan="2"><label>MSA Date</label></th>
+                        <th rowspan="2"><label>MSA No</label></th>
+                        <th rowspan="2"><label>Description</label></th>
+                        <th rowspan="2"><label>Characteristic Measured</label></th>
+                        <th rowspan="2"><label>Model</label></th>
+                        <th rowspan="2"><label>Serail No</label></th>
+                        <th rowspan="2"><label>Brand</label></th>
+                        <th rowspan="2"><label>Dept</label></th>
+                        <th rowspan="2"><label>Responsible</label></th>
+                        <th rowspan="2"><label>Manager</label></th>
+                        <th colspan="4"><label>GR&R ANOVA</label></th>
+                        <th colspan="3"><label>Bias</label></th>
+                        <th colspan="4"><label>Linearity</label></th>
+                        <th colspan="3"><label>Stability</label></th>
+                        <th rowspan="2"><label>Due Date</label></th>
+                    </tr>
+                    <tr>
+                        <th><label>%TV < 10%</label></th>
+                        <th><label>%PT < 10%</label></th>
+                        <th><label>ndc > 5</label></th>
+                        <th><label>< 10% ndc > 5</label></th>
+                        <th><label>t statistic</label></th>
+                        <th><label>Significant t value(2-tailed)</label></th>
+                        <th><label>t statistic < Significant t</label></th>
+                        <th><label>ta</label></th>
+                        <th><label>tb</label></th>
+                        <th><label>t58,0.975</label></th>
+                        <th><label>ta & tb < t58,0.975</label></th>
+                        <th><label>Stability</label></th>
+                        <th><label>Stdev</label></th>
+                        <th><label>Stability < STDEV</label></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.AnovaItemList)
+                    {
+                        if (item.AnovaHResult != null)
+                        {
+                            <tr>
+                                <td>@item.MSADateString</td>
+                                <td>@item.MSACalNo</td>
+                                <td>@item.MSAIchi</td>
+                                <td>@item.MSACharacteristic</td>
+                                <td>@item.Model</td>
+                                <td>@item.SerialNo</td>
+                                <td>@item.Brand</td>
+                                <td>@item.Factory</td>
+                                <td>@item.MSAResponsor</td>
+                                <td>@item.Manager</td>
+                                <td>@item.AnovaHResult.TVDisplay</td>
+                                <td>@item.AnovaHResult.PTDisplay</td>
+                                <td>@item.AnovaHResult.NDC</td>
+                                <td>@item.AnovaHResult.ResultDisplay</td>
+
+                                @if (item.BiasResult != null)
+                                {
+                                    <td>@item.BiasResult.TStatistic</td>
+                                    <td>@item.BiasResult.SignificantT</td>
+                                    <td>@item.BiasResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.LinearityResult != null)
+                                {
+                                    <td>@item.LinearityResult.ta</td>
+                                    <td>@item.LinearityResult.tb</td>
+                                    <td>@item.LinearityResult.t58</td>
+                                    <td>@item.LinearityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.StabilityResult != null)
+                                {
+                                    <td>@item.StabilityResult.Stability</td>
+                                    <td>@item.StabilityResult.Stdev</td>
+                                    <td>@item.StabilityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+                                <td>@item.DueDateString</td>
+                            </tr>
+                        }
+
+
+                        if (item.AnovaMResult != null)
+                        {
+                            <tr>
+                                <td>@item.MSADateString</td>
+                                <td>@item.MSACalNo</td>
+                                <td>@item.MSAIchi</td>
+                                <td>@item.MSACharacteristic</td>
+                                <td>@item.Model</td>
+                                <td>@item.SerialNo</td>
+                                <td>@item.Brand</td>
+                                <td>@item.Factory</td>
+                                <td>@item.MSAResponsor</td>
+                                <td>@item.Manager</td>
+                                <td>@item.AnovaMResult.TVDisplay</td>
+                                <td>@item.AnovaMResult.PTDisplay</td>
+                                <td>@item.AnovaMResult.NDC</td>
+                                <td>@item.AnovaMResult.ResultDisplay</td>
+
+                                @if (item.BiasResult != null)
+                                {
+                                    <td>@item.BiasResult.TStatistic</td>
+                                    <td>@item.BiasResult.SignificantT</td>
+                                    <td>@item.BiasResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.LinearityResult != null)
+                                {
+                                    <td>@item.LinearityResult.ta</td>
+                                    <td>@item.LinearityResult.tb</td>
+                                    <td>@item.LinearityResult.t58</td>
+                                    <td>@item.LinearityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.StabilityResult != null)
+                                {
+                                    <td>@item.StabilityResult.Stability</td>
+                                    <td>@item.StabilityResult.Stdev</td>
+                                    <td>@item.StabilityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+                                <td>@item.DueDateString</td>
+                            </tr>
+                        }
+
+                        if (item.AnovaLResult != null)
+                        {
+                            <tr>
+                                <td>@item.MSADateString</td>
+                                <td>@item.MSACalNo</td>
+                                <td>@item.MSAIchi</td>
+                                <td>@item.MSACharacteristic</td>
+                                <td>@item.Model</td>
+                                <td>@item.SerialNo</td>
+                                <td>@item.Brand</td>
+                                <td>@item.Factory</td>
+                                <td>@item.MSAResponsor</td>
+                                <td>@item.Manager</td>
+                                <td>@item.AnovaLResult.TVDisplay</td>
+                                <td>@item.AnovaLResult.PTDisplay</td>
+                                <td>@item.AnovaLResult.NDC</td>
+                                <td>@item.AnovaLResult.ResultDisplay</td>
+
+                                @if (item.BiasResult != null)
+                                {
+                                    <td>@item.BiasResult.TStatistic</td>
+                                    <td>@item.BiasResult.SignificantT</td>
+                                    <td>@item.BiasResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.LinearityResult != null)
+                                {
+                                    <td>@item.LinearityResult.ta</td>
+                                    <td>@item.LinearityResult.tb</td>
+                                    <td>@item.LinearityResult.t58</td>
+                                    <td>@item.LinearityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                @if (item.StabilityResult != null)
+                                {
+                                    <td>@item.StabilityResult.Stability</td>
+                                    <td>@item.StabilityResult.Stdev</td>
+                                    <td>@item.StabilityResult.ResultDisplay</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+                                <td>@item.DueDateString</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            Go no Go
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th rowspan="2"><label>MSA Date</label></th>
+                        <th rowspan="2"><label>MSA No</label></th>
+                        <th rowspan="2"><label>Description</label></th>
+                        <th rowspan="2"><label>Characteristic Measured</label></th>
+                        <th rowspan="2"><label>Model</label></th>
+                        <th rowspan="2"><label>Serail No</label></th>
+                        <th rowspan="2"><label>Brand</label></th>
+                        <th rowspan="2"><label>Dept</label></th>
+                        <th rowspan="2"><label>Responsible</label></th>
+                        <th rowspan="2"><label>Manager</label></th>
+                        <th rowspan="2"><label>APPRAISER</label></th>
+                        <th colspan="2"><label>Kappa</label></th>
+                        <th colspan="2"><label>Effectiveness</label></th>
+                        <th colspan="2"><label>Error Rate</label></th>
+                        <th colspan="2"><label>False Alarm Rate</label></th>
+                        <th rowspan="2"><label>Due Date</label></th>
+                    </tr>
+                    <tr>
+                        <th colspan="2"><label>kappa > 0.75 or = 1</label></th>
+                        <th colspan="2"><label>Effectiveness >= 90%</label></th>
+                        <th colspan="2"><label>Error Rate <= 2%</label></th>
+                        <th colspan="2"><label>False Alarm Rate <= 5%</label></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.GoOnGoItemList)
+                    {
+                        <tr>
+                            <td rowspan="3">@item.MSADateString</td>
+                            <td rowspan="3">@item.MSACalNo</td>
+                            <td rowspan="3">@item.MSAIchi</td>
+                            <td rowspan="3">@item.MSACharacteristic</td>
+                            <td rowspan="3">@item.Model</td>
+                            <td rowspan="3">@item.SerialNo</td>
+                            <td rowspan="3">@item.Brand</td>
+                            <td rowspan="3">@item.Factory</td>
+                            <td rowspan="3">@item.MSAResponsor</td>
+                            <td rowspan="3">@item.Manager</td>
+                            @if (item.CountResult != null)
+                            {  <td>A</td>
+                            <td>@item.CountResult.KappaA</td>
+                            <td rowspan="3">@item.CountResult.KappaResultDisplay</td>
+                            <td>@item.CountResult.CountAEffectiveDisplay</td>
+                            <td rowspan="3">@item.CountResult.ResultDisplay</td>
+                            <td>@item.CountResult.CountAErrorDisplay</td>
+                            <td rowspan="3">@item.CountResult.ResultDisplay</td>
+                            <td>@item.CountResult.CountAAlarmDisplay</td>
+                            <td rowspan="3">@item.CountResult.ResultDisplay</td>
+                            }
+                           else
+                            { 
+                            <td>A</td>
+                            <td></td>
+                            <td rowspan="3"></td>
+                            <td></td>
+                            <td rowspan="3"></td>
+                            <td></td>
+                            <td rowspan="3"></td>
+                            <td></td>
+                            <td rowspan="3"></td>
+                            }
+                            <td rowspan="3">@item.DueDateString</td>
+                        </tr>
+                        
+                        if (item.CountResult != null)
+                        {
+                            <tr>
+                                <td>B</td>
+                                <td>@item.CountResult.KappaB</td>
+                                <td>@item.CountResult.CountBEffectiveDisplay</td>
+                                <td>@item.CountResult.CountCErrorDisplay</td>
+                                <td>@item.CountResult.CountBAlarmDisplay</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>@item.CountResult.KappaC</td>
+                                <td>@item.CountResult.CountCEffectiveDisplay</td>
+                                <td>@item.CountResult.CountCErrorDisplay</td>
+                                <td>@item.CountResult.CountCAlarmDisplay</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                            <td>B</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>C</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

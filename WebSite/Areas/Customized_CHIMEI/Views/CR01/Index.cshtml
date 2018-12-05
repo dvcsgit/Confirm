@@ -1,0 +1,258 @@
+﻿@model Customized.CHIMEI.Models.AIMSJobQuery.QueryFormModel
+
+@{
+    Layout = "~/Areas/Customized_CHIMEI/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+    <link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+    <link href="@Url.Content("~/assets/css/datepicker.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/jquery.maskedinput.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-datepicker.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/assets/js/date-time/locales/bootstrap-datepicker."+ViewBag.Lang+".js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        InitTree();
+
+        $('#ExpandTree').click(function () {
+            var i = $(this).find('i');
+
+            if (i.hasClass('fa-chevron-down')) {
+                i.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                $('#divTree').jstree("open_all");
+            }
+            else {
+                i.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                $('#divTree').jstree("close_all");
+            }
+        });
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        $('#Modal').hide();
+    });
+
+    var EditAbnormalReason = function (uniqueID) {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("EditAbnormalReason")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                $('#ModalContent').html(data);
+                $('#Modal').show().modal('show');
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+
+    var InitTree = function () {
+        var container = $('#divTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Query = function () {
+        var list = $('#divList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Query")',
+            data: $('#QueryForm').serialize(),
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var Back2JobList = function (vhno) {
+        var list = $('#divList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Back2JobList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var GetEquipmentList = function (vhno) {
+        var list = $('#divList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetEquipmentList")',
+            data: { VHNO: vhno },
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Back2EquipmentList = function () {
+        var list = $('#divList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Back2EquipmentList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var GetCheckItemList = function (equipmentUniqueID) {
+        var list = $('#divList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetCheckItemList")',
+            data: { EquipmentUniqueID: equipmentUniqueID },
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    };
+</script>
+
+    @if (!string.IsNullOrEmpty(Model.Parameters.VHNO))
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                Query();
+            });
+        </script>
+    }
+
+}
+
+<div class="row">
+    <div class="col-xs-3">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Organization</h5>
+                <div class="widget-toolbar">
+                    <a href="#" id="ExpandTree" title="">
+                        <i class="ace-icon fa fa-chevron-down white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4" style="overflow-x:scroll;">
+                    <div id="divTreeContainer" style="min-height:200px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-9">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Search</h5>
+                <div class="widget-toolbar">
+                    <a href="#" onclick="Query();">
+                        <i class="ace-icon fa fa-search white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+                    {
+                        @Html.HiddenFor(x => x.Parameters.OrganizationUniqueID)
+
+                        <table class="table table-bordered table-input">
+                            <tr>
+                                <th class="col-sm-1"><label>工單日期(起)</label></th>
+                                <td class="col-sm-5">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.BeginDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <th class="col-sm-1"><label>工單日期(迄)</label></th>
+                                <td class="col-sm-5">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.EndDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label>馬達類型</label></th>
+                                <td>@Html.DropDownListFor(x => x.Parameters.MotorType, Model.MotorTypeSelectItemList)</td>
+                                <th><label>保養週期</label></th>
+                                <td>@Html.DropDownListFor(x => x.Parameters.Cycle, Model.CycleSelectItemList)</td>
+                            </tr>
+                            <tr>
+                                <th><label>工單號碼</label></th>
+                                <td colspan="3">@Html.TextBoxFor(x => x.Parameters.VHNO)</td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+        <div id="divList" style="min-height:200px;"></div>
+    </div>
+</div>
+
+<div class="modal" id="Modal">
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content" id="ModalContent">
+        </div>
+    </div>
+</div>

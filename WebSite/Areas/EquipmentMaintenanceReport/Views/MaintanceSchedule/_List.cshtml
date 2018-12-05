@@ -1,0 +1,62 @@
+﻿@model Report.EquipmentMaintenance.Models.MaintanceSchedule.GridViewModel
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Resources.Resource.SearchResults
+        </h5>
+        <div class="widget-toolbar">
+            <div class="widget-menu">
+                <a href="#" data-toggle="dropdown">
+                    <i class="ace-icon fa fa-cloud-download white"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})">Excel 2003</a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007 })">Excel 2007</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th>@Resources.Resource.Organization</th>
+                        <th>@Resources.Resource.EquipmentID</th>
+                        <th>@Resources.Resource.EquipmentName</th>
+                        <th>@Resources.Resource.PartName</th>
+                        <th>@Resources.Resource.MaintanceJob</th>
+                        <th>@Resources.Resource.CycleMode</th>
+                        <th>@Resources.Resource.BeginDate</th>
+                        <th>@Resources.Resource.EndDate</th>
+                        <th>@Resources.Resource.RecentMaintenanceDate</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemList)
+                    {
+                        <tr>
+                            <td>@item.Organization</td>
+                            <td>@item.EquipmentID</td>
+                            <td>@item.EquipmentName</td>
+                            <td>@item.EquipmentPart</td>
+                            <td>@item.MRoute</td>
+                            <td>@item.CycleMode</td>
+                            <td>@item.MJobBeginDate</td>
+                            <td>@item.MJobEndDate</td>
+                            <td>@item.MFormBeginDate</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

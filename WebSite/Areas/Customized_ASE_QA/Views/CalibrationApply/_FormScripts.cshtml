@@ -1,0 +1,205 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#IchiList').hide();
+        $('#CharacteristicTypeList').hide();
+
+        $('#NOCAL').prop('checked', $('#NOCAL').data('checked') == 'Y');
+        $('#FormInput_CAL').prop('checked', $('#FormInput_CAL').data('checked') == 'Y');
+        $('#FormInput_MSA').prop('checked', $('#FormInput_MSA').data('checked') == 'Y');
+
+        $("#FormInput_OwnerID").select2(select2GetUserOptions());
+        $("#FormInput_OwnerManagerID").select2(select2GetUserOptions());
+        $("#FormInput_PEID").select2(select2GetUserOptions());
+        $("#FormInput_PEManagerID").select2(select2GetUserOptions());
+
+        $("#FormInput_OwnerID").change(function () {
+            if ($("#FormInput_OwnerID").val() != '') {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetManagerID")',
+                    data: { UserID: $("#FormInput_OwnerID").val() },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            $("#FormInput_OwnerManagerID").val(data.Data);
+                            $("#FormInput_OwnerManagerID").select2(select2GetUserOptions());
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+
+        $("#FormInput_PEID").change(function () {
+            if ($("#FormInput_PEID").val() != '') {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetManagerID")',
+                    data: { UserID: $("#FormInput_PEID").val() },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            $("#FormInput_PEManagerID").val(data.Data);
+                            $("#FormInput_PEManagerID").select2(select2GetUserOptions());
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+
+        $("#FormInput_IchiType").change(function () {
+            var ichiType = $(this).val();
+
+            $('#FormInput_IchiUniqueID').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+            $('#FormInput_IchiUniqueID').prop('disabled', true);
+            $('#FormInput_IchiRemark').val('').hide();
+
+            $('#FormInput_CharacteristicType').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+            $('#FormInput_CharacteristicType').prop('disabled', true);
+
+            if (ichiType != '') {
+                $('#IchiList li').each(function () {
+                    if ($(this).data('ichitype') == ichiType) {
+                        $('#FormInput_IchiUniqueID').append('<option value="' + $(this).data('uniqueid') + '">' + $(this).data('name') + '</option>');
+                    }
+                });
+
+                $('#FormInput_IchiUniqueID').append('<option value="@Utility.Define.OTHER">' + '@Resources.Resource.Other' + '</option>');
+                $('#FormInput_IchiUniqueID').prop('disabled', false);
+            }
+        }).trigger('change');
+
+        if ($('#FormInput_IchiUniqueID').val() == '@Utility.Define.OTHER') {
+            $('#FormInput_IchiRemark').show();
+        }
+        else {
+            $('#FormInput_IchiRemark').val('').hide();
+        }
+
+        $('#FormInput_IchiUniqueID').change(function () {
+            var ichiUniqueID = $(this).val();
+
+            if (ichiUniqueID == '@Utility.Define.OTHER') {
+                $('#FormInput_IchiRemark').show();
+            }
+            else {
+                $('#FormInput_IchiRemark').val('').hide();
+            }
+
+            $('#FormInput_CharacteristicType').find('option').remove().end().append('<option value="">= ' + '@Resources.Resource.SelectOne' + ' =</option>');
+            $('#FormInput_CharacteristicType').prop('disabled', true);
+
+            if (ichiUniqueID != '') {
+                var characteristicTypeCount = 0;
+                var characteristicType = '';
+
+                $('#CharacteristicTypeList li').each(function () {
+                    if ($(this).data('ichiuniqueid') == ichiUniqueID) {
+                        characteristicType = $(this).data('type');
+                        characteristicTypeCount++;
+                        $('#FormInput_CharacteristicType').append('<option value="' + characteristicType + '">' + characteristicType + '</option>');
+                    }
+                });
+
+                $('#FormInput_CharacteristicType').prop('disabled', false);
+
+                if (characteristicTypeCount == 1) {
+                    $('#FormInput_CharacteristicType').val(characteristicType);
+                }
+            }
+        }).trigger('change');
+
+        if ($('#NOCAL').prop('checked')) {
+            $('#FormInput_CAL').prop('disabled', true);
+            $('#FormInput_MSA').prop('disabled', true);
+            $('#FormInput_CalCycle').val('');
+            $('#FormInput_MSACycle').val('');
+
+            $('.CAL').hide();
+        }
+        else {
+            $('#FormInput_CAL').prop('disabled', false);
+            $('#FormInput_MSA').prop('disabled', false);
+
+            $('.CAL').show();
+        }
+
+        $('#NOCAL').click(function () {
+            if ($('#NOCAL').prop('checked')) {
+                $('#FormInput_CAL').prop({ 'checked': false, 'disabled': true });
+                $('#FormInput_MSA').prop({ 'checked': false, 'disabled': true });
+                $('#FormInput_CalCycle').val('');
+                $('#FormInput_MSACycle').val('');
+
+                $('.CAL').hide();
+            }
+            else {
+                $('#FormInput_CAL').prop('disabled', false);
+                $('#FormInput_MSA').prop('disabled', false);
+
+                $('.CAL').show();
+            }
+        });
+    });
+
+    function select2GetUserOptions() {
+        var url = '@Url.Action("GetUserOptions")';
+
+        var jsonOption = {
+            minimumInputLength: 0,
+            escapeMarkup: function (m) { return m; },
+            allowClear: true,
+            placeholder: '= @Resources.Resource.SelectOne =',
+            width: '90%',
+            ajax: {
+                url: url,
+                dataType: 'json',
+                quietMillis: 100,
+                data: function (term, page) {
+                    return {
+                        Term: term,
+                        PageSize: 10,
+                        PageIndex: page
+                    };
+                },
+                results: function (data, page) {
+                    var more = (page * 10) < data.Total;
+                    return { results: data.Data, more: more };
+                }
+            },
+            initSelection: function (element, callback) {
+                var id = $(element).val();
+                if (id !== "") {
+                    $.ajax(url, {
+                        data: {
+                            Term: id,
+                            IsInit: true
+                        },
+                        dataType: "json"
+                    }).done(function (data) {
+                        if (data.Data.length == 1) {
+                            callback(data.Data[0]);
+                        }
+                    });
+                }
+            }
+        };
+
+        return jsonOption;
+    }
+</script>

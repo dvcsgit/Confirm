@@ -1,0 +1,105 @@
+﻿@model Models.EquipmentMaintenance.MaintenanceFormManagement.CreateResultFormModel
+
+<script type="text/javascript">
+    var CreateResult = function () {
+        var data = [];
+
+        $('.Standard').each(function () {
+            var uniqueID = $(this).data('uniqueid');
+
+            var feelOption = $(this).find('.FeelOptionUniqueID');
+            var value = $(this).find('.Value');
+
+            if (feelOption.length > 0) {
+                data.push(uniqueID + '@Utility.Define.Seperator' + feelOption.val() + '@Utility.Define.Seperator' + '');
+            }
+            else {
+                data.push(uniqueID + '@Utility.Define.Seperator' + '' + '@Utility.Define.Seperator' + value.val());
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("CreateResult")',
+            data: { Remark: $('#Remark').val(), StandardResults: JSON.stringify(data) },
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    CancelCreateResult();
+                    GetStandardList();
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var CancelCreateResult = function () {
+        $('#divStandardListWidget').show();
+        $('#divCreateResultWidget').hide();
+    };
+</script>
+
+
+<div class="widget-main no-padding">
+    <table class="table table-bordered table-input">
+        <tr>
+            <th class="col-sm-1"><label>工作紀要</label></th>
+            <td class="col-sm-11">
+                <input id="Remark" type="text" class="col-sm-11" />
+            </td>
+        </tr>
+    </table>
+    <table class="table table-striped table-bordered table-hover nowrap">
+        <thead class="thin-border-bottom">
+            <tr>
+                <th>@Resources.Resource.Standard</th>
+                <th>@Resources.Resource.Result</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.StandardList)
+            {
+                <tr class="Standard" data-uniqueid="@item.UniqueID">
+                    <td>@item.Display</td>
+                    <td>
+                        @if (item.IsFeelItem)
+                        { 
+                        <select class="FeelOptionUniqueID">
+                            <option value="">= @Resources.Resource.SelectOne =</option>
+                            @foreach (var option in item.OptionList)
+                            {
+                                <option value="@option.UniqueID">@option.Description</option> 
+                            }
+                        </select>
+                        }
+                        else
+                        {
+                        <input type="text" class="Value" /> @item.Unit
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+<div class="widget-toolbox padding-8 clearfix">
+    <button class="btn btn-primary" onclick="CreateResult();">
+        <i class="ace-icon fa fa-save"></i>
+        @Resources.Resource.Save
+    </button>
+    <button class="btn btn-success" onclick="CancelCreateResult();">
+        <i class="ace-icon fa fa-ban"></i>
+        @Resources.Resource.Cancel
+    </button>
+</div>

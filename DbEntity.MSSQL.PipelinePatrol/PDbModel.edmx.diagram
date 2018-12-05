@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="6032bc9224f845d0a7924ec8fd9f55db" Name="Diagram1">
+        <EntityTypeShape EntityType="PDbModel.AbnormalReason" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PDbModel.AbnormalReasonHandlingMethod" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PDbModel.ArriveRecord" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PDbModel.ArriveRecordPhoto" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PDbModel.CheckItem" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PDbModel.CheckItemAbnormalReason" Width="1.5" PointX="4.75" PointY="5.75" />
+        <EntityTypeShape EntityType="PDbModel.CheckItemFeelOption" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PDbModel.CheckResult" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PDbModel.CheckResultAbnormalReason" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PDbModel.CheckResultHandlingMethod" Width="1.5" PointX="2.75" PointY="8.75" />
+        <EntityTypeShape EntityType="PDbModel.CheckResultPhoto" Width="1.5" PointX="8.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PDbModel.Construction" Width="1.5" PointX="8.75" PointY="6.75" />
+        <EntityTypeShape EntityType="PDbModel.ConstructionFile" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PDbModel.ConstructionFirm" Width="1.5" PointX="10.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PDbModel.ConstructionPhoto" Width="1.5" PointX="10.75" PointY="6.75" />
+        <EntityTypeShape EntityType="PDbModel.ConstructionType" Width="1.5" PointX="10.75" PointY="9.75" />
+        <EntityTypeShape EntityType="PDbModel.Dialog" Width="1.5" PointX="0.75" PointY="11.75" />
+        <EntityTypeShape EntityType="PDbModel.File" Width="1.5" PointX="2.75" PointY="11.75" />
+        <EntityTypeShape EntityType="PDbModel.Folder" Width="1.5" PointX="4.75" PointY="11.75" />
+        <EntityTypeShape EntityType="PDbModel.HandlingMethod" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PDbModel.Inspection" Width="1.5" PointX="12.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PDbModel.InspectionPhoto" Width="1.5" PointX="6.75" PointY="12.75" />
+        <EntityTypeShape EntityType="PDbModel.InspectionUser" Width="1.5" PointX="12.75" PointY="8.75" />
+        <EntityTypeShape EntityType="PDbModel.Job" Width="1.5" PointX="8.75" PointY="12.75" />
+        <EntityTypeShape EntityType="PDbModel.JobRoute" Width="1.5" PointX="10.75" PointY="12.75" />
+        <EntityTypeShape EntityType="PDbModel.JobUserLocus" Width="1.5" PointX="12.75" PointY="11.75" />
+        <EntityTypeShape EntityType="PDbModel.Message" Width="1.5" PointX="14.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PDbModel.OnlineUserLocus" Width="1.5" PointX="14.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PDbModel.Pipeline" Width="1.5" PointX="14.75" PointY="6.75" />
+        <EntityTypeShape EntityType="PDbModel.PipelineAbnormal" Width="1.5" PointX="14.75" PointY="9.75" />
+        <EntityTypeShape EntityType="PDbModel.PipelineAbnormalFile" Width="1.5" PointX="14.75" PointY="14.75" />
+        <EntityTypeShape EntityType="PDbModel.PipelineAbnormalPhoto" Width="1.5" PointX="0.75" PointY="15.75" />
+        <EntityTypeShape EntityType="PDbModel.PipelineLocus" Width="1.5" PointX="2.75" PointY="15.75" />
+        <EntityTypeShape EntityType="PDbModel.PipelineSpec" Width="1.5" PointX="4.75" PointY="15.75" />
+        <EntityTypeShape EntityType="PDbModel.PipelineSpecOption" Width="1.5" PointX="10.75" PointY="15.75" />
+        <EntityTypeShape EntityType="PDbModel.PipelineSpecValue" Width="1.5" PointX="16.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PDbModel.PipePoint" Width="1.5" PointX="16.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PDbModel.PipePointCheckItem" Width="1.5" PointX="16.75" PointY="7.75" />
+        <EntityTypeShape EntityType="PDbModel.Route" Width="1.5" PointX="16.75" PointY="11.75" />
+        <EntityTypeShape EntityType="PDbModel.RouteCheckPoint" Width="1.5" PointX="16.75" PointY="14.75" />
+        <EntityTypeShape EntityType="PDbModel.RouteCheckPointCheckItem" Width="1.5" PointX="6.75" PointY="17.75" />
+        <EntityTypeShape EntityType="PDbModel.RoutePipeline" Width="1.5" PointX="12.75" PointY="17.75" />
+        <EntityTypeShape EntityType="PDbModel.TimeSpanAbnormalReason" Width="1.5" PointX="14.75" PointY="17.75" />
+        <EntityTypeShape EntityType="PDbModel.UploadLog" Width="1.5" PointX="16.75" PointY="17.75" />
+        <EntityTypeShape EntityType="PDbModel.UserExtra" Width="1.5" PointX="18.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PDbModel.Version" Width="1.5" PointX="0.75" PointY="18.75" />
+        <EntityTypeShape EntityType="PDbModel.View_PipePointCheckItem" Width="1.5" PointX="2.75" PointY="18.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

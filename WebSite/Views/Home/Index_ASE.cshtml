@@ -1,0 +1,200 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{var account = Session["Account"] as Models.Authenticated.Account;}
+
+@section Scripts
+{
+    
+    @if (ViewBag.ReturnUrl != null && !string.IsNullOrEmpty(ViewBag.ReturnUrl))
+    { 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.Redirect('@ViewBag.ReturnUrl');
+        });
+    </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                //GetVerifyList();
+            });
+
+            function GetVerifyList() {
+                var list = $('#divVerifyList');
+
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: '@Url.Action("GetVerifyList")',
+                    dataType: "html",
+                    beforeSend: function () { list.Overlay('show'); },
+                    success: function (data) { list.Overlay('show').html(data); },
+                    error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                });
+            }
+        </script>
+
+        if (account.MenuItemList.Any(x => x.ID == "B" || x.ID == "C"))
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                   // GetAbnormalHandlingList();
+                });
+
+                function GetAbnormalHandlingList() {
+                    var list = $('#divAbnormalHandling');
+
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '@Url.Action("GetAbnormalHandlingList")',
+                        dataType: "html",
+                        beforeSend: function () { list.Overlay('show'); },
+                        success: function (data) { list.Overlay('show').html(data); },
+                        error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                    });
+                }
+            </script>
+        }
+
+        if (account.MenuItemList.Any(x => x.ID == "C"))
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                   // GetEquipmentPatrolList();
+                });
+
+                function GetEquipmentPatrolList() {
+                    var list = $('#divEquipmemtPatrol');
+
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '@Url.Action("GetEquipmentPatrolList")',
+                        dataType: "html",
+                        beforeSend: function () { list.Overlay('show'); },
+                        success: function (data) { list.Overlay('show').html(data); },
+                        error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                    });
+                }
+            </script>
+        }
+
+        if (account.MenuItemList.Any(x => x.ID == "B"))
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                   // GetMaintenanceFormList();
+                   // GetRepairFormList();
+                });
+
+                function GetMaintenanceFormList() {
+                    var list = $('#divMaintenanceForm');
+
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '@Url.Action("GetMaintenanceFormList")',
+                        dataType: "html",
+                        beforeSend: function () { list.Overlay('show'); },
+                        success: function (data) { list.Overlay('show').html(data); },
+                        error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                    });
+                }
+
+                function GetRepairFormList() {
+                    var list = $('#divRepairForm');
+
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '@Url.Action("GetRepairFormList")',
+                        dataType: "html",
+                        beforeSend: function () { list.Overlay('show'); },
+                        success: function (data) { list.Overlay('show').html(data); },
+                        error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                    });
+                }
+            </script>
+        }
+        
+        if (account.MenuItemList.Any(x => x.ID == "H") && account.WebPermissionFunctionList.Any(x=>x.WebPermissionID=="HA"&&x.WebFunctionID=="Create"))
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                  //  GetAbnormalNotifyList();
+                });
+
+                function GetAbnormalNotifyList() {
+                    var list = $('#divAbnormalNotifyList');
+
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '@Url.Action("GetAbnormalNotifyList")',
+                        dataType: "html",
+                        beforeSend: function () { list.Overlay('show'); },
+                        success: function (data) { list.Overlay('show').html(data); },
+                        error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                    });
+                }
+            </script>
+        }
+        
+        if (account.MenuItemList.Any(x => x.ID == "F"))
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                  //  GetCalibrationFormList();
+                });
+
+                function GetCalibrationFormList() {
+                    var list = $('#divCalibrationFormList');
+
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '@Url.Action("GetCalibrationFormList")',
+                        dataType: "html",
+                        beforeSend: function () { list.Overlay('show'); },
+                        success: function (data) { list.Overlay('show').html(data); },
+                        error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                    });
+                }
+            </script>
+        }
+    }
+    
+}
+
+<div id="divVerifyList" style="min-height:30px;"></div>
+
+@if (account.MenuItemList.Any(x => x.ID == "F"))
+{
+    <div id="divCalibrationFormList" style="min-height:30px;"></div>
+}
+
+@if (account.MenuItemList.Any(x => x.ID == "B" || x.ID=="C"))
+{
+    <div id="divAbnormalHandling" style="min-height:30px;"></div>
+}
+
+@if (account.MenuItemList.Any(x => x.ID == "C"))
+{
+    <div id="divEquipmemtPatrol" style="min-height:30px;"></div>
+}
+
+@if (account.MenuItemList.Any(x => x.ID == "B"))
+{
+    <div id="divMaintenanceForm" style="min-height:30px;"></div>
+    
+    <div id="divRepairForm" style="min-height:30px;"></div>
+}
+
+@if (account.MenuItemList.Any(x => x.ID == "H"))
+{
+    <div id="divAbnormalNotifyList" style="min-height:30px;"></div>
+}

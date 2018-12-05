@@ -1,0 +1,212 @@
+﻿@model Models.EquipmentMaintenance.MaintenanceFormManagement.GridViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#All').click(function () {
+            if ($(this).prop('checked')) {
+                $('.TakeJob').prop('checked', true);
+            }
+            else {
+                $('.TakeJob').prop('checked', false);
+            }
+        });
+
+        $('#dataTable').DataTable({
+            "oLanguage": {
+                "sUrl": "@Url.Content("~/Content/dataTables.zh_tw.txt")"
+            },
+            "scrollY": 400,
+            "scrollX": true,
+            "paging": false,
+                  "searching": false,
+                  "order": [[ 2, "asc" ]],
+                 "aoColumnDefs": [{ "bSortable": false, "aTargets": [0, 1] }]
+    });
+    });
+</script>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Model.FullOrganizationDescription
+        </h5>
+        @if (Model != null && Model.ItemList.Count > 0)
+        {
+            <div class="widget-toolbar">
+                <div class="widget-menu">
+                    <a href="#" data-toggle="dropdown">
+                        <i class="ace-icon fa fa-cloud-download white"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                        <li>
+                            <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})">Excel 2003(清單)</a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007 })">Excel 2007(清單)</a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("ExportForm", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})">Excel 2003(表單)</a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("ExportForm", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007 })">Excel 2007(表單)</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+        @if (Model != null && Model.ItemList.Any(x => x.Status == "0" && x.JobUserList.Any(u => u.ID == (Session["Account"] as Models.Authenticated.Account).ID)))
+        {
+            <div class="widget-toolbar">
+                <a href="#" onclick="TakeJob();">
+                    <i class="ace-icon fa fa-download white"></i>
+                </a>
+            </div>
+        }
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" >
+            <table class="table table-striped table-bordered table-hover nowrap" id="dataTable">
+                <thead class="thin-border-bottom">
+                    <tr>
+@if (Model != null && Model.ItemList.Any(x => x.Status == "0" && x.JobUserList.Any(u => u.ID == (Session["Account"] as Models.Authenticated.Account).ID)))
+{
+                        <th class="col-sm-1  center">
+                            <label>
+                                <input id="All" class="ace ace-checkbox-2" type="checkbox">
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
+}
+                        <th></th>
+                        <th class="center">@Resources.Resource.VHNO</th>
+                        <th class="center">@Resources.Resource.Status</th>
+                        <th class="center">@Resources.Resource.Organization</th>
+                        <th>@Resources.Resource.Subject</th>
+                        <th>@Resources.Resource.Equipment</th>
+                        <th>@Resources.Resource.CycleBeginDate</th>
+                        <th>@Resources.Resource.CycleEndDate</th>
+                        <th>@Resources.Resource.EstMaintenanceBeginDate</th>
+                        <th>@Resources.Resource.EstMaintenanceEndDate</th>
+                        <th>@Resources.Resource.JobUser</th>
+                        <th>@Resources.Resource.CreateTime</th>
+                        <th>@Resources.Resource.TakeJobUser</th>
+                        <th>@Resources.Resource.TakeJobTime</th>
+                        <th>@Resources.Resource.MaintenanceUser</th>
+                        <th>@Resources.Resource.MaintenanceBeginDate</th>
+                        <th>@Resources.Resource.MaintenanceEndDate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemList)
+                    {
+                        <tr>
+@if (Model != null && Model.ItemList.Any(x => x.Status == "0" && x.JobUserList.Any(u => u.ID == (Session["Account"] as Models.Authenticated.Account).ID)))
+{
+                            <td class="col-sm-1 center">
+                                @if (item.Status == "0" && item.JobUserList.Any(x => x.ID == (Session["Account"] as Models.Authenticated.Account).ID))
+                                {
+                                    <label>
+                                        <input class="ace ace-checkbox-2 TakeJob" type="checkbox" value="@item.UniqueID">
+                                        <span class="lbl"></span>
+                                    </label>
+                                }
+                            </td>
+}
+                            <td>
+                                <div class="action-buttons">
+                                    @if ((item.Status == "1" || item.Status == "4") &&item.TakeJobUserID == (Session["Account"] as Models.Authenticated.Account).ID)
+                                    {
+                                        <a class="green" href="#" onclick="Edit('@item.UniqueID');" title="@Resources.Resource.Edit">
+                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        </a>
+                                    }
+                                    else if (item.Status == "0" && item.JobUserList.Any(x => x.ID == (Session["Account"] as Models.Authenticated.Account).ID))
+                                    {
+                                        <a class="orange" href="#" onclick="Detail('@item.UniqueID');" title="@Resources.Resource.TakeJob">
+                                            <i class="ace-icon fa fa-download bigger-130"></i>
+                                        </a>
+                                    }
+                                    else if (item.Status == "3" && item.CurrentVerifyUserID == (Session["Account"] as Models.Authenticated.Account).ID)
+                                    {
+                                        <a class="purple" href="#" onclick="Detail('@item.UniqueID');" title="@Resources.Resource.Verify">
+                                            <i class="ace-icon fa fa-gavel bigger-130"></i>
+                                        </a>
+                                    }
+                                    else if (item.Status == "6" && item.CurrentExtendVerifyUserID == (Session["Account"] as Models.Authenticated.Account).ID)
+                                    {
+                                        <a class="purple" href="#" onclick="Detail('@item.UniqueID');" title="@Resources.Resource.Verify">
+                                            <i class="ace-icon fa fa-gavel bigger-130"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a class="blue" href="#" onclick="Detail('@item.UniqueID');" title="@Resources.Resource.Detail">
+                                            <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                            <td class="center">@item.VHNO</td>
+                            <td class="center">
+                                @if (item.StatusCode == "0")
+                                {
+                                    <span class="label label-lg label-warning arrowed-right">@item.StatusDescription</span>
+                                }
+                                  else if (item.StatusCode == "7")
+                                {
+                                    <span class="label label-lg label-danger arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.StatusCode == "1")
+                                {
+                                    <span class="label label-lg label-primary arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.StatusCode == "2")
+                                {
+                                    <span class="label label-lg label-danger arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.StatusCode == "3")
+                                {
+                                    <span class="label label-lg label-purple arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.StatusCode == "4")
+                                {
+                                    <span class="label label-lg label-danger arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.StatusCode == "5")
+                                {
+                                    <span class="label label-lg label-success arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.StatusCode == "6")
+                                {
+                                    <span class="label label-lg label-purple arrowed-right">@item.StatusDescription</span>
+                                }
+                                else
+                                {
+                                    <span>@item.StatusDescription</span>
+                                }
+                            </td>
+                            <td>@item.OrganizationDescription</td>
+                            <td>@item.Subject</td>
+                            <td>@item.Equipment</td>
+                            <td>@item.CycleBeginDateString</td>
+                            <td>@item.CycleEndDateString</td>
+                            <td>@item.EstBeginDateString</td>
+                            <td>@item.EstEndDateString</td>
+                            <td>@item.JobUser</td>
+                            <td>@item.CreateTimeString</td>
+                            <td>@item.TakeJobUser</td>
+                            <td>@item.TakeJobTimeString</td>
+                            <td>@item.MaintenanceUser</td>
+                            <td>@item.BeginDateString</td>
+                            <td>@item.EndDateString</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

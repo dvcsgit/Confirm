@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Models.FlowManagement.VerifyOrganizationModel>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.OrganizationTBody').sortable().disableSelection();
+    });
+</script>
+
+<table class="table table-striped table-bordered table-hover nowrap">
+    <thead class="thin-border-bottom">
+        <tr>
+            <th class="col-sm-1"></th>
+            <th>@Resources.Resource.OrganizationDescription</th>
+            <th>@Resources.Resource.Manager</th>
+        </tr>
+    </thead>
+
+    <tbody class="OrganizationTBody">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="col-sm-1 center">
+                    <div class="action-buttons">
+                        <a class="red" href="#" onclick="DeleteSelected('@item.UniqueID'); return false;" title="@Resources.Resource.Delete">
+                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                        </a>
+                    </div>
+                </td>
+                <td>
+                    @item.Description
+                    <input type="hidden" class="Organization" data-uniqueid="@item.UniqueID" />
+                </td>
+                <td>
+                    @if (item.IsManagerExist)
+                    {
+                        <label>@item.Managers</label>
+                    }
+                    else
+                    { 
+                        <label class="red">@Resources.Resource.NotSet @Resources.Resource.Manager</label>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

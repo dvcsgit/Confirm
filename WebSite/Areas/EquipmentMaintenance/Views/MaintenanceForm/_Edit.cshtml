@@ -1,0 +1,393 @@
+﻿@model Models.EquipmentMaintenance.MaintenanceFormManagement.EditFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$('.ChangeQuantity').each(function () {
+        //    var qty = $(this).data('value');
+
+        //    $(this).val(qty);
+        //});
+    });
+
+    var MaterialResult = function () {
+        var data = [];
+
+        return JSON.stringify(data);
+    };
+
+    var Save = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Edit")',
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var Submit = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Submit")',
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<p>
+    @if (Model.FormViewModel.Status == "1" || Model.FormViewModel.Status == "4")
+    { 
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-primary btn-xs" onclick="Submit();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Submit
+    </button>
+        
+        <button class="btn btn-app btn-primary btn-xs" onclick="Extend('@Model.UniqueID');" type="button">
+            <i class="ace-icon fa fa-calendar-plus-o bigger-160"></i>
+            展延
+        </button>
+    }
+    
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+@if (Model.FormViewModel.FlowLogList.Count > 0)
+{
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.Verify @Resources.Resource.Flow</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.VerifyUser</th>
+                            <th>@Resources.Resource.NotifyTime</th>
+                            <th>@Resources.Resource.VerifyTime</th>
+                            <th>@Resources.Resource.VerifyResult</th>
+                            <th>@Resources.Resource.VerifyComment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FormViewModel.FlowLogList)
+                        {
+                            <tr>
+                                <td>@item.User.User</td>
+                                <td>@item.NotifyTimeString</td>
+                                <td>@item.VerifyTimeString</td>
+                                <td>@item.Result</td>
+                                <td>@item.Remark</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="space"></div>
+}
+
+@if (Model.FormViewModel.ExtendLogList.Count > 0)
+{
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">展延紀錄</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>原保養日期(起)</th>
+                            <th>原保養日期(迄)</th>
+                            <th>展延保養日期(起)</th>
+                            <th>展延保養日期(迄)</th>
+                            <th>申請時間</th>
+                            <th>展延原因</th>
+                            <th>簽核結果</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FormViewModel.ExtendLogList)
+                        {
+                            <tr>
+                                <td>@item.OBeginDateString</td>
+                                <td>@item.OEndDateString</td>
+                                <td>@item.NBeginDateString</td>
+                                <td>@item.NEndDateString</td>
+                                <td>@item.CreateTimeString</td>
+                                <td>@item.Reason</td>
+                                <td>@item.Result</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="space"></div>
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.MaintenanceForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.VHNO)</th>
+                    <td>@Html.DisplayFor(x => x.FormViewModel.VHNO)</td>
+                    <th>@Html.LabelFor(x => x.FormViewModel.StatusDescription)</th>
+                    <td>
+                        @if (Model.FormViewModel.StatusCode == "0")
+                        {
+                            <span class="label label-lg label-warning arrowed-right">@Model.FormViewModel.StatusDescription</span>
+                        }
+                        else if (Model.FormViewModel.StatusCode == "7")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.FormViewModel.StatusDescription</span>
+                        }
+                        else if (Model.FormViewModel.StatusCode == "1")
+                        {
+                            <span class="label label-lg label-primary arrowed-right">@Model.FormViewModel.StatusDescription</span>
+                        }
+                        else if (Model.FormViewModel.StatusCode == "2")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.FormViewModel.StatusDescription</span>
+                        }
+                        else if (Model.FormViewModel.StatusCode == "3")
+                        {
+                            <span class="label label-lg label-purple arrowed-right">@Model.FormViewModel.StatusDescription</span>
+                        }
+                        else if (Model.FormViewModel.StatusCode == "4")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.FormViewModel.StatusDescription</span>
+                        }
+                        else if (Model.FormViewModel.StatusCode == "5")
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Model.FormViewModel.StatusDescription</span>
+                        }
+                        else if (Model.FormViewModel.StatusCode == "6")
+                        {
+                            <span class="label label-lg label-purple arrowed-right">@Model.FormViewModel.StatusDescription</span>
+                        }
+                        else
+                        {
+                            <span>@Model.FormViewModel.StatusDescription</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.Subject)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FormViewModel.Subject)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.Equipment)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FormViewModel.Equipment)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.CreateTimeString)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FormViewModel.CreateTimeString)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.JobUser)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FormViewModel.JobUser)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CycleBeginDateString)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.CycleBeginDateString)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CycleEndDateString)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.CycleEndDateString)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.TakeJobUser)</th>
+                    <td>@Html.DisplayFor(x => x.FormViewModel.TakeJobUser)</td>
+                    <th>@Html.LabelFor(x => x.FormViewModel.TakeJobTimeString)</th>
+                    <td>@Html.DisplayFor(x => x.FormViewModel.TakeJobTimeString)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.EstBeginDateString)</th>
+                    <td>@Html.DisplayFor(x => x.FormViewModel.EstBeginDateString)</td>
+                    <th>@Html.LabelFor(x => x.FormViewModel.EstEndDateString)</th>
+                    <td>@Html.DisplayFor(x => x.FormViewModel.EstEndDateString)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.MaintenanceUser)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.FormViewModel.MaintenanceUser)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FormViewModel.BeginDateString)</th>
+                    <td>@Html.DisplayFor(x => x.FormViewModel.BeginDateString)</td>
+                    <th>@Html.LabelFor(x => x.FormViewModel.EndDateString)</th>
+                    <td>@Html.DisplayFor(x => x.FormViewModel.EndDateString)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+@*@if (Model.FormViewModel.StandardList != null && Model.FormViewModel.StandardList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">
+                @Resources.Resource.Standard
+            </h5>
+            <div class="widget-toolbar">
+                <a href="#" onclick="CreateResultForm(); return false;">
+                    <i class="ace-icon fa fa-plus white"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th></th>
+                            <th>@Resources.Resource.Standard</th>
+                            <th class="center">@Resources.Resource.LowerLimit</th>
+                            <th class="center">@Resources.Resource.LowerAlertLimit</th>
+                            <th class="center">@Resources.Resource.UpperAlertLimit</th>
+                            <th class="center">@Resources.Resource.UpperLimit</th>
+                            <th class="center">@Resources.Resource.Unit</th>
+                            <th class="center">@Resources.Resource.MaintenanceDate</th>
+                            <th class="center">@Resources.Resource.MaintenanceUser</th>
+                            <th class="center">@Resources.Resource.Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FormViewModel.StandardList)
+                        {
+                            <tr>
+                                <td>@item.Display</td>
+                                @if (item.IsFeelItem)
+                                {
+                                    <td colspan="5">@string.Format("{0}({1})", Resources.Resource.IsFeelItem, item.FeelOptions)</td>
+                                }
+                                else
+                                {
+                                    <td>@item.LowerLimit</td>
+                                    <td>@item.LowerAlertLimit</td>
+                                    <td>@item.UpperAlertLimit</td>
+                                    <td>@item.UpperLimit</td>
+                                    <td>@item.Unit</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}*@
+
+<div class="space"></div>
+
+@Html.Partial("_Standard")
+
+@if (Model.FormViewModel.MaterialList != null && Model.FormViewModel.MaterialList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">
+                設備耗材清單
+            </h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th class="col-sm-6">@Resources.Resource.Material</th>
+                            <th class="center col-sm-3">@Resources.Resource.Estimate @Resources.Resource.ReplaceQTY</th>
+                            <th class="center col-sm-3">@Resources.Resource.RMaterialQTY</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FormViewModel.MaterialList)
+                        {
+                            <tr>
+                                <td>@item.Display</td>
+                                <td class="center">@item.Quantity</td>
+                                <td class="center">
+                                    <select data-materialuniqueid="@item.UniqueID" data-value="@item.ChangeQuantity" class="ChangeQuantity">
+                                        @for (int i = 0; i <= item.Quantity;i++ )
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="space"></div>
+
+@Html.Partial("_WorkingHour")
+
+<div class="space"></div>
+
+@Html.Partial("_File")
+
+
+
+

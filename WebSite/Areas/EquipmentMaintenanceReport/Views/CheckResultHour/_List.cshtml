@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Report.EquipmentMaintenance.Models.CheckResultHour.GridItem>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Resources.Resource.SearchResults
+        </h5>
+        <div class="widget-toolbar">
+            <div class="widget-menu">
+                <a href="#" data-toggle="dropdown">
+                    <i class="ace-icon fa fa-cloud-download white"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})">Excel 2003</a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007 })">Excel 2007</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-bordered table-hover nowrap">
+                @foreach (var item in Model)
+                { 
+                <tr>
+                    <th class="col-sm-2">@Resources.Resource.Route</th>
+                    <td class="col-sm-2">@item.Route</td>
+                    <th class="col-sm-2">@Resources.Resource.CheckUser</th>
+                    <td class="col-sm-2">@item.User</td>
+                    <th class="col-sm-2">@Resources.Resource.TimeSpan</th>
+                    <td class="col-sm-2">@item.TimeSpan</td>
+                </tr>
+                    <tr>
+                        <th colspan="2">@Resources.Resource.ControlPoint</th>
+                        <th>@Resources.Resource.ArriveTime</th>
+                        <th>@Resources.Resource.BeginTime</th>
+                        <th>@Resources.Resource.EndTime</th>
+                        <th>@Resources.Resource.TimeSpan</th>
+                    </tr>
+                    foreach (var controlPoint in item.ControlPointList)
+                    { 
+                    <tr>
+                        <td colspan="2">@controlPoint.ControlPoint</td>
+                        <td>@controlPoint.ArriveTime</td>
+                        <td>@controlPoint.BeginTime</td>
+                        <td>@controlPoint.EndTime</td>
+                        <td>@controlPoint.TimeSpan</td>
+                    </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>

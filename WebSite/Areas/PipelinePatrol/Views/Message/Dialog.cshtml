@@ -1,0 +1,216 @@
+﻿@model Models.PipelinePatrol.Message.DialogModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles{
+<style>
+    .itemdiv.dialogdiv:before {
+        position:inherit; 
+    }
+</style>
+   <link href="@Url.Content("~/assets/css/colorbox.css")" rel="stylesheet" />
+}
+
+@section Scripts{
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.colorbox-min.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Message').keydown(function (event) {
+            if (event.which == 13) {
+                Send();
+                return false;
+            }
+        });
+
+        var file_input = $('#File');
+
+        file_input.ace_file_input({
+            style: 'well',
+            btn_choose: '請選擇檔案',
+            btn_change: '請選擇檔案',
+            droppable: false,
+            thumbnail: 'small'
+        }).on('change', function (e) {
+            var files = e.target.files;
+
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file" + x, files[x]);
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Upload")',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () { $.Overlay('show'); },
+                        success: function (data) {
+                            $.Overlay('hide');
+                            if (!data.IsSuccess) {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $.Overlay('hide');
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+                else {
+                    $.InfoDialog('無法上傳');
+                }
+            }
+            else {
+                $.InfoDialog('請選擇檔案');
+            }
+        });
+    });
+
+    var timer = setInterval(function () {
+        Pull();
+    }, 2 * 1000);
+
+    function Pull() {
+        if ($('#IsPulling').val() == 'N') {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("GetMessage")',
+                data: {
+                    DialogUniqueID: '@Model.UniqueID',
+                    Seq: $('#CurrentSeq').val()
+                },
+                dataType: "html",
+                beforeSend: function () {
+                    $('#IsPulling').val('Y');
+                },
+                success: function (data) {
+                    $('#IsPulling').val('N');
+                    $('#MessageList').append(data);
+                },
+                error: function (x, h, r) {
+                    $('#IsPulling').val('N');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    }
+
+    var Send = function () {
+        if ($('#Message').val() != '') {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("NewMessage")',
+                data: {
+                    DialogUniqueID: '@Model.UniqueID',
+                        Message: $('#Message').val()
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.IsSuccess) {
+                            $('#Message').val('');
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        };
+
+        var FileUpload = function () {
+            $('#divFileUpload').show();
+        };
+    </script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        @foreach (var item in Model.MessageList.Where(x=>x.IsPhoto))
+        {
+            <text>$(".@(string.Format("{0}_{1}", item.DialogUniqueID, item.Seq))").colorbox({ rel: '@(string.Format("{0}_{1}", item.DialogUniqueID, item.Seq))', maxWidth: '100%', maxHeight: '100%' });</text>
+        }
+    });
+</script>
+}
+
+<p>
+    <a class="btn btn-app btn-success btn-xs" href="@Url.Action("Index")">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        返回
+    </a>
+</p>
+
+<input id="IsPulling" type="hidden" value="N"  />
+
+@Html.HiddenFor(x => x.CurrentSeq)
+
+<div class="widget-box">
+    <div class="widget-header">
+        <h4 class="widget-title lighter smaller">
+            <i class="ace-icon fa fa-comment blue"></i>
+            @Model.Subject @Model.Description
+        </h4>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <!-- #section:pages/dashboard.conversations -->
+            <div id="MessageList" class="dialogs">
+                @foreach (var message in Model.MessageList)
+                {
+                    <div class="itemdiv dialogdiv">
+                        <div class="user">
+                            <img alt="" src="@(message.User.HasPhoto ? Url.Content(message.User.Photo.FilePath) : Url.Content("~/Content/images/ic_chat_user.png"))" />
+                        </div>
+
+                        <div class="body">
+                            <div class="time">
+                                <i class="ace-icon fa fa-clock-o"></i>
+                                <span class="green">@message.MessageTimeString</span>
+                            </div>
+
+                            <div class="name">
+                                <a href="#">@message.User.OrganizationDescription @message.User.User</a>
+                            </div>
+                            @if (message.IsPhoto)
+                            {
+                                <div class="text">
+                                    <a href="@Url.Content("~/ChatPhoto/" + message.Photo)" class="@(string.Format("{0}_{1}", message.DialogUniqueID, message.Seq))"><img alt="" style="width:150px;height:150px;" src="@Url.Content("~/ChatPhoto/" + message.Photo)" /></a>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text">@message.Message</div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- /section:pages/dashboard.conversations -->
+            <div class="form-actions">
+                <div class="input-group">
+                    <input placeholder="" type="text" class="form-control" id="Message">
+                    <span class="input-group-btn">
+                        <button class="btn btn-sm btn-info no-radius" type="button" onclick="Send();">
+                            <i class="ace-icon fa fa-share"></i>
+                            傳送
+                        </button>
+                    </span>
+                </div>
+                <input type="file" name="File" id="File" />
+            </div>
+        </div><!-- /.widget-main -->
+    </div><!-- /.widget-body -->
+</div>

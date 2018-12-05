@@ -1,0 +1,336 @@
+﻿@model Models.EquipmentMaintenance.MaintenanceJobManagement.EditFormModel
+
+@Html.Partial("_Scripts", Model.AncestorOrganizationUniqueID)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#EditForm");
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        $('.JobMode').hide();
+
+        var cycleMode = $('input[name="FormInput.CycleMode"]:checked').val();
+
+        if (cycleMode == "D")
+        {
+            $('.DayMode').show();
+        }
+        else if (cycleMode == "W") {
+            $('.WeekMode').show();
+
+            var checked = $('input[name="FormInput.WeekMode"]:checked').val();
+
+            if (checked == "I") {
+                $('#FormInput_Mon').prop({ checked: false, disabled: true });
+                $('#FormInput_Tue').prop({ checked: false, disabled: true });
+                $('#FormInput_Wed').prop({ checked: false, disabled: true });
+                $('#FormInput_Thu').prop({ checked: false, disabled: true });
+                $('#FormInput_Fri').prop({ checked: false, disabled: true });
+                $('#FormInput_Sat').prop({ checked: false, disabled: true });
+                $('#FormInput_Sun').prop({ checked: false, disabled: true });
+            }
+
+            if (checked == "S") {
+                $('#FormInput_Mon').prop('disabled', false).prop('checked', $('#FormInput_Mon').data('checked')=='Y');
+                $('#FormInput_Tue').prop('disabled', false).prop('checked', $('#FormInput_Tue').data('checked') == 'Y');
+                $('#FormInput_Wed').prop('disabled', false).prop('checked', $('#FormInput_Wed').data('checked') == 'Y');
+                $('#FormInput_Thu').prop('disabled', false).prop('checked', $('#FormInput_Thu').data('checked') == 'Y');
+                $('#FormInput_Fri').prop('disabled', false).prop('checked', $('#FormInput_Fri').data('checked') == 'Y');
+                $('#FormInput_Sat').prop('disabled', false).prop('checked', $('#FormInput_Sat').data('checked') == 'Y');
+                $('#FormInput_Sun').prop('disabled', false).prop('checked', $('#FormInput_Sun').data('checked') == 'Y');
+            }
+        }
+        else if (cycleMode == "M") {
+            $('.MonthMode').show();
+
+            var checked = $('input[name="FormInput.MonthMode"]:checked').val();
+
+            if (checked == "I") {
+                $('#FormInput_Day').prop('readonly', true).val('');
+            }
+        }
+        
+        $('input[name="FormInput.CycleMode"]').click(function () {
+            var checked = $('input[name="FormInput.CycleMode"]:checked').val();
+
+            $('.JobMode').hide();
+
+            if (checked == "D") {
+                $('.DayMode').show();
+            }
+            else if (checked == "W") {
+                $('.WeekMode').show();
+            }
+            else if (checked == "M") {
+                $('.MonthMode').show();
+            }
+        });
+
+        $('input[name="FormInput.WeekMode"]').click(function () {
+            var checked = $('input[name="FormInput.WeekMode"]:checked').val();
+
+            if (checked == "I") {
+                $('#FormInput_Mon').prop({ checked: false, disabled: true });
+                $('#FormInput_Tue').prop({ checked: false, disabled: true });
+                $('#FormInput_Wed').prop({ checked: false, disabled: true });
+                $('#FormInput_Thu').prop({ checked: false, disabled: true });
+                $('#FormInput_Fri').prop({ checked: false, disabled: true });
+                $('#FormInput_Sat').prop({ checked: false, disabled: true });
+                $('#FormInput_Sun').prop({ checked: false, disabled: true });
+            }
+
+            if (checked == "S") {
+                $('#FormInput_Mon').prop('disabled', false);
+                $('#FormInput_Tue').prop('disabled', false);
+                $('#FormInput_Wed').prop('disabled', false);
+                $('#FormInput_Thu').prop('disabled', false);
+                $('#FormInput_Fri').prop('disabled', false);
+                $('#FormInput_Sat').prop('disabled', false);
+                $('#FormInput_Sun').prop('disabled', false);
+            }
+        });
+
+        $('input[name="FormInput.MonthMode"]').click(function () {
+            var checked = $('input[name="FormInput.MonthMode"]:checked').val();
+
+            if (checked == "I") {
+                $('#FormInput_Day').prop('readonly', true).val('');
+            }
+
+            if (checked == "S") {
+                $('#FormInput_Day').prop('readonly', false).val('');
+            }
+        });
+    });
+
+    var Save = function () {
+        var form = $('#EditForm');
+
+        if (form.valid()) {
+            var user = [];
+
+            $('.User').each(function () {
+                if ($(this).prop('checked')) {
+                    user.push($(this).val());
+                }
+            });
+
+            $('#FormInput_Users').val(JSON.stringify(user));
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("Edit")',
+                data: form.serialize() + "&EquipmentStandardPageStates=" + EquipmentStandardPageState() + "&EquipmentMaterialPageStates=" + EquipmentMaterialPageState(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Detail('@Url.Action("Detail", "MaintenanceJob")', '@Model.UniqueID');
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Url.Action("Detail", "MaintenanceJob")', '@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Edit @Resources.Resource.MaintenanceJob</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Edit", null, FormMethod.Post, new { @ID = "EditForm" }))
+            {
+                @Html.HiddenFor(x => x.UniqueID)
+                @Html.HiddenFor(x => x.OrganizationUniqueID)
+
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                        <td class="col-sm-11" colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Description)</th>
+                        <td colspan="3">
+                            @Html.TextBoxFor(x => x.FormInput.Description, new { @class = "col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.Description)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Resources.Resource.CycleMode</th>
+                        <td>
+                            <label>@Resources.Resource.Every</label>
+                            @Html.TextBoxFor(x => x.FormInput.CycleCount, new { @class = "col-sm-1" })
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.CycleMode, "D", new { @class = "ace" })
+                                <span class="lbl"> @Resources.Resource.Day</span>
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.CycleMode, "W", new { @class = "ace" })
+                                <span class="lbl"> @Resources.Resource.Week</span>
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.CycleMode, "M", new { @class = "ace" })
+                                <span class="lbl"> @Resources.Resource.Month</span>
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.CycleMode, "Y", new { @class = "ace" })
+                                <span class="lbl"> @Resources.Resource.Year</span>
+                            </label>
+                        </td>
+                        <th>@Html.LabelFor(x => x.FormInput.NotifyDay)</th>
+                        <td>
+                            @Html.TextBoxFor(x => x.FormInput.NotifyDay, new { @class = "col-sm-1" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.NotifyDay)
+                        </td>
+                    </tr>
+                    <tr class="JobMode DayMode">
+                        <th>@Resources.Resource.CycleMode</th>
+                        <td colspan="3">
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.DayMode, "A", new { @class = "ace" })
+                                <span class="lbl"> 每天</span>
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.DayMode, "H", new { @class = "ace" })
+                                <span class="lbl"> 假日</span>
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.DayMode, "W", new { @class = "ace" })
+                                <span class="lbl"> 非假日</span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr class="JobMode WeekMode">
+                        <th>@Resources.Resource.CycleMode</th>
+                        <td>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.WeekMode, "I", new { @class = "ace" })
+                                <span class="lbl"> 區間</span>
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.WeekMode, "S", new { @class = "ace" })
+                                <span class="lbl"> 指定</span>
+                            </label>
+                        </td>
+                        <td colspan="2">
+                            <label>
+                                <input id="FormInput_Mon" name="FormInput.Mon" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.Mon?"Y":"N")">
+                                <span class="lbl"> 星期一</span>
+                            </label>
+                            <label>
+                                <input id="FormInput_Tue" name="FormInput.Tue" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.Tue ? "Y" : "N")">
+                                <span class="lbl"> 星期二</span>
+                            </label>
+                            <label>
+                                <input id="FormInput_Wed" name="FormInput.Wed" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.Wed ? "Y" : "N")">
+                                <span class="lbl"> 星期三</span>
+                            </label>
+                            <label>
+                                <input id="FormInput_Thu" name="FormInput.Thu" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.Thu ? "Y" : "N")">
+                                <span class="lbl"> 星期四</span>
+                            </label>
+                            <label>
+                                <input id="FormInput_Fri" name="FormInput.Fri" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.Fri ? "Y" : "N")">
+                                <span class="lbl"> 星期五</span>
+                            </label>
+                            <label>
+                                <input id="FormInput_Sat" name="FormInput.Sat" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.Sat ? "Y" : "N")">
+                                <span class="lbl"> 星期六</span>
+                            </label>
+                            <label>
+                                <input id="FormInput_Sun" name="FormInput.Sun" class="ace ace-checkbox-2" type="checkbox" value="true" data-checked="@(Model.FormInput.Sun ? "Y" : "N")">
+                                <span class="lbl"> 星期日</span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr class="JobMode MonthMode">
+                        <th>@Resources.Resource.CycleMode</th>
+                        <td>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.MonthMode, "I", new { @class = "ace" })
+                                <span class="lbl"> 區間</span>
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(x => x.FormInput.MonthMode, "S", new { @class = "ace" })
+                                <span class="lbl"> 指定</span>
+                            </label>
+                        </td>
+                        <td colspan="2">
+                            @Html.TextBoxFor(x => x.FormInput.Day, new { @class = "col-sm-1" }) <label>日</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.BeginDateString)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.BeginDateString, new { @class = "datepicker col-sm-11" })
+                            <br />
+                            @Html.ValidationMessageFor(x => x.FormInput.BeginDateString)
+                        </td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.EndDateString)</th>
+                        <td class="col-sm-5">
+                            @Html.TextBoxFor(x => x.FormInput.EndDateString, new { @class = "datepicker col-sm-11" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.FormInput.Remark)</th>
+                        <td colspan="3">@Html.TextBoxFor(x => x.FormInput.Remark, new { @class = "col-sm-11" })</td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.JobUser</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            @Html.Partial("_UserSelect")
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_Select")

@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Models.EquipmentMaintenance.EquipmentManagement.MaterialModel>
+
+<table class="table table-striped table-bordered table-hover nowrap">
+    <thead class="thin-border-bottom">
+        <tr>
+            <th class="col-sm-1"></th>
+            <th class="col-sm-4">@Resources.Resource.MaterialID</th>
+            <th class="col-sm-5">@Resources.Resource.MaterialName</th>
+            <th class="col-sm-2">@Resources.Resource.QTY</th>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="center">
+                <div class="action-buttons">
+                    <a class="red" href="#" onclick="DeleteMaterial('@item.UniqueID'); return false;" title="@Resources.Resource.Delete">
+                        <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                    </a>
+                </div>
+            </td>
+            <td>@item.ID</td>
+            <td>@item.Name</td>
+            <td><input type="text" class="input-mini Material" data-materialuniqueid="@item.UniqueID" value="@item.Quantity" /></td>
+        </tr>
+    }
+</table>
+
+
+

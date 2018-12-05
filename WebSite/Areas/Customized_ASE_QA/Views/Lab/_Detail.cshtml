@@ -1,0 +1,34 @@
+﻿@model Models.ASE.QA.LabManagement.DetailViewModel
+
+<p>
+    @if (ViewBag.CanEdit)
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+            <i class="ace-icon fa fa-edit bigger-160"></i>
+            @Resources.Resource.Edit
+        </button>
+    }
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="bigger lighter">外校實驗室</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Description)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.Description)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+

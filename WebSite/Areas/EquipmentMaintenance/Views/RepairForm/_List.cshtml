@@ -1,0 +1,111 @@
+﻿@model Models.EquipmentMaintenance.RepairFormManagement.GridViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        $('#dataTable').DataTable({
+            "oLanguage": {
+                "sUrl": "@Url.Content("~/Content/dataTables.zh_tw.txt")"
+        },
+                   "scrollX": true,
+                   "searching": false,
+                   "order": [[ 2, "asc" ]],
+                  "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "全部"]],
+                  "aoColumnDefs": [{ "bSortable": false, "aTargets": [0, 1] }]
+    });
+    });
+</script>
+
+@if (ViewBag.CanCreate && Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+{
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="Create('@Model.OrganizationUniqueID', '');">
+            <i class="ace-icon fa fa-plus"></i>
+            @Resources.Resource.Create @Resources.Resource.RepairForm @Resources.Resource.At @Model.OrganizationDescription
+        </button>
+    </div>
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Model.FullOrganizationDescription
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-striped table-bordered table-hover nowrap" id="dataTable">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th></th>
+                        <th class="center">@Resources.Resource.VHNO</th>
+                        <th class="center">@Resources.Resource.Status</th>
+                        <th>@Resources.Resource.Organization</th>
+                        <th>@Resources.Resource.MaintenanceOrganization</th>
+                        <th class="center">@Resources.Resource.RepairFormType</th>
+                        <th>@Resources.Resource.Equipment</th>
+                        <th>@Resources.Resource.Subject</th>
+                        <th>預計修復日期(起)</th>
+                        <th>預計修復日期(迄)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemList)
+                    {
+                        <tr>
+                            <td class="center">
+                                <div class="action-buttons">
+                                    <a class="blue" href="#" onclick="Detail('@item.UniqueID');" title="@Resources.Resource.Detail">
+                                        <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                    </a>
+
+                                    @if ((item.Status == "4" || item.Status == "7" )&& item.TakeJobUserID == (Session["Account"] as Models.Authenticated.Account).ID)
+                                    {
+                                        <a class="green" href="#" onclick="Edit('@item.UniqueID');" title="@Resources.Resource.Edit">
+                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                            <td class="center">@item.VHNO</td>
+                            <td class="center">
+                                @if (item.StatusCode == "0" || item.StatusCode == "2" || item.StatusCode == "3")
+                                {
+                                    <span class="label label-lg label-warning arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.StatusCode == "1" || item.StatusCode == "8")
+                                {
+                                    <span class="label label-lg label-success arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.StatusCode == "4")
+                                {
+                                    <span class="label label-lg label-info arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.StatusCode == "5" || item.StatusCode == "7")
+                                {
+                                    <span class="label label-lg label-danger arrowed-right">@item.StatusDescription</span>
+                                }
+                                else if (item.StatusCode == "6" || item.StatusCode == "9")
+                                {
+                                    <span class="label label-lg label-purple arrowed-right">@item.StatusDescription</span>
+                                }
+                                else
+                                {
+                                    <span>@item.StatusDescription</span>
+                                }
+                            </td>
+                            <td>@item.OrganizationDescription</td>
+                            <td>@item.MaintenanceOrganizationDescription</td>
+                            <td>@item.RepairFormType</td>
+                            <td>@item.Equipment</td>
+                            <td>@item.Subject</td>
+                            <td>@item.EstBeginDateString</td>
+                            <td>@item.EstEndDateString</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

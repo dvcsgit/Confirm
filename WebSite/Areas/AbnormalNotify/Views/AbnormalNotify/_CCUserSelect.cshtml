@@ -1,0 +1,151 @@
+﻿
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedCCUserList();
+
+        InitSelectCCUserTree();
+
+        $('#divCCUserSelectTreeWidget').hide();
+    });
+
+    function GetSelectedCCUserList() {
+        var list = $('#divSelectedCCUserList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedCCUserList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitSelectCCUserTree() {
+        var container = $('#divCCUserSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitSelectCCUserTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var CCUserSelect = function () {
+        $('#divCCUserSelectedListWidget').hide();
+        $('#divCCUserSelectTreeWidget').show();
+    };
+
+    var CancelCCUserSelect = function () {
+        $('#divCCUserSelectedListWidget').show();
+        $('#divCCUserSelectTreeWidget').hide();
+    };
+
+    var AddCCUser = function () {
+        var data = [];
+
+        $("#divSelectCCUserTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.UserID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddCCUser")',
+            data: { Selecteds: JSON.stringify(data) },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divCCUserSelectTreeWidget').hide();
+                $('#divCCUserSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divCCUserSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedCCUserList();
+                    $("#divSelectCCUserTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divCCUserSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteCCUser = function (userID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteCCUser")',
+            data: { UserID: userID, },
+            dataType: "json",
+            beforeSend: function () { $('#divCCUserSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divCCUserSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedCCUserList();
+                    $("#divSelectCCUserTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divCCUserSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+
+<div id="divCCUserSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">選擇副本通知人員</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divCCUserSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddCCUser(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelCCUserSelect(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divCCUserSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">副本通知人員</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="CCUserSelect(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; min-height:100px; max-height:300px;">
+            <div id="divSelectedCCUserList" style="min-height:100px;"></div>
+        </div>
+    </div>
+</div>

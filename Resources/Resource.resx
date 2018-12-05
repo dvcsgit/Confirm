@@ -1,0 +1,2316 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>變更密碼</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="Cpassword" xml:space="preserve">
+    <value>確認新密碼</value>
+  </data>
+  <data name="CpasswordRequired" xml:space="preserve">
+    <value>請確認新密碼</value>
+  </data>
+  <data name="NCPasswordDiffer" xml:space="preserve">
+    <value>新密碼與確認密碼不相符</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="Npassword" xml:space="preserve">
+    <value>新密碼</value>
+  </data>
+  <data name="NpasswordRequired" xml:space="preserve">
+    <value>請輸入新密碼</value>
+  </data>
+  <data name="Opassword" xml:space="preserve">
+    <value>舊密碼</value>
+  </data>
+  <data name="OpasswordRequired" xml:space="preserve">
+    <value>請輸入舊密碼</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="FEM" xml:space="preserve">
+    <value>FEM設備保養管理系統</value>
+  </data>
+  <data name="SessionTimeout" xml:space="preserve">
+    <value>登入逾時</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>登入</value>
+  </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="SystemMessage" xml:space="preserve">
+    <value>系統訊息</value>
+  </data>
+  <data name="UserID" xml:space="preserve">
+    <value>使用者帳號</value>
+  </data>
+  <data name="UserIDNotExist" xml:space="preserve">
+    <value>使用者帳號不存在</value>
+  </data>
+  <data name="UserIDRequired" xml:space="preserve">
+    <value>請輸入使用者帳號</value>
+  </data>
+  <data name="UserPassword" xml:space="preserve">
+    <value>使用者密碼</value>
+  </data>
+  <data name="UserPasswordRequired" xml:space="preserve">
+    <value>請輸入使用者密碼</value>
+  </data>
+  <data name="WrongPassword" xml:space="preserve">
+    <value>密碼錯誤</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="ParentOrganization" xml:space="preserve">
+    <value>隸屬組織</value>
+  </data>
+  <data name="EquipmentSpecDescription" xml:space="preserve">
+    <value>設備規格描述</value>
+  </data>
+  <data name="EquipmentSpecDescriptionRequired" xml:space="preserve">
+    <value>請輸入設備規格描述</value>
+  </data>
+  <data name="EquipmentSpecOption" xml:space="preserve">
+    <value>設備規格選項</value>
+  </data>
+  <data name="EquipmentType" xml:space="preserve">
+    <value>設備類別</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>選擇</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Unsupported" xml:space="preserve">
+    <value>不支援的</value>
+  </data>
+  <data name="EquipmentSpec" xml:space="preserve">
+    <value>設備規格</value>
+  </data>
+  <data name="Exists" xml:space="preserve">
+    <value>已存在</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Data" xml:space="preserve">
+    <value>資料</value>
+  </data>
+  <data name="Management" xml:space="preserve">
+    <value>管理</value>
+  </data>
+  <data name="At" xml:space="preserve">
+    <value>於</value>
+  </data>
+  <data name="Detail" xml:space="preserve">
+    <value>詳細資料</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Option" xml:space="preserve">
+    <value>選項</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="EquipmentTypeRequired" xml:space="preserve">
+    <value>請選擇設備類別</value>
+  </data>
+  <data name="MaterialType" xml:space="preserve">
+    <value>材料類別</value>
+  </data>
+  <data name="MaterialSpecDescription" xml:space="preserve">
+    <value>材料規格描述</value>
+  </data>
+  <data name="MaterialSpecDescriptionRequired" xml:space="preserve">
+    <value>請輸入材料規格描述</value>
+  </data>
+  <data name="MaterialSpecOption" xml:space="preserve">
+    <value>材料規格選項</value>
+  </data>
+  <data name="MaterialSpec" xml:space="preserve">
+    <value>材料規格</value>
+  </data>
+  <data name="MaterialTypeRequired" xml:space="preserve">
+    <value>請選擇材料類別</value>
+  </data>
+  <data name="MaterialID" xml:space="preserve">
+    <value>材料編號</value>
+  </data>
+  <data name="MaterialIDRequired" xml:space="preserve">
+    <value>請輸入材料編號</value>
+  </data>
+  <data name="MaterialName" xml:space="preserve">
+    <value>材料名稱</value>
+  </data>
+  <data name="MaterialNameRequired" xml:space="preserve">
+    <value>請輸入材料名稱</value>
+  </data>
+  <data name="Material" xml:space="preserve">
+    <value>材料</value>
+  </data>
+  <data name="UnKnownOperation" xml:space="preserve">
+    <value>未知的操作模式</value>
+  </data>
+  <data name="EquipmentID" xml:space="preserve">
+    <value>設備代號</value>
+  </data>
+  <data name="EquipmentIDRequired" xml:space="preserve">
+    <value>請輸入設備代號</value>
+  </data>
+  <data name="EquipmentName" xml:space="preserve">
+    <value>設備名稱</value>
+  </data>
+  <data name="EquipmentNameRequired" xml:space="preserve">
+    <value>請輸入設備名稱</value>
+  </data>
+  <data name="MaintenanceOrganization" xml:space="preserve">
+    <value>保養單位</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>下載</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>上傳</value>
+  </data>
+  <data name="OrganizationID" xml:space="preserve">
+    <value>組織代號</value>
+  </data>
+  <data name="Manager" xml:space="preserve">
+    <value>簽核主管</value>
+  </data>
+  <data name="OrganizationDescription" xml:space="preserve">
+    <value>組織描述</value>
+  </data>
+  <data name="Remark" xml:space="preserve">
+    <value>備註</value>
+  </data>
+  <data name="OrganizationDescriptionRequired" xml:space="preserve">
+    <value>請輸入組織描述</value>
+  </data>
+  <data name="OrganizationIDRequired" xml:space="preserve">
+    <value>請輸入組織代號</value>
+  </data>
+  <data name="Organization" xml:space="preserve">
+    <value>組織</value>
+  </data>
+  <data name="Query" xml:space="preserve">
+    <value>查詢</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>重新整理</value>
+  </data>
+  <data name="AuthGroupID" xml:space="preserve">
+    <value>權限群組代號</value>
+  </data>
+  <data name="AuthGroupIDRequired" xml:space="preserve">
+    <value>請輸入權限群組代號</value>
+  </data>
+  <data name="AuthGroupName" xml:space="preserve">
+    <value>權限群組名稱</value>
+  </data>
+  <data name="AuthGroupNameRequired" xml:space="preserve">
+    <value>請輸入權限群組名稱</value>
+  </data>
+  <data name="AuthGroup" xml:space="preserve">
+    <value>權限群組</value>
+  </data>
+  <data name="SearchResults" xml:space="preserve">
+    <value>搜尋結果</value>
+  </data>
+  <data name="Item" xml:space="preserve">
+    <value>項次</value>
+  </data>
+  <data name="Pager" xml:space="preserve">
+    <value>共 {0} 筆資料，目前顯示第 {1} 筆至第 {2} 筆。</value>
+  </data>
+  <data name="Permission" xml:space="preserve">
+    <value>權限</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>啟用</value>
+  </data>
+  <data name="Function" xml:space="preserve">
+    <value>功能</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>搜尋</value>
+  </data>
+  <data name="EMail" xml:space="preserve">
+    <value>電子郵件信箱</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>職稱</value>
+  </data>
+  <data name="UID" xml:space="preserve">
+    <value>UID</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>使用者</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>使用者姓名</value>
+  </data>
+  <data name="UserNameRequired" xml:space="preserve">
+    <value>請輸入使用者姓名</value>
+  </data>
+  <data name="SelectOne" xml:space="preserve">
+    <value>請選擇</value>
+  </data>
+  <data name="ResetPassword" xml:space="preserve">
+    <value>重設密碼</value>
+  </data>
+  <data name="Equipment" xml:space="preserve">
+    <value>設備</value>
+  </data>
+  <data name="QTY" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>複製</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="EmgContactTel" xml:space="preserve">
+    <value>緊急連絡人電話</value>
+  </data>
+  <data name="Itself" xml:space="preserve">
+    <value>本體</value>
+  </data>
+  <data name="EquipmentPart" xml:space="preserve">
+    <value>設備部位</value>
+  </data>
+  <data name="PartDescription" xml:space="preserve">
+    <value>設備部位描述</value>
+  </data>
+  <data name="PartDescriptionRequired" xml:space="preserve">
+    <value>請輸入設備部位描述</value>
+  </data>
+  <data name="AbnormalReasonDescription" xml:space="preserve">
+    <value>異常原因描述</value>
+  </data>
+  <data name="AbnormalReasonDescriptionRequired" xml:space="preserve">
+    <value>請輸入異常原因描述</value>
+  </data>
+  <data name="AbnormalReasonID" xml:space="preserve">
+    <value>異常原因代號</value>
+  </data>
+  <data name="AbnormalReasonIDRequired" xml:space="preserve">
+    <value>請輸入異常原因代號</value>
+  </data>
+  <data name="OverTimeReason" xml:space="preserve">
+    <value>巡檢遲到/早退異常原因</value>
+  </data>
+  <data name="UnRFIDReason" xml:space="preserve">
+    <value>管制點未感應RFID原因</value>
+  </data>
+  <data name="HandlingMethod" xml:space="preserve">
+    <value>異常處理對策</value>
+  </data>
+  <data name="HandlingMethodDescription" xml:space="preserve">
+    <value>異常處理對策描述</value>
+  </data>
+  <data name="HandlingMethodID" xml:space="preserve">
+    <value>異常處理對策代號</value>
+  </data>
+  <data name="HandlingMethodType" xml:space="preserve">
+    <value>異常處理對策類別</value>
+  </data>
+  <data name="HandlingMethodDescriptionRequired" xml:space="preserve">
+    <value>請輸入異常處理對策描述</value>
+  </data>
+  <data name="HandlingMethodIDRequired" xml:space="preserve">
+    <value>請輸入異常處理對策代號</value>
+  </data>
+  <data name="HandlingMethodTypeRequired" xml:space="preserve">
+    <value>請選擇異常處理對策類別</value>
+  </data>
+  <data name="AbnormalType" xml:space="preserve">
+    <value>異常原因類別</value>
+  </data>
+  <data name="AbnormalReason" xml:space="preserve">
+    <value>異常原因</value>
+  </data>
+  <data name="AbnormalTypeRequired" xml:space="preserve">
+    <value>請選擇異常原因類別</value>
+  </data>
+  <data name="CheckType" xml:space="preserve">
+    <value>檢查類別</value>
+  </data>
+  <data name="CheckTypeRequired" xml:space="preserve">
+    <value>請選擇檢查類別</value>
+  </data>
+  <data name="CheckItemDescription" xml:space="preserve">
+    <value>檢查項目描述</value>
+  </data>
+  <data name="CheckItemDescriptionRequired" xml:space="preserve">
+    <value>請輸入檢查項目描述</value>
+  </data>
+  <data name="CheckItemID" xml:space="preserve">
+    <value>檢查項目代號</value>
+  </data>
+  <data name="CheckItemIDRequired" xml:space="preserve">
+    <value>請輸入檢查項目代號</value>
+  </data>
+  <data name="FeelOptions" xml:space="preserve">
+    <value>感官選項</value>
+  </data>
+  <data name="IsFeelItem" xml:space="preserve">
+    <value>感官項目</value>
+  </data>
+  <data name="LowerLimit" xml:space="preserve">
+    <value>下限值</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>單位</value>
+  </data>
+  <data name="UpperLimit" xml:space="preserve">
+    <value>上限值</value>
+  </data>
+  <data name="Abnormal" xml:space="preserve">
+    <value>異常</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>正常</value>
+  </data>
+  <data name="CheckItem" xml:space="preserve">
+    <value>檢查項目</value>
+  </data>
+  <data name="Rollback" xml:space="preserve">
+    <value>還原</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>預設值</value>
+  </data>
+  <data name="FeelOptionRequired" xml:space="preserve">
+    <value>請設定感官選項</value>
+  </data>
+  <data name="IsFeelItemDefaultNormal" xml:space="preserve">
+    <value>感官項目預設正常</value>
+  </data>
+  <data name="Inherit" xml:space="preserve">
+    <value>繼承設定</value>
+  </data>
+  <data name="ControlPoint" xml:space="preserve">
+    <value>管制點</value>
+  </data>
+  <data name="ControlPointDescription" xml:space="preserve">
+    <value>管制點描述</value>
+  </data>
+  <data name="ControlPointDescriptionRequired" xml:space="preserve">
+    <value>請輸入管制點描述</value>
+  </data>
+  <data name="ControlPointID" xml:space="preserve">
+    <value>管制點代號</value>
+  </data>
+  <data name="ControlPointIDRequired" xml:space="preserve">
+    <value>請輸入管制點代號</value>
+  </data>
+  <data name="TagID" xml:space="preserve">
+    <value>Tag ID</value>
+  </data>
+  <data name="RouteID" xml:space="preserve">
+    <value>巡檢路線代號</value>
+  </data>
+  <data name="RouteIDRequired" xml:space="preserve">
+    <value>請輸入巡檢路線代號</value>
+  </data>
+  <data name="RouteName" xml:space="preserve">
+    <value>巡檢路線名稱</value>
+  </data>
+  <data name="RouteNameRequired" xml:space="preserve">
+    <value>請輸入巡檢路線名稱</value>
+  </data>
+  <data name="Route" xml:space="preserve">
+    <value>巡檢路線</value>
+  </data>
+  <data name="Job" xml:space="preserve">
+    <value>派工</value>
+  </data>
+  <data name="BeginDate" xml:space="preserve">
+    <value>開始日期</value>
+  </data>
+  <data name="BeginDateRequired" xml:space="preserve">
+    <value>請選擇開始日期</value>
+  </data>
+  <data name="BeginTime" xml:space="preserve">
+    <value>開始時間</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>結束日期</value>
+  </data>
+  <data name="EndTime" xml:space="preserve">
+    <value>結束時間</value>
+  </data>
+  <data name="IsCheckBySeq" xml:space="preserve">
+    <value>需依序檢查</value>
+  </data>
+  <data name="IsNeedVerify" xml:space="preserve">
+    <value>是否需要簽核</value>
+  </data>
+  <data name="IsShowPrevRecord" xml:space="preserve">
+    <value>顯示前次巡檢紀錄</value>
+  </data>
+  <data name="JobDescription" xml:space="preserve">
+    <value>派工描述</value>
+  </data>
+  <data name="JobDescriptionRequired" xml:space="preserve">
+    <value>請輸入派工描述</value>
+  </data>
+  <data name="CycleMode" xml:space="preserve">
+    <value>循環模式</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>天</value>
+  </data>
+  <data name="Every" xml:space="preserve">
+    <value>每</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>月</value>
+  </data>
+  <data name="Week" xml:space="preserve">
+    <value>週</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>年</value>
+  </data>
+  <data name="JobUser" xml:space="preserve">
+    <value>派工人員</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="MaintenanceType" xml:space="preserve">
+    <value>保養類別</value>
+  </data>
+  <data name="StandardDescription" xml:space="preserve">
+    <value>保養基準描述</value>
+  </data>
+  <data name="StandardDescriptionRequired" xml:space="preserve">
+    <value>請輸入保養基準描述</value>
+  </data>
+  <data name="StandardID" xml:space="preserve">
+    <value>保養基準代號</value>
+  </data>
+  <data name="StandardIDRequired" xml:space="preserve">
+    <value>請輸入保養基準代號</value>
+  </data>
+  <data name="Standard" xml:space="preserve">
+    <value>保養基準</value>
+  </data>
+  <data name="MaintenanceRoute" xml:space="preserve">
+    <value>定期保養作業</value>
+  </data>
+  <data name="MaintenanceRouteDescription" xml:space="preserve">
+    <value>定期保養作業描述</value>
+  </data>
+  <data name="MaintenanceRouteDescriptionRequired" xml:space="preserve">
+    <value>請輸入定期保養作業描述</value>
+  </data>
+  <data name="MaintenanceJob" xml:space="preserve">
+    <value>定期保養派工</value>
+  </data>
+  <data name="NotifyDay" xml:space="preserve">
+    <value>提前通知天數</value>
+  </data>
+  <data name="NotifyDayRequired" xml:space="preserve">
+    <value>請輸入提前通知天數</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>檔案</value>
+  </data>
+  <data name="FileName" xml:space="preserve">
+    <value>檔案名稱</value>
+  </data>
+  <data name="FilePath" xml:space="preserve">
+    <value>檔案位置</value>
+  </data>
+  <data name="FileSize" xml:space="preserve">
+    <value>檔案大小</value>
+  </data>
+  <data name="FileTime" xml:space="preserve">
+    <value>檔案時間</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>資料夾</value>
+  </data>
+  <data name="IsDownload2Mobile" xml:space="preserve">
+    <value>下載至行動裝置</value>
+  </data>
+  <data name="FileAuthor" xml:space="preserve">
+    <value>上傳人員</value>
+  </data>
+  <data name="FolderDescription" xml:space="preserve">
+    <value>資料夾描述</value>
+  </data>
+  <data name="UploadButtonChange" xml:space="preserve">
+    <value>更換檔案請將檔案拖曳至此或選擇檔案</value>
+  </data>
+  <data name="UploadButtonChoose" xml:space="preserve">
+    <value>請將檔案拖曳至此或選擇檔案</value>
+  </data>
+  <data name="UploadFileRequired" xml:space="preserve">
+    <value>請選擇上傳檔案</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>所選的</value>
+  </data>
+  <data name="FileNameRequired" xml:space="preserve">
+    <value>請輸入檔案名稱</value>
+  </data>
+  <data name="FolderDescriptionRequired" xml:space="preserve">
+    <value>請輸入資料夾描述</value>
+  </data>
+  <data name="MaintenanceJobDescription" xml:space="preserve">
+    <value>定期保養派工描述</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="TakeJobUser" xml:space="preserve">
+    <value>接案人員</value>
+  </data>
+  <data name="MaintenanceCycle" xml:space="preserve">
+    <value>保養週期</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>主旨</value>
+  </data>
+  <data name="VHNO" xml:space="preserve">
+    <value>單號</value>
+  </data>
+  <data name="EmgContact" xml:space="preserve">
+    <value>緊急連絡人</value>
+  </data>
+  <data name="JobBeginDateHave2AfterToday" xml:space="preserve">
+    <value>派工起日必須大於今天</value>
+  </data>
+  <data name="MaintenanceForm" xml:space="preserve">
+    <value>定期保養通知單</value>
+  </data>
+  <data name="MaintenancePlan" xml:space="preserve">
+    <value>保養計畫表</value>
+  </data>
+  <data name="TakeJob" xml:space="preserve">
+    <value>接案</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="PutOnRecord" xml:space="preserve">
+    <value>立案</value>
+  </data>
+  <data name="SubmitForApprove" xml:space="preserve">
+    <value>呈核</value>
+  </data>
+  <data name="PatrolDate" xml:space="preserve">
+    <value>巡檢日期</value>
+  </data>
+  <data name="Incomplete" xml:space="preserve">
+    <value>未完成</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>執行中</value>
+  </data>
+  <data name="UnPatrol" xml:space="preserve">
+    <value>未巡檢</value>
+  </data>
+  <data name="MinTimeSpan" xml:space="preserve">
+    <value>最短作業時間</value>
+  </data>
+  <data name="CompleteRate" xml:space="preserve">
+    <value>完成率</value>
+  </data>
+  <data name="UnPatrolReason" xml:space="preserve">
+    <value>未巡檢原因</value>
+  </data>
+  <data name="ArriveDate" xml:space="preserve">
+    <value>到位日期</value>
+  </data>
+  <data name="ArriveTime" xml:space="preserve">
+    <value>到位時間</value>
+  </data>
+  <data name="ArriveUser" xml:space="preserve">
+    <value>到位人員</value>
+  </data>
+  <data name="CheckDate" xml:space="preserve">
+    <value>檢查日期</value>
+  </data>
+  <data name="CheckResult" xml:space="preserve">
+    <value>檢查結果</value>
+  </data>
+  <data name="CheckTime" xml:space="preserve">
+    <value>檢查時間</value>
+  </data>
+  <data name="CheckUser" xml:space="preserve">
+    <value>檢查人員</value>
+  </data>
+  <data name="And" xml:space="preserve">
+    <value>和</value>
+  </data>
+  <data name="ArriveStatus" xml:space="preserve">
+    <value>到位狀態</value>
+  </data>
+  <data name="Late" xml:space="preserve">
+    <value>遲到</value>
+  </data>
+  <data name="LeaveEarly" xml:space="preserve">
+    <value>早退</value>
+  </data>
+  <data name="RemarkRequired" xml:space="preserve">
+    <value>請輸入備註</value>
+  </data>
+  <data name="OtherMk1" xml:space="preserve">
+    <value>備機</value>
+  </data>
+  <data name="OtherMk2" xml:space="preserve">
+    <value>檢修</value>
+  </data>
+  <data name="OtherMk3" xml:space="preserve">
+    <value>停機</value>
+  </data>
+  <data name="AbnormalCount" xml:space="preserve">
+    <value>異常次數</value>
+  </data>
+  <data name="FlowDescription" xml:space="preserve">
+    <value>流程描述</value>
+  </data>
+  <data name="FlowDescriptionRequired" xml:space="preserve">
+    <value>請輸入流程描述</value>
+  </data>
+  <data name="FormType" xml:space="preserve">
+    <value>表單類別</value>
+  </data>
+  <data name="NotSet" xml:space="preserve">
+    <value>未設定</value>
+  </data>
+  <data name="EquipmentPatrolResult" xml:space="preserve">
+    <value>設備檢查結果</value>
+  </data>
+  <data name="Flow" xml:space="preserve">
+    <value>流程</value>
+  </data>
+  <data name="RepairForm" xml:space="preserve">
+    <value>修復單</value>
+  </data>
+  <data name="Seq" xml:space="preserve">
+    <value>順序</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>裝置</value>
+  </data>
+  <data name="ReleaseDate" xml:space="preserve">
+    <value>發佈日期</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="SoftwareDownload" xml:space="preserve">
+    <value>軟體下載</value>
+  </data>
+  <data name="FileExtensionError" xml:space="preserve">
+    <value>檔案格式錯誤</value>
+  </data>
+  <data name="Length" xml:space="preserve">
+    <value>長度</value>
+  </data>
+  <data name="FormatError" xml:space="preserve">
+    <value>格式錯誤</value>
+  </data>
+  <data name="LowerAlertLimit" xml:space="preserve">
+    <value>下限警戒值</value>
+  </data>
+  <data name="UpperAlertLimit" xml:space="preserve">
+    <value>上限警戒值</value>
+  </data>
+  <data name="AbnormalTop50" xml:space="preserve">
+    <value>巡檢抄表異常基準Top50</value>
+  </data>
+  <data name="CheckJobAnalyze" xml:space="preserve">
+    <value>巡檢執行統計表</value>
+  </data>
+  <data name="UnFinished" xml:space="preserve">
+    <value>未完成</value>
+  </data>
+  <data name="UnJob" xml:space="preserve">
+    <value>未派工</value>
+  </data>
+  <data name="CheckResultHour" xml:space="preserve">
+    <value>到位巡檢工時分析報表</value>
+  </data>
+  <data name="CheckResultAnalyze" xml:space="preserve">
+    <value>檢查基準分析報表</value>
+  </data>
+  <data name="NotExist" xml:space="preserve">
+    <value>不存在</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>匯入</value>
+  </data>
+  <data name="DataType" xml:space="preserve">
+    <value>資料類型</value>
+  </data>
+  <data name="ID" xml:space="preserve">
+    <value>代號</value>
+  </data>
+  <data name="ImportStatus" xml:space="preserve">
+    <value>(嘗試匯入{0}筆，驗證成功{1}筆，失敗{2}筆)</value>
+  </data>
+  <data name="NoMapping" xml:space="preserve">
+    <value>無法對應</value>
+  </data>
+  <data name="Record" xml:space="preserve">
+    <value>筆</value>
+  </data>
+  <data name="DontCloseWindow" xml:space="preserve">
+    <value>請勿關閉視窗</value>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>失敗</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>讀取</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>讀取中</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>進度</value>
+  </data>
+  <data name="Validate" xml:space="preserve">
+    <value>驗證</value>
+  </data>
+  <data name="ExportTime" xml:space="preserve">
+    <value>匯出時間</value>
+  </data>
+  <data name="ArriveRecord" xml:space="preserve">
+    <value>到位記錄</value>
+  </data>
+  <data name="PatrolStatus" xml:space="preserve">
+    <value>執行狀態</value>
+  </data>
+  <data name="HighAbnormal" xml:space="preserve">
+    <value>重大異常</value>
+  </data>
+  <data name="LowAbnormal" xml:space="preserve">
+    <value>一般異常</value>
+  </data>
+  <data name="MediumAbnormal" xml:space="preserve">
+    <value>中等異常</value>
+  </data>
+  <data name="NotAbnormal" xml:space="preserve">
+    <value>非異常</value>
+  </data>
+  <data name="AbnormalLevel" xml:space="preserve">
+    <value>異常等級</value>
+  </data>
+  <data name="AbnormalLevelRequired" xml:space="preserve">
+    <value>請選擇異常等級</value>
+  </data>
+  <data name="RepairFormTypeDescription" xml:space="preserve">
+    <value>修復單類型描述</value>
+  </data>
+  <data name="RepairFormTypeDescriptionRequired" xml:space="preserve">
+    <value>請輸入修復單類型描述</value>
+  </data>
+  <data name="RepairFormType" xml:space="preserve">
+    <value>修復單類型</value>
+  </data>
+  <data name="MFormStatus_Approve" xml:space="preserve">
+    <value>簽核中</value>
+  </data>
+  <data name="MFormStatus_Closed" xml:space="preserve">
+    <value>已結案</value>
+  </data>
+  <data name="MFormStatus_Executing" xml:space="preserve">
+    <value>已轉立修復單</value>
+  </data>
+  <data name="MFormStatus_New" xml:space="preserve">
+    <value>立案</value>
+  </data>
+  <data name="MFormStatus_Preparing" xml:space="preserve">
+    <value>準備中</value>
+  </data>
+  <data name="Actual" xml:space="preserve">
+    <value>實際</value>
+  </data>
+  <data name="Estimate" xml:space="preserve">
+    <value>預計</value>
+  </data>
+  <data name="EstMaintenanceBeginDate" xml:space="preserve">
+    <value>預計保養日期(起)</value>
+  </data>
+  <data name="EstMaintenanceEndDate" xml:space="preserve">
+    <value>預計保養日期(迄)</value>
+  </data>
+  <data name="MaintenanceBeginDate" xml:space="preserve">
+    <value>保養日期(起)</value>
+  </data>
+  <data name="MaintenanceDate" xml:space="preserve">
+    <value>保養日期</value>
+  </data>
+  <data name="MaintenanceEndDate" xml:space="preserve">
+    <value>保養日期(迄)</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>無</value>
+  </data>
+  <data name="CreateUser" xml:space="preserve">
+    <value>立案人員</value>
+  </data>
+  <data name="MaintenanceOrganizationRequired" xml:space="preserve">
+    <value>請選擇保養單位</value>
+  </data>
+  <data name="RepairFormTypeRequired" xml:space="preserve">
+    <value>請選擇修復單類型</value>
+  </data>
+  <data name="SubjectRequired" xml:space="preserve">
+    <value>請輸入主旨</value>
+  </data>
+  <data name="SendApprove" xml:space="preserve">
+    <value>傳送簽核</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>注意</value>
+  </data>
+  <data name="TimeMode0" xml:space="preserve">
+    <value>早於設定時間開始，晚於設定時間結束</value>
+  </data>
+  <data name="TimeMode1" xml:space="preserve">
+    <value>於設定時間區間內開始</value>
+  </data>
+  <data name="TimeMode" xml:space="preserve">
+    <value>時間管理模式</value>
+  </data>
+  <data name="Verify" xml:space="preserve">
+    <value>簽核</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>待</value>
+  </data>
+  <data name="NoMJob" xml:space="preserve">
+    <value>設備免定保</value>
+  </data>
+  <data name="NoMJobReason1" xml:space="preserve">
+    <value>設備可靠度高</value>
+  </data>
+  <data name="NoMJobReason2" xml:space="preserve">
+    <value>預防保養或預知保養可充分掌握設備狀況</value>
+  </data>
+  <data name="NoMJobReason3" xml:space="preserve">
+    <value>無法停車或停車時機不定</value>
+  </data>
+  <data name="NoMJobReason4" xml:space="preserve">
+    <value>動用率低</value>
+  </data>
+  <data name="NoMJobReason5" xml:space="preserve">
+    <value>非主要生產設備或雜項設備，異常時無影響生產或造成工安環保事故之虞，且其故障修復費用較定期保養費用低者</value>
+  </data>
+  <data name="CreateTime" xml:space="preserve">
+    <value>立案時間</value>
+  </data>
+  <data name="EquipmentCount" xml:space="preserve">
+    <value>設備數量</value>
+  </data>
+  <data name="NoMJobReason" xml:space="preserve">
+    <value>免定保原因</value>
+  </data>
+  <data name="IsChangeMaterial" xml:space="preserve">
+    <value>更換材料</value>
+  </data>
+  <data name="CycleBeginDate" xml:space="preserve">
+    <value>保養週期(起)</value>
+  </data>
+  <data name="CycleEndDate" xml:space="preserve">
+    <value>保養週期(迄)</value>
+  </data>
+  <data name="TakeJobTime" xml:space="preserve">
+    <value>接案時間</value>
+  </data>
+  <data name="ChangeMaterialList" xml:space="preserve">
+    <value>換料清單</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>呈核</value>
+  </data>
+  <data name="EndDateRequired" xml:space="preserve">
+    <value>請選擇結束日期</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>核准</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>退回</value>
+  </data>
+  <data name="NotifyTime" xml:space="preserve">
+    <value>通知時間</value>
+  </data>
+  <data name="VerifyComment" xml:space="preserve">
+    <value>簽核意見</value>
+  </data>
+  <data name="VerifyResult" xml:space="preserve">
+    <value>簽核結果</value>
+  </data>
+  <data name="VerifyTime" xml:space="preserve">
+    <value>簽核時間</value>
+  </data>
+  <data name="VerifyUser" xml:space="preserve">
+    <value>簽核人員</value>
+  </data>
+  <data name="JobManager" xml:space="preserve">
+    <value>派工主管</value>
+  </data>
+  <data name="JobTime" xml:space="preserve">
+    <value>派工時間</value>
+  </data>
+  <data name="WorkingHourRecord" xml:space="preserve">
+    <value>工時紀錄</value>
+  </data>
+  <data name="FrontBeginTime" xml:space="preserve">
+    <value>前置工時(起)</value>
+  </data>
+  <data name="FrontEndTime" xml:space="preserve">
+    <value>前置工時(迄)</value>
+  </data>
+  <data name="WorkingHour" xml:space="preserve">
+    <value>工時</value>
+  </data>
+  <data name="FrontBeginDate" xml:space="preserve">
+    <value>前置工時(起日)</value>
+  </data>
+  <data name="FrontEndDate" xml:space="preserve">
+    <value>前置工時(迄日)</value>
+  </data>
+  <data name="EditableOrganization" xml:space="preserve">
+    <value>可編輯組織</value>
+  </data>
+  <data name="QueryableOrganization" xml:space="preserve">
+    <value>可查詢組織</value>
+  </data>
+  <data name="AccumulationBase" xml:space="preserve">
+    <value>初始值</value>
+  </data>
+  <data name="IsAccumulation" xml:space="preserve">
+    <value>累進值項目</value>
+  </data>
+  <data name="ImproveIdea" xml:space="preserve">
+    <value>改善構想</value>
+  </data>
+  <data name="OperateStatus" xml:space="preserve">
+    <value>運轉情形</value>
+  </data>
+  <data name="RepairProcess" xml:space="preserve">
+    <value>修復過程</value>
+  </data>
+  <data name="JobUserRequired" xml:space="preserve">
+    <value>請選擇派工人員</value>
+  </data>
+  <data name="Refuse" xml:space="preserve">
+    <value>退回</value>
+  </data>
+  <data name="RefuseReason" xml:space="preserve">
+    <value>退回原因</value>
+  </data>
+  <data name="RefuseReasonRequired" xml:space="preserve">
+    <value>請輸入退回原因</value>
+  </data>
+  <data name="JobRefuseReason" xml:space="preserve">
+    <value>派工退回原因</value>
+  </data>
+  <data name="MaintenanceBeginDateRequired" xml:space="preserve">
+    <value>請選擇保養日期(起)</value>
+  </data>
+  <data name="MaintenanceEndDateRequired" xml:space="preserve">
+    <value>請選擇保養日期(迄)</value>
+  </data>
+  <data name="UnArriveCount" xml:space="preserve">
+    <value>未到位次數</value>
+  </data>
+  <data name="RFormStatus_0" xml:space="preserve">
+    <value>未派工</value>
+  </data>
+  <data name="RFormStatus_1" xml:space="preserve">
+    <value>取消立案(保養主管退回)</value>
+  </data>
+  <data name="RFormStatus_2" xml:space="preserve">
+    <value>已派工未接案</value>
+  </data>
+  <data name="RFormStatus_3" xml:space="preserve">
+    <value>未派工(保養人員退回)</value>
+  </data>
+  <data name="RFormStatus_4" xml:space="preserve">
+    <value>修復中</value>
+  </data>
+  <data name="RFormStatus_5" xml:space="preserve">
+    <value>修復中(逾期)</value>
+  </data>
+  <data name="RFormStatus_6" xml:space="preserve">
+    <value>簽核中(修復完成)</value>
+  </data>
+  <data name="MaintenanceUser" xml:space="preserve">
+    <value>保養人員</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>列印</value>
+  </data>
+  <data name="BeginDateGreaterThanEndDate" xml:space="preserve">
+    <value>起日大於迄日</value>
+  </data>
+  <data name="FrontWorkingHour" xml:space="preserve">
+    <value>前置工時</value>
+  </data>
+  <data name="TotalWorkingHour" xml:space="preserve">
+    <value>總工時</value>
+  </data>
+  <data name="WorkingHourRequired" xml:space="preserve">
+    <value>請輸入工時</value>
+  </data>
+  <data name="MaintenanceUserRequired" xml:space="preserve">
+    <value>請選擇保養人員</value>
+  </data>
+  <data name="QFormStatus_1" xml:space="preserve">
+    <value>未接案</value>
+  </data>
+  <data name="QFormStatus_2" xml:space="preserve">
+    <value>處理中</value>
+  </data>
+  <data name="QFormStatus_3" xml:space="preserve">
+    <value>已結案</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>聯絡人</value>
+  </data>
+  <data name="ContactEmail" xml:space="preserve">
+    <value>聯絡電子郵件</value>
+  </data>
+  <data name="ContactNameRequired" xml:space="preserve">
+    <value>請輸入聯絡人</value>
+  </data>
+  <data name="ContactTel" xml:space="preserve">
+    <value>連絡電話</value>
+  </data>
+  <data name="QForm" xml:space="preserve">
+    <value>報修單</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>處理說明</value>
+  </data>
+  <data name="Closed" xml:space="preserve">
+    <value>結案</value>
+  </data>
+  <data name="ClosedTime" xml:space="preserve">
+    <value>結案時間</value>
+  </data>
+  <data name="ClosedQFormRequired" xml:space="preserve">
+    <value>請輸入處理說明或轉立修復單</value>
+  </data>
+  <data name="Repair" xml:space="preserve">
+    <value>修復</value>
+  </data>
+  <data name="Patrol" xml:space="preserve">
+    <value>定檢</value>
+  </data>
+  <data name="Resume" xml:space="preserve">
+    <value>履歷</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="RouteManager" xml:space="preserve">
+    <value>巡檢路線異常負責人</value>
+  </data>
+  <data name="Captcha" xml:space="preserve">
+    <value>驗證碼</value>
+  </data>
+  <data name="Cycle" xml:space="preserve">
+    <value>週期</value>
+  </data>
+  <data name="PlanBeginDate" xml:space="preserve">
+    <value>計畫日期</value>
+  </data>
+  <data name="ByCent" xml:space="preserve">
+    <value>期間</value>
+  </data>
+  <data name="MaterialCost" xml:space="preserve">
+    <value>材料更換數量統計表</value>
+  </data>
+  <data name="MaterialCostReport" xml:space="preserve">
+    <value>材料更換記錄統計表</value>
+  </data>
+  <data name="MaterialCount" xml:space="preserve">
+    <value>材料數量</value>
+  </data>
+  <data name="MaterialPrice" xml:space="preserve">
+    <value>材料單價</value>
+  </data>
+  <data name="MaterialTotal" xml:space="preserve">
+    <value>材料總價</value>
+  </data>
+  <data name="PartName" xml:space="preserve">
+    <value>部位名稱</value>
+  </data>
+  <data name="PrintDate" xml:space="preserve">
+    <value>印表日期</value>
+  </data>
+  <data name="RFormVHNO" xml:space="preserve">
+    <value>修復單單號</value>
+  </data>
+  <data name="RMaterialID" xml:space="preserve">
+    <value>更換材料編號</value>
+  </data>
+  <data name="RMaterialName" xml:space="preserve">
+    <value>更換材料品名</value>
+  </data>
+  <data name="RMaterialQTY" xml:space="preserve">
+    <value>更換材料數量</value>
+  </data>
+  <data name="RMaterialSpec" xml:space="preserve">
+    <value>更換材料規格</value>
+  </data>
+  <data name="VHNOCreateDate" xml:space="preserve">
+    <value>本單建立時間</value>
+  </data>
+  <data name="DelayDays" xml:space="preserve">
+    <value>逾期天數</value>
+  </data>
+  <data name="MaintanceDelay" xml:space="preserve">
+    <value>定期保養逾期案件統計表</value>
+  </data>
+  <data name="MaintanceJob" xml:space="preserve">
+    <value>保養作業</value>
+  </data>
+  <data name="MaintanceSchedule" xml:space="preserve">
+    <value>定期保養建檔數據清單</value>
+  </data>
+  <data name="Maintenance" xml:space="preserve">
+    <value>保養</value>
+  </data>
+  <data name="RecentMaintenanceDate" xml:space="preserve">
+    <value>最近保養日期</value>
+  </data>
+  <data name="Engineer" xml:space="preserve">
+    <value>工程師</value>
+  </data>
+  <data name="EquipmentRForm" xml:space="preserve">
+    <value>定保修復單整批匯出</value>
+  </data>
+  <data name="EquipMFormReport" xml:space="preserve">
+    <value>設備定期保養點檢表</value>
+  </data>
+  <data name="EquipUniqueID" xml:space="preserve">
+    <value>設備編號</value>
+  </data>
+  <data name="ImplementUser" xml:space="preserve">
+    <value>執行人員</value>
+  </data>
+  <data name="ManageUserID" xml:space="preserve">
+    <value>部門主管</value>
+  </data>
+  <data name="PutDate" xml:space="preserve">
+    <value>實施日期</value>
+  </data>
+  <data name="TWGY" xml:space="preserve">
+    <value>台惟工業股份有限公司</value>
+  </data>
+  <data name="VHNOStatus" xml:space="preserve">
+    <value>本單狀態</value>
+  </data>
+  <data name="Deal" xml:space="preserve">
+    <value>處置</value>
+  </data>
+  <data name="Fieldcadre" xml:space="preserve">
+    <value>現場幹部確認:</value>
+  </data>
+  <data name="StandardItem" xml:space="preserve">
+    <value>點檢項目</value>
+  </data>
+  <data name="StandardPart" xml:space="preserve">
+    <value>點檢部位</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>狀況</value>
+  </data>
+  <data name="Tips" xml:space="preserve">
+    <value>特別註記</value>
+  </data>
+  <data name="UnArriveResultAnalyze" xml:space="preserve">
+    <value>巡檢到位異常人員分析報表</value>
+  </data>
+  <data name="UnCheckResultAnalyze" xml:space="preserve">
+    <value>未檢查基準分析報表</value>
+  </data>
+  <data name="NormalCheckResult" xml:space="preserve">
+    <value>正常巡檢:V</value>
+  </data>
+  <data name="UnCheckResult" xml:space="preserve">
+    <value>未巡檢：※</value>
+  </data>
+  <data name="UnCompletelyCheckResult" xml:space="preserve">
+    <value>未完全巡檢：●</value>
+  </data>
+  <data name="UnSendJob" xml:space="preserve">
+    <value>未派工：O</value>
+  </data>
+  <data name="Agent" xml:space="preserve">
+    <value>代理商</value>
+  </data>
+  <data name="FactoryNumber" xml:space="preserve">
+    <value>出廠編號</value>
+  </data>
+  <data name="Model" xml:space="preserve">
+    <value>型號</value>
+  </data>
+  <data name="Format" xml:space="preserve">
+    <value>規格</value>
+  </data>
+  <data name="EquipmentDetail" xml:space="preserve">
+    <value>設備部位組成報表</value>
+  </data>
+  <data name="OwnOrganization" xml:space="preserve">
+    <value>保管單位</value>
+  </data>
+  <data name="MaterialTotalPrice" xml:space="preserve">
+    <value>材料總價</value>
+  </data>
+  <data name="ReplaceQTY" xml:space="preserve">
+    <value>更換數量</value>
+  </data>
+  <data name="DurationTime" xml:space="preserve">
+    <value>期間</value>
+  </data>
+  <data name="MaintenanceCostTimeTotal" xml:space="preserve">
+    <value>保養工時合計</value>
+  </data>
+  <data name="RepairCostTimeTotal" xml:space="preserve">
+    <value>維修工時合計</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>合計</value>
+  </data>
+  <data name="EquipmentCost" xml:space="preserve">
+    <value>機台保修成本統計表</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>類</value>
+  </data>
+  <data name="TypeHour" xml:space="preserve">
+    <value>類工時</value>
+  </data>
+  <data name="HourCount" xml:space="preserve">
+    <value>工時合計</value>
+  </data>
+  <data name="NumberCount" xml:space="preserve">
+    <value>次數合計</value>
+  </data>
+  <data name="EquipmentFixCost" xml:space="preserve">
+    <value>設備異常次數統計表</value>
+  </data>
+  <data name="AbnormalStatus" xml:space="preserve">
+    <value>異常描述</value>
+  </data>
+  <data name="RepairDescription" xml:space="preserve">
+    <value>修復紀要</value>
+  </data>
+  <data name="EquipmentPatrolDate" xml:space="preserve">
+    <value>設備檢修日期</value>
+  </data>
+  <data name="OrganizationDataManagement" xml:space="preserve">
+    <value>組織資料管理</value>
+  </data>
+  <data name="MaterialChangManagement" xml:space="preserve">
+    <value>材料更換資料管理</value>
+  </data>
+  <data name="EquipmentDataManagement" xml:space="preserve">
+    <value>設備資料管理</value>
+  </data>
+  <data name="Move" xml:space="preserve">
+    <value>移動</value>
+  </data>
+  <data name="TrendChart" xml:space="preserve">
+    <value>趨勢圖</value>
+  </data>
+  <data name="UnArriveRouteAnalyze" xml:space="preserve">
+    <value>未執行到位分析報表</value>
+  </data>
+  <data name="EquipmentReport" xml:space="preserve">
+    <value>設備一覽表</value>
+  </data>
+  <data name="EquipmentFixHour" xml:space="preserve">
+    <value>保養工時統計表</value>
+  </data>
+  <data name="Shared" xml:space="preserve">
+    <value>共通性</value>
+  </data>
+  <data name="RepairFormColumn" xml:space="preserve">
+    <value>修復單欄位</value>
+  </data>
+  <data name="RepairFormColumnDescription" xml:space="preserve">
+    <value>修復單欄位描述</value>
+  </data>
+  <data name="RepairFormColumnDescriptionRequired" xml:space="preserve">
+    <value>請輸入修復單欄位描述</value>
+  </data>
+  <data name="MFormStatus_1" xml:space="preserve">
+    <value>執行中</value>
+  </data>
+  <data name="MFormStatus_2" xml:space="preserve">
+    <value>執行中(逾期)</value>
+  </data>
+  <data name="MFormStatus_3" xml:space="preserve">
+    <value>簽核中</value>
+  </data>
+  <data name="MFormStatus_4" xml:space="preserve">
+    <value>退回修正</value>
+  </data>
+  <data name="TransRepairForm" xml:space="preserve">
+    <value>轉立修復單</value>
+  </data>
+  <data name="SeqRequired" xml:space="preserve">
+    <value>請輸入順序</value>
+  </data>
+  <data name="CaptchaError" xml:space="preserve">
+    <value>驗證碼輸入錯誤</value>
+  </data>
+  <data name="CaptchaRequired" xml:space="preserve">
+    <value>請輸入驗證碼</value>
+  </data>
+  <data name="CheckAbnormalNotify" xml:space="preserve">
+    <value>巡檢結果異常通知</value>
+  </data>
+  <data name="MFormNotify" xml:space="preserve">
+    <value>定期保養通知單立案通知</value>
+  </data>
+  <data name="QFormDescriptionRemark" xml:space="preserve">
+    <value>請描述異常狀況，異常時間，報修單位，報修地點或異常設備</value>
+  </data>
+  <data name="QFormNotify" xml:space="preserve">
+    <value>報修單立案通知</value>
+  </data>
+  <data name="RefreshCaptcha" xml:space="preserve">
+    <value>請重新取得驗證碼</value>
+  </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>未授權</value>
+  </data>
+  <data name="JobAbnormalNotify" xml:space="preserve">
+    <value>巡檢派工執行異常通知</value>
+  </data>
+  <data name="CheckedItemCount" xml:space="preserve">
+    <value>已檢數量</value>
+  </data>
+  <data name="CheckItemCount" xml:space="preserve">
+    <value>應檢數量</value>
+  </data>
+  <data name="QFormClosedNotify" xml:space="preserve">
+    <value>報修單結案通知</value>
+  </data>
+  <data name="QFormTakeJobNotify" xml:space="preserve">
+    <value>報修單接案處理中通知</value>
+  </data>
+  <data name="RFormApproveNotify" xml:space="preserve">
+    <value>修復單簽核通知</value>
+  </data>
+  <data name="RFormJobNotify" xml:space="preserve">
+    <value>修復單待派工通知</value>
+  </data>
+  <data name="RFormJobRefuseNotify" xml:space="preserve">
+    <value>修復單派工退回通知</value>
+  </data>
+  <data name="RFormRefuseMotify" xml:space="preserve">
+    <value>修復單取消立案通知</value>
+  </data>
+  <data name="RFormRejectNotify" xml:space="preserve">
+    <value>修復單簽核退回通知</value>
+  </data>
+  <data name="RFormTakeJobMotify" xml:space="preserve">
+    <value>修復單派工通知</value>
+  </data>
+  <data name="Pipeline" xml:space="preserve">
+    <value>管線</value>
+  </data>
+  <data name="PipelineID" xml:space="preserve">
+    <value>管線編號</value>
+  </data>
+  <data name="Locus" xml:space="preserve">
+    <value>軌跡</value>
+  </data>
+  <data name="PipelineSpec" xml:space="preserve">
+    <value>管線規格</value>
+  </data>
+  <data name="PipelineSpecDescription" xml:space="preserve">
+    <value>管線規格描述</value>
+  </data>
+  <data name="PipelineSpecDescriptionRequired" xml:space="preserve">
+    <value>請輸入管線規格描述</value>
+  </data>
+  <data name="PipelineSpecOption" xml:space="preserve">
+    <value>管線規格選項</value>
+  </data>
+  <data name="SpecType" xml:space="preserve">
+    <value>規格類別</value>
+  </data>
+  <data name="SpecTypeRequired" xml:space="preserve">
+    <value>請選擇或新增規格類別</value>
+  </data>
+  <data name="OnlyAbnormal" xml:space="preserve">
+    <value>只顯示異常</value>
+  </data>
+  <data name="Minute" xml:space="preserve">
+    <value>分</value>
+  </data>
+  <data name="TimeSpan" xml:space="preserve">
+    <value>作業時間</value>
+  </data>
+  <data name="TimeSpanAbnormal" xml:space="preserve">
+    <value>作業時間異常</value>
+  </data>
+  <data name="MaintenanceTypeRequired" xml:space="preserve">
+    <value>請選擇保養類別</value>
+  </data>
+  <data name="TimeSpanAbnormalReason" xml:space="preserve">
+    <value>作業時間異常原因</value>
+  </data>
+  <data name="Construction" xml:space="preserve">
+    <value>施工回報</value>
+  </data>
+  <data name="PipelineAbnormal" xml:space="preserve">
+    <value>管線異常</value>
+  </data>
+  <data name="ConstructionFirm" xml:space="preserve">
+    <value>施工單位</value>
+  </data>
+  <data name="ConstructionType" xml:space="preserve">
+    <value>施工類別</value>
+  </data>
+  <data name="ArriveEarly" xml:space="preserve">
+    <value>提早到位</value>
+  </data>
+  <data name="Limit" xml:space="preserve">
+    <value>管理值</value>
+  </data>
+  <data name="Inspection" xml:space="preserve">
+    <value>施工會勘</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="InspectionUser" xml:space="preserve">
+    <value>會勘人員</value>
+  </data>
+  <data name="InspectTime" xml:space="preserve">
+    <value>會勘時間</value>
+  </data>
+  <data name="PipePoint" xml:space="preserve">
+    <value>管線定位點</value>
+  </data>
+  <data name="IsMobileUser" xml:space="preserve">
+    <value>可使用行動裝置</value>
+  </data>
+  <data name="ExceedsMobileUserLimit" xml:space="preserve">
+    <value>新增失敗，【{0}】行動裝置使用者上限人數為{1}人</value>
+  </data>
+  <data name="ExceedsUserLimit" xml:space="preserve">
+    <value>新增失敗，【{0}】使用者上限人數為{1}人</value>
+  </data>
+  <data name="NotMobileUser" xml:space="preserve">
+    <value>此帳號未取得行動裝置使用授權</value>
+  </data>
+  <data name="MobileFileMustBePDF" xml:space="preserve">
+    <value>下載至行動裝置檔案必須為PDF檔</value>
+  </data>
+  <data name="RepairFormSubject" xml:space="preserve">
+    <value>修復單主旨</value>
+  </data>
+  <data name="RepairFormSubjectDescription" xml:space="preserve">
+    <value>修復單主旨描述</value>
+  </data>
+  <data name="RepairFormSubjectID" xml:space="preserve">
+    <value>修復單主旨代號</value>
+  </data>
+  <data name="RepairFormSubjectDescriptionRequired" xml:space="preserve">
+    <value>請輸入修復單主旨描述</value>
+  </data>
+  <data name="RepairFormSubjectIDRequired" xml:space="preserve">
+    <value>請輸入修復單主旨代號</value>
+  </data>
+  <data name="ConstructionFirmID" xml:space="preserve">
+    <value>施工單位代號</value>
+  </data>
+  <data name="ConstructionFirmIDRequired" xml:space="preserve">
+    <value>請輸入施工單位代號</value>
+  </data>
+  <data name="ConstructionFirmName" xml:space="preserve">
+    <value>施工單位名稱</value>
+  </data>
+  <data name="ConstructionFirmNameRequired" xml:space="preserve">
+    <value>請輸入施工單位名稱</value>
+  </data>
+  <data name="ConstructionTypeDescription" xml:space="preserve">
+    <value>施工類別描述</value>
+  </data>
+  <data name="ConstructionTypeDescriptionRequired" xml:space="preserve">
+    <value>請輸入施工類別描述</value>
+  </data>
+  <data name="ConstructionTypeID" xml:space="preserve">
+    <value>施工類別代號</value>
+  </data>
+  <data name="ConstructionTypeIDRequired" xml:space="preserve">
+    <value>請輸入施工類別代號</value>
+  </data>
+  <data name="PipelineColor" xml:space="preserve">
+    <value>管線顯示顏色</value>
+  </data>
+  <data name="PipelineColorRequired" xml:space="preserve">
+    <value>請選擇管線顯示顏色</value>
+  </data>
+  <data name="PipelineIDRequired" xml:space="preserve">
+    <value>請輸入管線編號</value>
+  </data>
+  <data name="LAT" xml:space="preserve">
+    <value>緯度</value>
+  </data>
+  <data name="LNG" xml:space="preserve">
+    <value>經度</value>
+  </data>
+  <data name="PipePointID" xml:space="preserve">
+    <value>定位點代號</value>
+  </data>
+  <data name="PipePointIDRequired" xml:space="preserve">
+    <value>請輸入定位點代號</value>
+  </data>
+  <data name="PipePointLocationRequired" xml:space="preserve">
+    <value>請標示定位點位置</value>
+  </data>
+  <data name="PipePointName" xml:space="preserve">
+    <value>定位點名稱</value>
+  </data>
+  <data name="PipePointNameRequired" xml:space="preserve">
+    <value>請輸入定位點名稱</value>
+  </data>
+  <data name="PipePointType" xml:space="preserve">
+    <value>定位點類別</value>
+  </data>
+  <data name="PipePointTypeRequired" xml:space="preserve">
+    <value>請選擇定位點類別</value>
+  </data>
+  <data name="PipePointLocation" xml:space="preserve">
+    <value>定位點位置</value>
+  </data>
+  <data name="CheckPoint" xml:space="preserve">
+    <value>巡檢點</value>
+  </data>
+  <data name="JobID" xml:space="preserve">
+    <value>派工代號</value>
+  </data>
+  <data name="JobIDRequired" xml:space="preserve">
+    <value>請輸入派工代號</value>
+  </data>
+  <data name="ChangeUserPhoto" xml:space="preserve">
+    <value>變更使用者圖片</value>
+  </data>
+  <data name="CheckResultAbnormalStatus_1" xml:space="preserve">
+    <value>已結案</value>
+  </data>
+  <data name="CheckResultAbnormalStatus_2" xml:space="preserve">
+    <value>未結案</value>
+  </data>
+  <data name="IsOptional" xml:space="preserve">
+    <value>非必要</value>
+  </data>
+  <data name="ClosedUser" xml:space="preserve">
+    <value>結案人員</value>
+  </data>
+  <data name="ChargePerson" xml:space="preserve">
+    <value>負責人員</value>
+  </data>
+  <data name="AfterHandling" xml:space="preserve">
+    <value>改善後</value>
+  </data>
+  <data name="BeforeHandling" xml:space="preserve">
+    <value>改善前</value>
+  </data>
+  <data name="Photo" xml:space="preserve">
+    <value>照片</value>
+  </data>
+  <data name="Or" xml:space="preserve">
+    <value>或</value>
+  </data>
+  <data name="JobResultVerifyStatus_1" xml:space="preserve">
+    <value>已確認</value>
+  </data>
+  <data name="JobResultVerifyStatus_2" xml:space="preserve">
+    <value>待確認</value>
+  </data>
+  <data name="CommentRequired" xml:space="preserve">
+    <value>請輸入處理說明</value>
+  </data>
+  <data name="UnRFID" xml:space="preserve">
+    <value>管制點未感應RFID</value>
+  </data>
+  <data name="CurrentVerifyUser" xml:space="preserve">
+    <value>目前簽核人員</value>
+  </data>
+  <data name="RepairBySelf" xml:space="preserve">
+    <value>自行修復</value>
+  </data>
+  <data name="CalibrationApplyStatus_1" xml:space="preserve">
+    <value>簽核中</value>
+  </data>
+  <data name="CalibrationApplyStatus_2" xml:space="preserve">
+    <value>退回修正</value>
+  </data>
+  <data name="CalibrationApplyStatus_3" xml:space="preserve">
+    <value>簽核完成</value>
+  </data>
+  <data name="ApplyDate" xml:space="preserve">
+    <value>申請日期</value>
+  </data>
+  <data name="AssetNo" xml:space="preserve">
+    <value>儀器編號</value>
+  </data>
+  <data name="SerialNo" xml:space="preserve">
+    <value>序號</value>
+  </data>
+  <data name="Brand" xml:space="preserve">
+    <value>廠牌</value>
+  </data>
+  <data name="CalibrationApply" xml:space="preserve">
+    <value>儀器校驗/免校驗申請單</value>
+  </data>
+  <data name="Department" xml:space="preserve">
+    <value>部門</value>
+  </data>
+  <data name="EquipmentOwner" xml:space="preserve">
+    <value>設備負責人</value>
+  </data>
+  <data name="EquipmentOwnerManager" xml:space="preserve">
+    <value>設備負責人主管</value>
+  </data>
+  <data name="MachineName" xml:space="preserve">
+    <value>儀器名稱</value>
+  </data>
+  <data name="PE" xml:space="preserve">
+    <value>製程負責人</value>
+  </data>
+  <data name="PEManager" xml:space="preserve">
+    <value>製程負責人主管</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>申請</value>
+  </data>
+  <data name="AssetNoRequired" xml:space="preserve">
+    <value>請輸入儀器編號</value>
+  </data>
+  <data name="BrandRequired" xml:space="preserve">
+    <value>請輸入品牌</value>
+  </data>
+  <data name="Calibration" xml:space="preserve">
+    <value>校正</value>
+  </data>
+  <data name="CalibrationCycle" xml:space="preserve">
+    <value>校正頻率(月)</value>
+  </data>
+  <data name="CalibrationCycleRequired" xml:space="preserve">
+    <value>請輸入校正頻率(月)</value>
+  </data>
+  <data name="CalibrationPoint" xml:space="preserve">
+    <value>檢驗點</value>
+  </data>
+  <data name="Characteristic" xml:space="preserve">
+    <value>量測特性</value>
+  </data>
+  <data name="EquipmentOwnerManagerRequired" xml:space="preserve">
+    <value>請選擇設備負責人主管</value>
+  </data>
+  <data name="EquipmentOwnerRequired" xml:space="preserve">
+    <value>請選擇設備負責人</value>
+  </data>
+  <data name="MachineNameRequired" xml:space="preserve">
+    <value>請輸入儀器名稱</value>
+  </data>
+  <data name="ModelRequired" xml:space="preserve">
+    <value>請輸入型號</value>
+  </data>
+  <data name="MSA" xml:space="preserve">
+    <value>MSA</value>
+  </data>
+  <data name="PEManagerRequired" xml:space="preserve">
+    <value>請選擇製程負責人主管</value>
+  </data>
+  <data name="PERequired" xml:space="preserve">
+    <value>請選擇製程負責人</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>量測範圍</value>
+  </data>
+  <data name="SerialNoRequired" xml:space="preserve">
+    <value>請輸入序號</value>
+  </data>
+  <data name="Tolerance" xml:space="preserve">
+    <value>允收標準</value>
+  </data>
+  <data name="UsingRange" xml:space="preserve">
+    <value>使用範圍</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>資訊</value>
+  </data>
+  <data name="CalibrationPointRequired" xml:space="preserve">
+    <value>請輸入檢驗點</value>
+  </data>
+  <data name="CharacteristicRequired" xml:space="preserve">
+    <value>請輸入量測特性</value>
+  </data>
+  <data name="RangeRequired" xml:space="preserve">
+    <value>請輸入量測範圍</value>
+  </data>
+  <data name="ToleranceRequired" xml:space="preserve">
+    <value>請輸入允收標準</value>
+  </data>
+  <data name="UnitRequired" xml:space="preserve">
+    <value>請輸入單位</value>
+  </data>
+  <data name="UsingRangeRequired" xml:space="preserve">
+    <value>請輸入使用範圍</value>
+  </data>
+  <data name="MustMoreThan" xml:space="preserve">
+    <value>必須大於</value>
+  </data>
+  <data name="QA" xml:space="preserve">
+    <value>QA</value>
+  </data>
+  <data name="CalibrationApplyVerifyResultStatus_1" xml:space="preserve">
+    <value>核准</value>
+  </data>
+  <data name="CalibrationApplyVerifyResultStatus_2" xml:space="preserve">
+    <value>退回</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="VerifyCommentRequired" xml:space="preserve">
+    <value>請輸入簽核意見</value>
+  </data>
+  <data name="CalibrateDate" xml:space="preserve">
+    <value>校驗日期</value>
+  </data>
+  <data name="CalibrateDateRequired" xml:space="preserve">
+    <value>請選擇校驗日期</value>
+  </data>
+  <data name="CalibrateType" xml:space="preserve">
+    <value>校正類別</value>
+  </data>
+  <data name="CalibrateTypeRequired" xml:space="preserve">
+    <value>請選擇校正類別</value>
+  </data>
+  <data name="CalibrateType_EF" xml:space="preserve">
+    <value>外校(現場)</value>
+  </data>
+  <data name="CalibrateType_EL" xml:space="preserve">
+    <value>外校(實驗室)</value>
+  </data>
+  <data name="CalibrateType_IF" xml:space="preserve">
+    <value>內校(現場)</value>
+  </data>
+  <data name="CalibrateType_IL" xml:space="preserve">
+    <value>內校(實驗室)</value>
+  </data>
+  <data name="CalibrateUnit" xml:space="preserve">
+    <value>校正負責單位</value>
+  </data>
+  <data name="CalibrateUnitRequired" xml:space="preserve">
+    <value>請選擇校正負責單位</value>
+  </data>
+  <data name="CalibrateUnit_F" xml:space="preserve">
+    <value>現場</value>
+  </data>
+  <data name="CalibrateUnit_L" xml:space="preserve">
+    <value>實驗室</value>
+  </data>
+  <data name="Calibrator" xml:space="preserve">
+    <value>校驗人員</value>
+  </data>
+  <data name="CalibratorRequired" xml:space="preserve">
+    <value>請選擇校驗人員</value>
+  </data>
+  <data name="CaseType" xml:space="preserve">
+    <value>案件類別</value>
+  </data>
+  <data name="CaseTypeRequired" xml:space="preserve">
+    <value>請選擇案件類別</value>
+  </data>
+  <data name="CaseType_E" xml:space="preserve">
+    <value>緊急</value>
+  </data>
+  <data name="CaseType_G" xml:space="preserve">
+    <value>一般</value>
+  </data>
+  <data name="CalibrationApplyVerifyResultStatus_0" xml:space="preserve">
+    <value>呈核</value>
+  </data>
+  <data name="MSADate" xml:space="preserve">
+    <value>MSA日期</value>
+  </data>
+  <data name="MSADateRequired" xml:space="preserve">
+    <value>請選擇MSA日期</value>
+  </data>
+  <data name="CalibrationForm" xml:space="preserve">
+    <value>儀器校驗通知單</value>
+  </data>
+  <data name="CalibrationFormStatus_0" xml:space="preserve">
+    <value>未接案</value>
+  </data>
+  <data name="CalibrationFormStatus_1" xml:space="preserve">
+    <value>執行中</value>
+  </data>
+  <data name="CalibrationFormStatus_2" xml:space="preserve">
+    <value>逾期</value>
+  </data>
+  <data name="CalibrationFormStatus_3" xml:space="preserve">
+    <value>簽核中</value>
+  </data>
+  <data name="CalibrationFormStatus_4" xml:space="preserve">
+    <value>退回修正</value>
+  </data>
+  <data name="CalibrationFormStatus_5" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="CalibrationFormVerifyResultStatus_0" xml:space="preserve">
+    <value>呈核</value>
+  </data>
+  <data name="CalibrationFormVerifyResultStatus_1" xml:space="preserve">
+    <value>核准</value>
+  </data>
+  <data name="CalibrationFormVerifyResultStatus_2" xml:space="preserve">
+    <value>退回修正</value>
+  </data>
+  <data name="ReadingValue" xml:space="preserve">
+    <value>讀值</value>
+  </data>
+  <data name="Result" xml:space="preserve">
+    <value>結果</value>
+  </data>
+  <data name="ReadingValueRequired" xml:space="preserve">
+    <value>請輸入讀值</value>
+  </data>
+  <data name="CalNo" xml:space="preserve">
+    <value>儀校編號</value>
+  </data>
+  <data name="CalibrationNoRequired" xml:space="preserve">
+    <value>請輸入儀校編號</value>
+  </data>
+  <data name="CalibrationAbnormalForm" xml:space="preserve">
+    <value>儀器校驗異常通知單</value>
+  </data>
+  <data name="AbnormalFormStatus_1" xml:space="preserve">
+    <value>未處置</value>
+  </data>
+  <data name="AbnormalFormStatus_2" xml:space="preserve">
+    <value>微調處置完成</value>
+  </data>
+  <data name="AbnormalFormStatus_3" xml:space="preserve">
+    <value>異動申請中</value>
+  </data>
+  <data name="HandleTime" xml:space="preserve">
+    <value>處理時間</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>異動</value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="Fix" xml:space="preserve">
+    <value>維修</value>
+  </data>
+  <data name="Scrapped" xml:space="preserve">
+    <value>報廢</value>
+  </data>
+  <data name="ChangeFormChangeType_1" xml:space="preserve">
+    <value>免校驗</value>
+  </data>
+  <data name="ChangeFormChangeType_2" xml:space="preserve">
+    <value>遺失</value>
+  </data>
+  <data name="ChangeFormChangeType_3" xml:space="preserve">
+    <value>報廢</value>
+  </data>
+  <data name="ChangeFormChangeType_4" xml:space="preserve">
+    <value>維修</value>
+  </data>
+  <data name="ChangeFormChangeType_5" xml:space="preserve">
+    <value>移轉</value>
+  </data>
+  <data name="ChangeFormChangeType_6" xml:space="preserve">
+    <value>庫存</value>
+  </data>
+  <data name="ChangeFormChangeType_7" xml:space="preserve">
+    <value>復用</value>
+  </data>
+  <data name="ChangeReason" xml:space="preserve">
+    <value>異動原因</value>
+  </data>
+  <data name="ChangeType" xml:space="preserve">
+    <value>異動類別</value>
+  </data>
+  <data name="FixFinishedDate" xml:space="preserve">
+    <value>維修完成日</value>
+  </data>
+  <data name="CalibrationChangeForm" xml:space="preserve">
+    <value>儀器狀態異動申請單</value>
+  </data>
+  <data name="QAEquipmentStatus_D" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="QAEquipmentStatus_F" xml:space="preserve">
+    <value>維修</value>
+  </data>
+  <data name="QAEquipmentStatus_L" xml:space="preserve">
+    <value>遺失</value>
+  </data>
+  <data name="QAEquipmentStatus_N" xml:space="preserve">
+    <value>正常</value>
+  </data>
+  <data name="QAEquipmentStatus_S" xml:space="preserve">
+    <value>報廢</value>
+  </data>
+  <data name="ChangeFormStatus_1" xml:space="preserve">
+    <value>簽核中</value>
+  </data>
+  <data name="ChangeFormStatus_2" xml:space="preserve">
+    <value>退回修正</value>
+  </data>
+  <data name="ChangeFormStatus_3" xml:space="preserve">
+    <value>簽核完成</value>
+  </data>
+  <data name="ChangeReasonRequired" xml:space="preserve">
+    <value>請輸入異動原因</value>
+  </data>
+  <data name="FixFinishedDateRequired" xml:space="preserve">
+    <value>請選擇維修完成日</value>
+  </data>
+  <data name="ChangeFormVerifyResultStatus_0" xml:space="preserve">
+    <value>申請</value>
+  </data>
+  <data name="ChangeFormVerifyResultStatus_1" xml:space="preserve">
+    <value>核准</value>
+  </data>
+  <data name="ChangeFormVerifyResultStatus_2" xml:space="preserve">
+    <value>退回</value>
+  </data>
+  <data name="NewEquipmentOwner" xml:space="preserve">
+    <value>新設備負責人</value>
+  </data>
+  <data name="NewEquipmentOwnerManager" xml:space="preserve">
+    <value>新設備負責人主管</value>
+  </data>
+  <data name="NewPE" xml:space="preserve">
+    <value>新製程負責人</value>
+  </data>
+  <data name="NewPEManager" xml:space="preserve">
+    <value>新製程負責人主管</value>
+  </data>
+  <data name="ICHIID" xml:space="preserve">
+    <value>儀器編號</value>
+  </data>
+  <data name="IchiName" xml:space="preserve">
+    <value>儀器名稱</value>
+  </data>
+  <data name="IchiNameRequired" xml:space="preserve">
+    <value>請輸入儀器名稱</value>
+  </data>
+  <data name="IchiType" xml:space="preserve">
+    <value>儀器類別</value>
+  </data>
+  <data name="LowerUsingRange" xml:space="preserve">
+    <value>使用範圍下限</value>
+  </data>
+  <data name="UpperUsingRange" xml:space="preserve">
+    <value>使用範圍上限</value>
+  </data>
+  <data name="AbnormalNotifyStatus_0" xml:space="preserve">
+    <value>不須處置</value>
+  </data>
+  <data name="AbnormalNotifyStatus_1" xml:space="preserve">
+    <value>待負責單位處置</value>
+  </data>
+  <data name="AbnormalNotifyStatus_2" xml:space="preserve">
+    <value>負責單位處理中</value>
+  </data>
+  <data name="AbnormalNotifyStatus_3" xml:space="preserve">
+    <value>已結案</value>
+  </data>
+  <data name="OccurDate" xml:space="preserve">
+    <value>發生日期</value>
+  </data>
+  <data name="OccurTime" xml:space="preserve">
+    <value>發生時間</value>
+  </data>
+  <data name="ResponsibleOrganization" xml:space="preserve">
+    <value>負責單位</value>
+  </data>
+  <data name="AbnormalNotifyForm" xml:space="preserve">
+    <value>異常通報表</value>
+  </data>
+  <data name="NotifyUser" xml:space="preserve">
+    <value>通知人員</value>
+  </data>
+  <data name="MSAResponsor" xml:space="preserve">
+    <value>MSA負責人</value>
+  </data>
+  <data name="ICHI" xml:space="preserve">
+    <value>儀器</value>
+  </data>
+  <data name="MSALowerRange" xml:space="preserve">
+    <value>ALL PACKAGE 量測範圍下限</value>
+  </data>
+  <data name="MSAUpperRange" xml:space="preserve">
+    <value>ALL PACKAGE 量測範圍上限</value>
+  </data>
+  <data name="Station" xml:space="preserve">
+    <value>站別</value>
+  </data>
+  <data name="MSACharacteristicRequired" xml:space="preserve">
+    <value>請選擇量測特性</value>
+  </data>
+  <data name="MSACharacteristicUnitRequired" xml:space="preserve">
+    <value>請選擇量測特性單位</value>
+  </data>
+  <data name="MSAIchiRequired" xml:space="preserve">
+    <value>請選擇儀器</value>
+  </data>
+  <data name="MSARangeRequired" xml:space="preserve">
+    <value>請輸入ALL PACKAGE 量測範圍</value>
+  </data>
+  <data name="StationRequired" xml:space="preserve">
+    <value>請選擇站別</value>
+  </data>
+  <data name="FactoryIDRequired" xml:space="preserve">
+    <value>請選擇廠別</value>
+  </data>
+  <data name="IchiRequired" xml:space="preserve">
+    <value>請選擇儀器名稱</value>
+  </data>
+  <data name="IchiTypeRequired" xml:space="preserve">
+    <value>請選擇儀器類別</value>
+  </data>
+  <data name="OrganizationRequired" xml:space="preserve">
+    <value>請選擇組織</value>
+  </data>
+  <data name="JobDateYet" xml:space="preserve">
+    <value>未到派工日期</value>
+  </data>
+  <data name="MSAFormStatus_1" xml:space="preserve">
+    <value>執行中</value>
+  </data>
+  <data name="MSAFormStatus_2" xml:space="preserve">
+    <value>逾期</value>
+  </data>
+  <data name="MSAFormStatus_3" xml:space="preserve">
+    <value>退回修正</value>
+  </data>
+  <data name="MSAFormStatus_4" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="MSAForm" xml:space="preserve">
+    <value>MSA通知單</value>
+  </data>
+  <data name="MSARange" xml:space="preserve">
+    <value>ALL PACKAGE 量測範圍</value>
+  </data>
+  <data name="MFormStatus_0" xml:space="preserve">
+    <value>未接案</value>
+  </data>
+  <data name="MFormStatus_5" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="UsingRangeTolerance" xml:space="preserve">
+    <value>使用範圍允收</value>
+  </data>
+  <data name="UsingRangeToleranceUnit" xml:space="preserve">
+    <value>使用範圍允收單位</value>
+  </data>
+  <data name="MaintenanceJobDescriptionRequired" xml:space="preserve">
+    <value>請輸入定期保養派工描述</value>
+  </data>
+  <data name="CalibrationFormStatus_6" xml:space="preserve">
+    <value>退件</value>
+  </data>
+  <data name="MFormStatus_6" xml:space="preserve">
+    <value>展延申請中</value>
+  </data>
+  <data name="RFormStatus_7" xml:space="preserve">
+    <value>退回修正</value>
+  </data>
+  <data name="RFormStatus_8" xml:space="preserve">
+    <value>已結案</value>
+  </data>
+  <data name="RFormStatus_9" xml:space="preserve">
+    <value>展延申請中</value>
+  </data>
+  <data name="CalibrationFormStatus_7" xml:space="preserve">
+    <value>異常處置中</value>
+  </data>
+  <data name="CalibrationFormStatus_8" xml:space="preserve">
+    <value>異常處理完成</value>
+  </data>
+  <data name="AbnormalFormStatus_4" xml:space="preserve">
+    <value>已結案</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="CalibrationOperationManagement" xml:space="preserve">
+    <value>儀校作業管理</value>
+  </data>
+</root>

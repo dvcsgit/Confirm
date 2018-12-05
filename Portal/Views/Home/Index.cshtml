@@ -1,0 +1,42 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width" />
+
+    <title>@Utility.Config.SystemName[ViewBag.Lang]</title>
+
+    <!--[if !IE]> -->
+    <script type="text/javascript">
+        document.write("<script src='@Url.Content("~/Scripts/jquery.min.js")'>" + "<" + "/script>");
+        document.write("<script type=\"text/javascript\">$(document).ready(function () { location.replace('@Url.Action("WindowsAuthentication", new { ReturnUrl = ViewBag.ReturnUrl })'); });" + "<" + "/script>");
+    </script>
+    <!-- <![endif]-->
+
+    <!--[if IE]>
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='@Url.Content("~/Scripts/jquery1x.min.js")'>"+"<"+"/script>");
+    </script>
+    <![endif]
+
+    <!--[if lt IE 10]>
+        <script type="text/javascript">
+        document.write("<script type=\"text/javascript\">$(document).ready(function () { location.replace('@Url.Action("IE10")'); });" + "<" + "/script>");
+        </script>
+    <![endif]-->
+
+    <!--[if gte IE 10]>
+        <script type="text/javascript">
+        document.write("<script type=\"text/javascript\">$(document).ready(function () { location.replace('@Url.Action("Compatibility")'); });" + "<" + "/script>");
+        </script>
+    <![endif]-->
+</head>
+<body>
+    
+</body>
+</html>

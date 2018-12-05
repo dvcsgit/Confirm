@@ -1,0 +1,102 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts
+{
+<script type="text/javascript">
+    var timer1;
+    var timer2;
+    var timer3;
+    var timer4;
+
+    $(document).ready(function () {
+        GetRepairFormList();
+        GetRepairFormDetailList();
+        GetMaintenanceFormList();
+        GetMaintenanceFormDetailList();
+
+        timer1 = setInterval(function () {
+            GetRepairFormList();
+        }, 300 * 1000);
+
+        timer2 = setInterval(function () {
+            GetRepairFormDetailList();
+        }, 300 * 1000);
+
+        timer3 = setInterval(function () {
+            GetMaintenanceFormList();
+        }, 300 * 1000);
+
+        timer4 = setInterval(function () {
+            GetMaintenanceFormDetailList();
+        }, 300 * 1000);
+    });
+
+    function GetRepairFormList() {
+        var list = $('#divRepairForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetRepairFormList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function GetRepairFormDetailList() {
+        var list = $('#divRepairFormDetail');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetRepairFormDetailList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function GetMaintenanceFormList() {
+        var list = $('#divMaintenanceForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetMaintenanceFormList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function GetMaintenanceFormDetailList() {
+        var list = $('#divMaintenanceFormDetail');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetMaintenanceFormDetailList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+</script>
+
+}
+
+<div id="divRepairForm" style="min-height:30px;"></div>
+
+<div id="divRepairFormDetail" style="min-height:30px;"></div>
+
+<div id="divMaintenanceForm" style="min-height:30px;"></div>
+
+<div id="divMaintenanceFormDetail" style="min-height:30px;"></div>

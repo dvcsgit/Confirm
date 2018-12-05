@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Config>
+  <DataBase Host="10.1.1.128" Port="1521" ServiceName="ORBITDB" UserID="FPG" Password="FPG" />
+  <MAIL EMAIL="10592@mail.chimei.com.tw" NAME="何鏡"></MAIL>
+    <MAIL EMAIL="a12791@mail.chimei.com.tw" NAME="林孟賢"></MAIL>
+</Config>
+

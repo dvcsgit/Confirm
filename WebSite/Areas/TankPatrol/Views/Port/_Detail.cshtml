@@ -1,0 +1,654 @@
+﻿@model Models.TankPatrol.PortManagement.DetailViewModel
+
+<p>
+    @if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+    {
+        if (ViewBag.CanEdit)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-pencil bigger-160"></i>
+                @Resources.Resource.Edit
+            </button>
+        }
+
+        if (ViewBag.CanDelete)
+        {
+            <button class="btn btn-app btn-danger btn-xs" onclick="Delete('@Model.UniqueID');" type="button">
+                <i class="ace-icon fa fa-trash-o bigger-160"></i>
+                @Resources.Resource.Delete
+            </button>
+        }
+    }
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">灌口</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.StationDescription)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.StationDescription)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.IslandDescription)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.IslandDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.ID)</th>
+                    <td>@Html.DisplayFor(x => x.ID)</td>
+                    <th>@Html.LabelFor(x => x.Description)</th>
+                    <td>@Html.DisplayFor(x => x.Description)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.TagID)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.TagID)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="tabbable">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a data-toggle="tab" href="#Load">
+                裝料
+            </a>
+        </li>
+
+        <li>
+            <a data-toggle="tab" href="#UnLoad">
+                卸料
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="Load" class="tab-pane fade in active">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">裝料前 @Resources.Resource.CheckItem</h5>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <div style="min-height:200px;">
+                            <table class="table table-striped table-bordered table-hover nowrap">
+                                <thead class="thin-border-bottom">
+                                    <tr>
+                                        <th class="col-sm-1 center">@Resources.Resource.Inherit</th>
+                                        <th>@Resources.Resource.CheckType</th>
+                                        <th>@Resources.Resource.CheckItemID</th>
+                                        <th>@Resources.Resource.CheckItemDescription</th>
+                                        <th class="col-sm-3">@Resources.Resource.TagID</th>
+                                        <th>@Resources.Resource.LowerLimit</th>
+                                        <th>@Resources.Resource.LowerAlertLimit</th>
+                                        <th>@Resources.Resource.UpperAlertLimit</th>
+                                        <th>@Resources.Resource.UpperLimit</th>
+                                        <th>@Resources.Resource.AccumulationBase</th>
+                                        <th>@Resources.Resource.Unit</th>
+                                        <th>@Resources.Resource.Remark</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model.LBCheckItemList)
+                                    {
+                                        <tr>
+                                            <td class="center">
+                                                @if (item.IsInherit)
+                                                {
+                                                    <i class="ace-icon fa fa-check bigger-110 red"></i> 
+                                                }
+                                            </td>
+                                            <td>@item.CheckType</td>
+                                            <td>@item.ID</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.TagID</td>
+                                            @if (item.IsFeelItem)
+                                            {
+                                                <td colspan="7">@Resources.Resource.IsFeelItem</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@(item.IsInherit ? item.OriLowerLimit : item.LowerLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriLowerAlertLimit : item.LowerAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperAlertLimit : item.UpperAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperLimit : item.UpperLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriAccumulationBase : item.AccumulationBase)</td>
+                                                <td>@(item.IsInherit ? item.OriUnit : item.Unit)</td>
+                                                <td>@(item.IsInherit ? item.OriRemark : item.Remark)</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.LB2LPTimeSpan.HasValue)
+            { 
+                <div class="space"></div>
+                <div class="well well-sm" style="margin-bottom:0px;">裝料前至裝料中檢查需間隔 @Html.DisplayFor(x => x.LB2LPTimeSpan) 分鐘</div>
+                <div class="space"></div>
+            }
+            else
+            { 
+                <div class="space"></div>
+            }
+            
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">裝料中 @Resources.Resource.CheckItem</h5>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <div style="min-height:200px;">
+                            <table class="table table-striped table-bordered table-hover nowrap">
+                                <thead class="thin-border-bottom">
+                                    <tr>
+                                        <th class="col-sm-1 center">@Resources.Resource.Inherit</th>
+                                        <th>@Resources.Resource.CheckType</th>
+                                        <th>@Resources.Resource.CheckItemID</th>
+                                        <th>@Resources.Resource.CheckItemDescription</th>
+                                        <th class="col-sm-3">@Resources.Resource.TagID</th>
+                                        <th>@Resources.Resource.LowerLimit</th>
+                                        <th>@Resources.Resource.LowerAlertLimit</th>
+                                        <th>@Resources.Resource.UpperAlertLimit</th>
+                                        <th>@Resources.Resource.UpperLimit</th>
+                                        <th>@Resources.Resource.AccumulationBase</th>
+                                        <th>@Resources.Resource.Unit</th>
+                                        <th>@Resources.Resource.Remark</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model.LPCheckItemList)
+                                    {
+                                        <tr>
+                                            <td class="center">
+                                                @if (item.IsInherit)
+                                                {
+                                                    <i class="ace-icon fa fa-check bigger-110 red"></i>
+                                                }
+                                            </td>
+                                            <td>@item.CheckType</td>
+                                            <td>@item.ID</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.TagID</td>
+                                            @if (item.IsFeelItem)
+                                            {
+                                                <td colspan="7">@Resources.Resource.IsFeelItem</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@(item.IsInherit ? item.OriLowerLimit : item.LowerLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriLowerAlertLimit : item.LowerAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperAlertLimit : item.UpperAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperLimit : item.UpperLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriAccumulationBase : item.AccumulationBase)</td>
+                                                <td>@(item.IsInherit ? item.OriUnit : item.Unit)</td>
+                                                <td>@(item.IsInherit ? item.OriRemark : item.Remark)</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.LP2LATimeSpan.HasValue)
+            {
+                <div class="space"></div>
+                <div class="well well-sm" style="margin-bottom:0px;">裝料中至裝料後檢查需間隔 @Html.DisplayFor(x => x.LP2LATimeSpan) 分鐘</div>
+                <div class="space"></div>
+            }
+            else
+            {
+                <div class="space"></div>
+            }
+
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">裝料後 @Resources.Resource.CheckItem</h5>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <div style="min-height:200px;">
+                            <table class="table table-striped table-bordered table-hover nowrap">
+                                <thead class="thin-border-bottom">
+                                    <tr>
+                                        <th class="col-sm-1 center">@Resources.Resource.Inherit</th>
+                                        <th>@Resources.Resource.CheckType</th>
+                                        <th>@Resources.Resource.CheckItemID</th>
+                                        <th>@Resources.Resource.CheckItemDescription</th>
+                                        <th class="col-sm-3">@Resources.Resource.TagID</th>
+                                        <th>@Resources.Resource.LowerLimit</th>
+                                        <th>@Resources.Resource.LowerAlertLimit</th>
+                                        <th>@Resources.Resource.UpperAlertLimit</th>
+                                        <th>@Resources.Resource.UpperLimit</th>
+                                        <th>@Resources.Resource.AccumulationBase</th>
+                                        <th>@Resources.Resource.Unit</th>
+                                        <th>@Resources.Resource.Remark</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model.LACheckItemList)
+                                    {
+                                        <tr>
+                                            <td class="center">
+                                                @if (item.IsInherit)
+                                                {
+                                                    <i class="ace-icon fa fa-check bigger-110 red"></i>
+                                                }
+                                            </td>
+                                            <td>@item.CheckType</td>
+                                            <td>@item.ID</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.TagID</td>
+                                            @if (item.IsFeelItem)
+                                            {
+                                                <td colspan="7">@Resources.Resource.IsFeelItem</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@(item.IsInherit ? item.OriLowerLimit : item.LowerLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriLowerAlertLimit : item.LowerAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperAlertLimit : item.UpperAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperLimit : item.UpperLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriAccumulationBase : item.AccumulationBase)</td>
+                                                <td>@(item.IsInherit ? item.OriUnit : item.Unit)</td>
+                                                <td>@(item.IsInherit ? item.OriRemark : item.Remark)</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.LA2LDTimeSpan.HasValue)
+            {
+                <div class="space"></div>
+                <div class="well well-sm" style="margin-bottom:0px;">裝料後至當日裝料完畢檢查需間隔 @Html.DisplayFor(x => x.LA2LDTimeSpan) 分鐘</div>
+                <div class="space"></div>
+            }
+            else
+            {
+                <div class="space"></div>
+            }
+
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">當日裝料完畢 @Resources.Resource.CheckItem</h5>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <div style="min-height:200px;">
+                            <table class="table table-striped table-bordered table-hover nowrap">
+                                <thead class="thin-border-bottom">
+                                    <tr>
+                                        <th class="col-sm-1 center">@Resources.Resource.Inherit</th>
+                                        <th>@Resources.Resource.CheckType</th>
+                                        <th>@Resources.Resource.CheckItemID</th>
+                                        <th>@Resources.Resource.CheckItemDescription</th>
+                                        <th class="col-sm-3">@Resources.Resource.TagID</th>
+                                        <th>@Resources.Resource.LowerLimit</th>
+                                        <th>@Resources.Resource.LowerAlertLimit</th>
+                                        <th>@Resources.Resource.UpperAlertLimit</th>
+                                        <th>@Resources.Resource.UpperLimit</th>
+                                        <th>@Resources.Resource.AccumulationBase</th>
+                                        <th>@Resources.Resource.Unit</th>
+                                        <th>@Resources.Resource.Remark</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model.LDCheckItemList)
+                                    {
+                                        <tr>
+                                            <td class="center">
+                                                @if (item.IsInherit)
+                                                {
+                                                    <i class="ace-icon fa fa-check bigger-110 red"></i>
+                                                }
+                                            </td>
+                                            <td>@item.CheckType</td>
+                                            <td>@item.ID</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.TagID</td>
+                                            @if (item.IsFeelItem)
+                                            {
+                                                <td colspan="7">@Resources.Resource.IsFeelItem</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@(item.IsInherit ? item.OriLowerLimit : item.LowerLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriLowerAlertLimit : item.LowerAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperAlertLimit : item.UpperAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperLimit : item.UpperLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriAccumulationBase : item.AccumulationBase)</td>
+                                                <td>@(item.IsInherit ? item.OriUnit : item.Unit)</td>
+                                                <td>@(item.IsInherit ? item.OriRemark : item.Remark)</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="UnLoad" class="tab-pane fade">
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">卸料前 @Resources.Resource.CheckItem</h5>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <div style="min-height:200px;">
+                            <table class="table table-striped table-bordered table-hover nowrap">
+                                <thead class="thin-border-bottom">
+                                    <tr>
+                                        <th class="col-sm-1 center">@Resources.Resource.Inherit</th>
+                                        <th>@Resources.Resource.CheckType</th>
+                                        <th>@Resources.Resource.CheckItemID</th>
+                                        <th>@Resources.Resource.CheckItemDescription</th>
+                                        <th class="col-sm-3">@Resources.Resource.TagID</th>
+                                        <th>@Resources.Resource.LowerLimit</th>
+                                        <th>@Resources.Resource.LowerAlertLimit</th>
+                                        <th>@Resources.Resource.UpperAlertLimit</th>
+                                        <th>@Resources.Resource.UpperLimit</th>
+                                        <th>@Resources.Resource.AccumulationBase</th>
+                                        <th>@Resources.Resource.Unit</th>
+                                        <th>@Resources.Resource.Remark</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model.UBCheckItemList)
+                                    {
+                                        <tr>
+                                            <td class="center">
+                                                @if (item.IsInherit)
+                                                {
+                                                    <i class="ace-icon fa fa-check bigger-110 red"></i>
+                                                }
+                                            </td>
+                                            <td>@item.CheckType</td>
+                                            <td>@item.ID</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.TagID</td>
+                                            @if (item.IsFeelItem)
+                                            {
+                                                <td colspan="7">@Resources.Resource.IsFeelItem</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@(item.IsInherit ? item.OriLowerLimit : item.LowerLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriLowerAlertLimit : item.LowerAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperAlertLimit : item.UpperAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperLimit : item.UpperLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriAccumulationBase : item.AccumulationBase)</td>
+                                                <td>@(item.IsInherit ? item.OriUnit : item.Unit)</td>
+                                                <td>@(item.IsInherit ? item.OriRemark : item.Remark)</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.UB2UPTimeSpan.HasValue)
+            {
+                <div class="space"></div>
+                <div class="well well-sm" style="margin-bottom:0px;">卸料前至卸料中檢查需間隔 @Html.DisplayFor(x => x.UB2UPTimeSpan) 分鐘</div>
+                <div class="space"></div>
+            }
+            else
+            {
+                <div class="space"></div>
+            }
+
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">卸料中 @Resources.Resource.CheckItem</h5>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <div style="min-height:200px;">
+                            <table class="table table-striped table-bordered table-hover nowrap">
+                                <thead class="thin-border-bottom">
+                                    <tr>
+                                        <th class="col-sm-1 center">@Resources.Resource.Inherit</th>
+                                        <th>@Resources.Resource.CheckType</th>
+                                        <th>@Resources.Resource.CheckItemID</th>
+                                        <th>@Resources.Resource.CheckItemDescription</th>
+                                        <th class="col-sm-3">@Resources.Resource.TagID</th>
+                                        <th>@Resources.Resource.LowerLimit</th>
+                                        <th>@Resources.Resource.LowerAlertLimit</th>
+                                        <th>@Resources.Resource.UpperAlertLimit</th>
+                                        <th>@Resources.Resource.UpperLimit</th>
+                                        <th>@Resources.Resource.AccumulationBase</th>
+                                        <th>@Resources.Resource.Unit</th>
+                                        <th>@Resources.Resource.Remark</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model.UPCheckItemList)
+                                    {
+                                        <tr>
+                                            <td class="center">
+                                                @if (item.IsInherit)
+                                                {
+                                                    <i class="ace-icon fa fa-check bigger-110 red"></i>
+                                                }
+                                            </td>
+                                            <td>@item.CheckType</td>
+                                            <td>@item.ID</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.TagID</td>
+                                            @if (item.IsFeelItem)
+                                            {
+                                                <td colspan="7">@Resources.Resource.IsFeelItem</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@(item.IsInherit ? item.OriLowerLimit : item.LowerLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriLowerAlertLimit : item.LowerAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperAlertLimit : item.UpperAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperLimit : item.UpperLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriAccumulationBase : item.AccumulationBase)</td>
+                                                <td>@(item.IsInherit ? item.OriUnit : item.Unit)</td>
+                                                <td>@(item.IsInherit ? item.OriRemark : item.Remark)</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.UP2UATimeSpan.HasValue)
+            {
+                <div class="space"></div>
+                <div class="well well-sm" style="margin-bottom:0px;">卸料中至卸料後檢查需間隔 @Html.DisplayFor(x => x.UP2UATimeSpan) 分鐘</div>
+                <div class="space"></div>
+            }
+            else
+            {
+                <div class="space"></div>
+            }
+
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">卸料後 @Resources.Resource.CheckItem</h5>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <div style="min-height:200px;">
+                            <table class="table table-striped table-bordered table-hover nowrap">
+                                <thead class="thin-border-bottom">
+                                    <tr>
+                                        <th class="col-sm-1 center">@Resources.Resource.Inherit</th>
+                                        <th>@Resources.Resource.CheckType</th>
+                                        <th>@Resources.Resource.CheckItemID</th>
+                                        <th>@Resources.Resource.CheckItemDescription</th>
+                                        <th class="col-sm-3">@Resources.Resource.TagID</th>
+                                        <th>@Resources.Resource.LowerLimit</th>
+                                        <th>@Resources.Resource.LowerAlertLimit</th>
+                                        <th>@Resources.Resource.UpperAlertLimit</th>
+                                        <th>@Resources.Resource.UpperLimit</th>
+                                        <th>@Resources.Resource.AccumulationBase</th>
+                                        <th>@Resources.Resource.Unit</th>
+                                        <th>@Resources.Resource.Remark</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model.UACheckItemList)
+                                    {
+                                        <tr>
+                                            <td class="center">
+                                                @if (item.IsInherit)
+                                                {
+                                                    <i class="ace-icon fa fa-check bigger-110 red"></i>
+                                                }
+                                            </td>
+                                            <td>@item.CheckType</td>
+                                            <td>@item.ID</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.TagID</td>
+                                            @if (item.IsFeelItem)
+                                            {
+                                                <td colspan="7">@Resources.Resource.IsFeelItem</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@(item.IsInherit ? item.OriLowerLimit : item.LowerLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriLowerAlertLimit : item.LowerAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperAlertLimit : item.UpperAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperLimit : item.UpperLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriAccumulationBase : item.AccumulationBase)</td>
+                                                <td>@(item.IsInherit ? item.OriUnit : item.Unit)</td>
+                                                <td>@(item.IsInherit ? item.OriRemark : item.Remark)</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.UA2UDTimeSpan.HasValue)
+            {
+                <div class="space"></div>
+                <div class="well well-sm" style="margin-bottom:0px;">卸料後至當日卸料完畢檢查需間隔 @Html.DisplayFor(x => x.UA2UDTimeSpan) 分鐘</div>
+                <div class="space"></div>
+            }
+            else
+            {
+                <div class="space"></div>
+            }
+
+            <div class="widget-box widget-color-dark">
+                <div class="widget-header">
+                    <h5 class="widget-title">當日卸料完畢 @Resources.Resource.CheckItem</h5>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding" style="overflow-x:scroll;">
+                        <div style="min-height:200px;">
+                            <table class="table table-striped table-bordered table-hover nowrap">
+                                <thead class="thin-border-bottom">
+                                    <tr>
+                                        <th class="col-sm-1 center">@Resources.Resource.Inherit</th>
+                                        <th>@Resources.Resource.CheckType</th>
+                                        <th>@Resources.Resource.CheckItemID</th>
+                                        <th>@Resources.Resource.CheckItemDescription</th>
+                                        <th class="col-sm-3">@Resources.Resource.TagID</th>
+                                        <th>@Resources.Resource.LowerLimit</th>
+                                        <th>@Resources.Resource.LowerAlertLimit</th>
+                                        <th>@Resources.Resource.UpperAlertLimit</th>
+                                        <th>@Resources.Resource.UpperLimit</th>
+                                        <th>@Resources.Resource.AccumulationBase</th>
+                                        <th>@Resources.Resource.Unit</th>
+                                        <th>@Resources.Resource.Remark</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in Model.UDCheckItemList)
+                                    {
+                                        <tr>
+                                            <td class="center">
+                                                @if (item.IsInherit)
+                                                {
+                                                    <i class="ace-icon fa fa-check bigger-110 red"></i>
+                                                }
+                                            </td>
+                                            <td>@item.CheckType</td>
+                                            <td>@item.ID</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.TagID</td>
+                                            @if (item.IsFeelItem)
+                                            {
+                                                <td colspan="7">@Resources.Resource.IsFeelItem</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@(item.IsInherit ? item.OriLowerLimit : item.LowerLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriLowerAlertLimit : item.LowerAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperAlertLimit : item.UpperAlertLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriUpperLimit : item.UpperLimit)</td>
+                                                <td>@(item.IsInherit ? item.OriAccumulationBase : item.AccumulationBase)</td>
+                                                <td>@(item.IsInherit ? item.OriUnit : item.Unit)</td>
+                                                <td>@(item.IsInherit ? item.OriRemark : item.Remark)</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

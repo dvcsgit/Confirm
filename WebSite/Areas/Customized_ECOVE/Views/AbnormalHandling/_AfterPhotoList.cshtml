@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Customized.ECOVE.Models.AbnormalHandlingManagement.PhotoModel>
+
+<script type="text/javascript">
+
+$(document).ready(function () {
+@foreach (var item in Model)
+{
+    <text>$(".@string.Format("{0}_{1}_{2}", item.AbnormalUniqueID, item.Type, item.Seq)").colorbox({ rel: '@string.Format("{0}_{1}_{2}", item.AbnormalUniqueID, item.Type, item.Seq)', maxWidth: '100%', maxHeight: '100%' });</text>
+}
+});
+
+    </script>
+
+<ul class="ace-thumbnails clearfix">
+    @foreach (var photo in Model)
+    {
+        <li>
+            @if (photo.IsSaved)
+            {
+                <a href="@Url.Content("~/EquipmentPatrolPhoto/" + photo.FileName)" title="Photo Title" data-rel="colorbox" class="cboxElement @string.Format("{0}_{1}_{2}", photo.AbnormalUniqueID, photo.Type, photo.Seq)">
+                    <img width="150" height="150" alt="150x150" src="@Url.Content("~/EquipmentPatrolPhoto/" + photo.FileName)">
+                </a>
+            }
+            else
+            {
+                <a href="@Url.Content("~/Temp/" + photo.TempFileName)" title="Photo Title" data-rel="colorbox" class="cboxElement @string.Format("{0}_{1}_{2}", photo.AbnormalUniqueID, photo.Type, photo.Seq)">
+                    <img width="150" height="150" alt="150x150" src="@Url.Content("~/Temp/" + photo.TempFileName)">
+                </a>
+            }
+            <div class="tools">
+                <a href="#" onclick="DeleteAfterPhoto('@photo.AbnormalUniqueID', @photo.Seq); return false;">
+                    <i class="ace-icon fa fa-times red"></i>
+                </a>
+            </div>
+        </li>
+    }
+</ul>

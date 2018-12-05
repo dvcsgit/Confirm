@@ -1,0 +1,208 @@
+﻿@model Models.TruckPatrol.HandlingMethodManagement.QueryFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+<link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        InitTree();
+
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+    });
+
+    var InitTree = function () {
+        var container = $('#divTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Form = function (url, data) {
+        $('#divQueryFormContainer').hide();
+        $('#divFormContainer').show();
+
+        var form = $('#divForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            data: data,
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Query = function () {
+        if ($('#Parameters_OrganizationUniqueID').val() != '') {
+            $('#divQueryFormContainer').show();
+            $('#divFormContainer').hide();
+
+            var div = $('#divQueryResult');
+
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: '@Url.Action("Query")',
+                data: $('#QueryForm').serialize(),
+                dataType: "html",
+                beforeSend: function () { div.Overlay('show'); },
+                success: function (data) { div.Overlay('show').html(data); },
+                error: function (x, h, r) { div.Overlay('hide').html(x.responseText); }
+            });
+        }
+        else {
+            Cancel();
+        }
+    }
+
+    var Detail = function (uniqueID) {
+        Form('@Url.Action("Detail")', { UniqueID: uniqueID });
+    }
+
+    var Create = function (organizationUniqueID, handlingMethodType) {
+        Form('@Url.Action("Create")', { OrganizationUniqueID: organizationUniqueID, HandlingMethodType: handlingMethodType });
+    };
+
+    var Edit = function (uniqueID) {
+        Form('@Url.Action("Edit")', { UniqueID: uniqueID });
+    }
+
+    var Cancel = function () {
+        $('#divForm').empty();
+        $('#divQueryResult').empty();
+
+        $('#divQueryFormContainer').show();
+        $('#divFormContainer').hide();
+    };
+
+    var Delete = function (uniqueID) {
+
+        var selecteds = [];
+
+        if (uniqueID != '') {
+            selecteds.push(uniqueID);
+        }
+        else {
+            $('.HandlingMethod').each(function () {
+                if ($(this).prop('checked')) {
+                    selecteds.push($(this).val());
+                }
+            });
+        }
+
+        if (selecteds.length == 0) {
+            $.InfoDialog('@string.Format("{0} {1}", Resources.Resource.SelectOne, Resources.Resource.HandlingMethod)')
+        }
+        else {
+            $.ConfirmDialog('@string.Format("{0} {1} ?", Resources.Resource.Confirm, Resources.Resource.Delete)', function (confirmed) {
+                if (confirmed) {
+                    $.ajax({
+                        type: "POST",
+                        cache: false,
+                        url: '@Url.Action("Delete")',
+                        data: { Selecteds: JSON.stringify(selecteds) },
+                        dataType: "json",
+                        beforeSend: function () { $.Overlay('show'); },
+                        success: function (data) {
+                            $.Overlay('hide');
+
+                            if (data.IsSuccess) {
+                                InitTree();
+                                Query();
+                                $.SuccessDialog(data.Message);
+                            }
+                            else {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $.Overlay('hide');
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+            });
+        }
+    };
+</script>
+}
+
+<div class="row" id="divQueryFormContainer">
+    <div class="col-xs-3">
+        @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+        {
+            @Html.HiddenFor(x => x.Parameters.OrganizationUniqueID)
+            @Html.HiddenFor(x => x.Parameters.HandlingMethodType)
+
+            <div class="input-group">
+                <span class="input-group-addon" onclick="Query();" style="cursor:pointer;">
+                    <i class="fa fa-search bigger-110"></i>
+                </span>
+                @Html.TextBoxFor(x => x.Parameters.Keyword, new { @class = "form-control" })
+            </div>
+        }
+
+        <div class="space"></div>
+
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.HandlingMethod @Resources.Resource.Data @Resources.Resource.Management</h5>
+                <div class="widget-toolbar">
+                    <a href="#" onclick="InitTree();">
+                        <i class="ace-icon fa fa-refresh white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4" style="overflow-x:scroll;">
+                    <div id="divTreeContainer" style="min-height:200px;"></div>
+                </div>
+                @if ((Session["Account"] as Models.Authenticated.Account).OrganizationUniqueID == "*")
+                {
+                    <div class="widget-toolbox padding-8 clearfix">
+                        <button class="btn btn-primary" onclick="Create('*');">
+                            <i class="ace-icon fa fa-plus"></i>
+                            @Resources.Resource.Create
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-9">
+        <div id="divQueryResult" style="min-height:200px;"></div>
+    </div>
+</div>
+
+<div class="row" id="divFormContainer">
+    <div class="col-xs-12">
+        <div id="divForm" style="min-height:200px;"></div>
+    </div>
+</div>

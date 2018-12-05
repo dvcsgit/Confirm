@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ADbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ANForm">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="VHNO" Type="varchar" MaxLength="32" />
+          <Property Name="OccurDate" Type="varchar" MaxLength="8" />
+          <Property Name="OccurTime" Type="varchar" MaxLength="6" />
+          <Property Name="Contact" Type="nvarchar" MaxLength="32" />
+          <Property Name="MVPN" Type="nvarchar" MaxLength="32" />
+          <Property Name="Subject" Type="nvarchar" MaxLength="64" />
+          <Property Name="Description" Type="nvarchar" MaxLength="512" />
+          <Property Name="HandlingDescription" Type="nvarchar" MaxLength="512" />
+          <Property Name="RecoveryDate" Type="varchar" MaxLength="8" />
+          <Property Name="RecoveryTime" Type="varchar" MaxLength="6" />
+          <Property Name="RecoveryDescription" Type="nvarchar" MaxLength="512" />
+          <Property Name="EffectArea" Type="nvarchar" MaxLength="512" />
+          <Property Name="EffectSystem" Type="nvarchar" MaxLength="512" />
+          <Property Name="Cost" Type="nvarchar" MaxLength="32" />
+          <Property Name="CreateUserID" Type="nvarchar" MaxLength="32" />
+          <Property Name="CreateTime" Type="datetime" />
+          <Property Name="Location" Type="nvarchar" MaxLength="512" />
+        </EntityType>
+        <EntityType Name="ANFormCCUser">
+          <Key>
+            <PropertyRef Name="FormUniqueID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="FormUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ANFormFile">
+          <Key>
+            <PropertyRef Name="FormUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="FormUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Seq" Type="int" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="64" />
+          <Property Name="Length" Type="int" />
+          <Property Name="Extension" Type="varchar" MaxLength="8" />
+          <Property Name="LastModifyTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ANFormGroup">
+          <Key>
+            <PropertyRef Name="FormUniqueID" />
+            <PropertyRef Name="GroupUniqueID" />
+          </Key>
+          <Property Name="FormUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="GroupUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ANFormLog">
+          <Key>
+            <PropertyRef Name="FormUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="FormUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Seq" Type="int" Nullable="false" />
+          <Property Name="Action" Type="varchar" MaxLength="32" />
+          <Property Name="LogTime" Type="datetime" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="32" />
+        </EntityType>
+        <EntityType Name="ANFormUser">
+          <Key>
+            <PropertyRef Name="FormUniqueID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="FormUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ANGroup">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ANGroupCCUser">
+          <Key>
+            <PropertyRef Name="GroupUniqueID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="GroupUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ANGroupUser">
+          <Key>
+            <PropertyRef Name="GroupUniqueID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="GroupUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ADbModelStoreContainer">
+          <EntitySet Name="ANForm" EntityType="Self.ANForm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ANFormCCUser" EntityType="Self.ANFormCCUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ANFormFile" EntityType="Self.ANFormFile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ANFormGroup" EntityType="Self.ANFormGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ANFormLog" EntityType="Self.ANFormLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ANFormUser" EntityType="Self.ANFormUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ANGroup" EntityType="Self.ANGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ANGroupCCUser" EntityType="Self.ANGroupCCUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ANGroupUser" EntityType="Self.ANGroupUser" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ADbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ANForm">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="VHNO" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="OccurDate" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="OccurTime" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="Contact" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="MVPN" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Subject" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="HandlingDescription" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="RecoveryDate" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="RecoveryTime" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="RecoveryDescription" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="EffectArea" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="EffectSystem" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="Cost" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="CreateUserID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Precision="3" />
+          <Property Name="Location" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ANFormCCUser">
+          <Key>
+            <PropertyRef Name="FormUniqueID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="FormUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ANFormFile">
+          <Key>
+            <PropertyRef Name="FormUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="FormUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Seq" Type="Int32" Nullable="false" />
+          <Property Name="FileName" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Length" Type="Int32" />
+          <Property Name="Extension" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="LastModifyTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="ANFormGroup">
+          <Key>
+            <PropertyRef Name="FormUniqueID" />
+            <PropertyRef Name="GroupUniqueID" />
+          </Key>
+          <Property Name="FormUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="GroupUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ANFormLog">
+          <Key>
+            <PropertyRef Name="FormUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="FormUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Seq" Type="Int32" Nullable="false" />
+          <Property Name="Action" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="LogTime" Type="DateTime" Precision="3" />
+          <Property Name="UserID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ANFormUser">
+          <Key>
+            <PropertyRef Name="FormUniqueID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="FormUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ANGroup">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ANGroupCCUser">
+          <Key>
+            <PropertyRef Name="GroupUniqueID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="GroupUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ANGroupUser">
+          <Key>
+            <PropertyRef Name="GroupUniqueID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="GroupUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ADbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ANForm" EntityType="Self.ANForm" />
+          <EntitySet Name="ANFormCCUser" EntityType="Self.ANFormCCUser" />
+          <EntitySet Name="ANFormFile" EntityType="Self.ANFormFile" />
+          <EntitySet Name="ANFormGroup" EntityType="Self.ANFormGroup" />
+          <EntitySet Name="ANFormLog" EntityType="Self.ANFormLog" />
+          <EntitySet Name="ANFormUser" EntityType="Self.ANFormUser" />
+          <EntitySet Name="ANGroup" EntityType="Self.ANGroup" />
+          <EntitySet Name="ANGroupCCUser" EntityType="Self.ANGroupCCUser" />
+          <EntitySet Name="ANGroupUser" EntityType="Self.ANGroupUser" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ADbModelStoreContainer" CdmEntityContainer="ADbEntities">
+          <EntitySetMapping Name="ANForm">
+            <EntityTypeMapping TypeName="ADbModel.ANForm">
+              <MappingFragment StoreEntitySet="ANForm">
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+                <ScalarProperty Name="VHNO" ColumnName="VHNO" />
+                <ScalarProperty Name="OccurDate" ColumnName="OccurDate" />
+                <ScalarProperty Name="OccurTime" ColumnName="OccurTime" />
+                <ScalarProperty Name="Contact" ColumnName="Contact" />
+                <ScalarProperty Name="MVPN" ColumnName="MVPN" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="HandlingDescription" ColumnName="HandlingDescription" />
+                <ScalarProperty Name="RecoveryDate" ColumnName="RecoveryDate" />
+                <ScalarProperty Name="RecoveryTime" ColumnName="RecoveryTime" />
+                <ScalarProperty Name="RecoveryDescription" ColumnName="RecoveryDescription" />
+                <ScalarProperty Name="EffectArea" ColumnName="EffectArea" />
+                <ScalarProperty Name="EffectSystem" ColumnName="EffectSystem" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="CreateUserID" ColumnName="CreateUserID" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ANFormCCUser">
+            <EntityTypeMapping TypeName="ADbModel.ANFormCCUser">
+              <MappingFragment StoreEntitySet="ANFormCCUser">
+                <ScalarProperty Name="FormUniqueID" ColumnName="FormUniqueID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ANFormFile">
+            <EntityTypeMapping TypeName="ADbModel.ANFormFile">
+              <MappingFragment StoreEntitySet="ANFormFile">
+                <ScalarProperty Name="FormUniqueID" ColumnName="FormUniqueID" />
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Length" ColumnName="Length" />
+                <ScalarProperty Name="Extension" ColumnName="Extension" />
+                <ScalarProperty Name="LastModifyTime" ColumnName="LastModifyTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ANFormGroup">
+            <EntityTypeMapping TypeName="ADbModel.ANFormGroup">
+              <MappingFragment StoreEntitySet="ANFormGroup">
+                <ScalarProperty Name="FormUniqueID" ColumnName="FormUniqueID" />
+                <ScalarProperty Name="GroupUniqueID" ColumnName="GroupUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ANFormLog">
+            <EntityTypeMapping TypeName="ADbModel.ANFormLog">
+              <MappingFragment StoreEntitySet="ANFormLog">
+                <ScalarProperty Name="FormUniqueID" ColumnName="FormUniqueID" />
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="LogTime" ColumnName="LogTime" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ANFormUser">
+            <EntityTypeMapping TypeName="ADbModel.ANFormUser">
+              <MappingFragment StoreEntitySet="ANFormUser">
+                <ScalarProperty Name="FormUniqueID" ColumnName="FormUniqueID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ANGroup">
+            <EntityTypeMapping TypeName="ADbModel.ANGroup">
+              <MappingFragment StoreEntitySet="ANGroup">
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ANGroupCCUser">
+            <EntityTypeMapping TypeName="ADbModel.ANGroupCCUser">
+              <MappingFragment StoreEntitySet="ANGroupCCUser">
+                <ScalarProperty Name="GroupUniqueID" ColumnName="GroupUniqueID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ANGroupUser">
+            <EntityTypeMapping TypeName="ADbModel.ANGroupUser">
+              <MappingFragment StoreEntitySet="ANGroupUser">
+                <ScalarProperty Name="GroupUniqueID" ColumnName="GroupUniqueID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

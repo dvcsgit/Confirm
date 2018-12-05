@@ -1,0 +1,220 @@
+﻿@model Models.TankPatrol.ResultQuery.ArriveRecordModel
+
+@if (!string.IsNullOrEmpty(Model.Sign))
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".Sign").colorbox({ href: '@Url.Content("~/TankPatrolPhoto/"+ Model.Sign)', maxWidth: '100%', maxHeight: '100%' });
+        });
+    </script>
+}
+
+
+<p>
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.CheckResult</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1"><label>@Resources.Resource.Organization</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.OrganizationDescription)</td>
+                    <th class="col-sm-1"><label>裝/卸料站</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Station)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>灌島</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Island)</td>
+                    <th class="col-sm-1"><label>灌口</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Port)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>車牌號碼</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.TankNo)</td>
+                    <th class="col-sm-1"><label>檢查類別</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.CheckTypeDisplay)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>司機</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Driver)</td>
+                    <th class="col-sm-1"><label>貨主</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Owner)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>上次承載物質</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.LastTimeMaterial)</td>
+                    <th class="col-sm-1"><label>本次承載物質</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.ThisTimeMaterial)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>到位日期</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.ArriveDate)</td>
+                    <th class="col-sm-1"><label>到位時間</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.ArriveTime)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>檢查人員</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.User)</td>
+                    <th class="col-sm-1"><label>未感應RFID原因</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.UnRFIDReason)</td>
+                </tr>
+                @if (!string.IsNullOrEmpty(Model.Sign))
+                { 
+                    <tr>
+                        <th>司機簽名</th>
+                        <td colspan="3">
+                            <span class="profile-picture">
+                                <img class="img-responsive Sign" style="max-height:150px;" src="@Url.Content("~/TankPatrolPhoto/"+ Model.Sign)" />
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.LBCheckResultList != null && Model.LBCheckResultList.Count > 0)
+{ 
+<div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">裝料前檢查</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                @Html.Partial("_CheckResultList", Model.LBCheckResultList)
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.LPCheckResultList != null && Model.LPCheckResultList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">裝料中檢查</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                @Html.Partial("_CheckResultList", Model.LPCheckResultList)
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.LACheckResultList != null && Model.LACheckResultList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">裝料後檢查</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                @Html.Partial("_CheckResultList", Model.LACheckResultList)
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.LDCheckResultList != null && Model.LDCheckResultList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">當日裝料完畢檢查</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                @Html.Partial("_CheckResultList", Model.LDCheckResultList)
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.UBCheckResultList != null && Model.UBCheckResultList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">卸料前檢查</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                @Html.Partial("_CheckResultList", Model.UBCheckResultList)
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.UPCheckResultList != null && Model.UPCheckResultList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">卸料中檢查</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                @Html.Partial("_CheckResultList", Model.UPCheckResultList)
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.UACheckResultList != null && Model.UACheckResultList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">卸料後檢查</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                @Html.Partial("_CheckResultList", Model.UACheckResultList)
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.UDCheckResultList != null && Model.UDCheckResultList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title bigger lighter">當日卸料完畢檢查</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+                @Html.Partial("_CheckResultList", Model.UDCheckResultList)
+            </div>
+        </div>
+    </div>
+}

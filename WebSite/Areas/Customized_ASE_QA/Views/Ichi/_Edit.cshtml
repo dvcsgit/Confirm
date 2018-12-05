@@ -1,0 +1,159 @@
+﻿@model Models.ASE.QA.IchiManagement.EditFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#EditForm");
+
+        $('.Characteristic').each(function () {
+            if ($(this).data('checked')=='Y') {
+                $(this).prop('checked', true);
+            }
+        });
+
+        $('#Type').change(function () {
+            var val = $(this).val();
+
+            if (val == '') {
+                $('#FormInput_Type').val('').prop('readonly', true);
+            }
+            else if (val == '@Utility.Define.NEW') {
+                $('#FormInput_Type').val('').prop('readonly', false);
+            }
+            else {
+                $('#FormInput_Type').val(val).prop('readonly', true);
+            }
+        });
+    });
+
+    function Save() {
+        var form = $('#EditForm');
+
+        if (form.valid()) {
+            if ($('#FormInput_Type').val() == '') {
+                $.InfoDialog('請選擇或新增類別');
+            }
+            else {
+                var characteristic = [];
+
+                $('.Characteristic:checked').each(function () {
+                    characteristic.push($(this).val());
+                });
+
+                $('#FormInput_Characteristics').val(JSON.stringify(characteristic));
+
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Edit")',
+                    data: form.serialize(),
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }   
+        }
+    }
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Detail('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="bigger lighter">@Resources.Resource.Edit 儀器</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Edit", null, FormMethod.Post, new { @ID = "EditForm" }))
+            {
+                @Html.HiddenFor(x => x.UniqueID)
+                @Html.HiddenFor(x => x.FormInput.Characteristics)
+
+    <table class="table table-bordered table-input">
+        <tr>
+            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Type)</th>
+            <td class="col-sm-5">@Html.DropDownList("Type", Model.TypeSelectItemList)</td>
+            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Type)</th>
+            <td class="col-sm-5">
+                @Html.TextBoxFor(x => x.FormInput.Type, new { @class = "col-sm-11", @readonly = "readonly" })
+                <br />
+                @Html.ValidationMessageFor(x => x.FormInput.Type)
+            </td>
+        </tr>
+        <tr>
+            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Name)</th>
+            <td colspan="3">
+                @Html.TextBoxFor(x => x.FormInput.Name, new { @class = "col-sm-6" })
+                <br />
+                @Html.ValidationMessageFor(x => x.FormInput.Name)
+            </td>
+        </tr>
+    </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">量測特性</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; min-height:30px; max-height:500px;">
+            <table id="EquipmentList" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="center"></th>
+                        <th class="center">量性</th>
+                        <th>量測特性</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CharacteristicList)
+                    {
+                        <tr>
+                            <td class="center">
+                                <label>
+                                    <input class="ace ace-checkbox-2 Characteristic" type="checkbox" value="@item.UniqueID" data-checked="@(Model.IchiCharacteristicList.Any(x => x == item.UniqueID) ? "Y" : "N")">
+                                    <span class="lbl"></span>
+                                </label>
+                            </td>
+                            <td class="center">@item.Type</td>
+                            <td>@item.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CONFIG>
+  <WebSite WindowsAuthentication="Home/Portal" FormsAuthentication="Home/Login">10.3.3.5/FEM_Portal</WebSite>
+  <ASE>
+    
+  </ASE>
+</CONFIG>

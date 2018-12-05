@@ -1,0 +1,191 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedUAList();
+
+        InitSelectUATree();
+
+        $('#divSelectUATreeWidget').hide();
+    });
+
+    function GetSelectedUAList() {
+        var list = $('#divSelectedUAList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedUAList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitSelectUATree() {
+        var container = $('#divSelectUATreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitSelectUATree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectUA = function () {
+        $('#divSelectedUAListWidget').hide();
+        $('#divSelectUATreeWidget').show();
+    };
+
+    var CancelSelectUA = function () {
+        $('#divSelectedUAListWidget').show();
+        $('#divSelectUATreeWidget').hide();
+    };
+
+    var UAPageState = function () {
+        var pageState = [];
+
+        $('.IsInherit.UA').each(function () {
+            var isInherit = $(this).prop('checked') ? 'Y' : 'N';
+            var checkItemUniqueID = $(this).data('checkitemuniqueid');
+
+            var tagID = '';
+            var l = '';
+            var la = '';
+            var ua = '';
+            var u = '';
+            var a = '';
+            var unit = '';
+            var remark = '';
+
+            tagID = $(this).closest('tr').find('.TagID').val();
+
+            if (isInherit == 'N') {
+                l = $(this).closest('tr').find('.LowerLimit').val();
+                la = $(this).closest('tr').find('.LowerAlertLimit').val();
+                ua = $(this).closest('tr').find('.UpperAlertLimit').val();
+                u = $(this).closest('tr').find('.UpperLimit').val();
+                a = $(this).closest('tr').find('.AccumulationBase').val();
+                unit = $(this).closest('tr').find('.Unit').val();
+                remark = $(this).closest('tr').find('.Remark').val();
+            }
+
+            pageState.push(isInherit + '@Utility.Define.Seperator' + checkItemUniqueID + '@Utility.Define.Seperator' + tagID + '@Utility.Define.Seperator' + l + '@Utility.Define.Seperator' + la + '@Utility.Define.Seperator' + ua + '@Utility.Define.Seperator' + u + '@Utility.Define.Seperator' + a + '@Utility.Define.Seperator' + unit + '@Utility.Define.Seperator' + remark);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddUA = function () {
+        var data = [];
+
+        $("#divSelectUATree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.CheckType") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.CheckItemUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddUA")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                PageStates: UAPageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divSelectUATreeWidget').hide();
+                $('#divSelectedUAListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedUAListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedUAList();
+                    $("#divSelectUATree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedUAListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteSelectedUA = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteSelectedUA")',
+            data: {
+                CheckItemUniqueID: uniqueID,
+                PageStates: UAPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedUAListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedUAListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedUAList();
+                    $("#divSelectUATree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedUAListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divSelectUATreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">卸料後 @Resources.Resource.CheckItem</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divSelectUATreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddUA(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectUA(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divSelectedUAListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">卸料後 @Resources.Resource.CheckItem</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="SelectUA(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll;">
+            <div id="divSelectedUAList" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

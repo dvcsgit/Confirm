@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Models.ASE.QS.CheckListManagement.PhotoModel>
+
+@{var tmpID = Guid.NewGuid().ToString();}
+
+@if (Model != null && Model.Count() > 0)
+{
+    <script type="text/javascript" id="@tmpID">
+
+        $(document).ready(function () {
+            $('#' + '@tmpID').parent().parent().parent().parent().show();
+
+            @foreach (var item in Model)
+{
+    if (item.IsSaved)
+    {
+    <text>$(".@string.Format("{0}_{1}_{2}_{3}", item.FormUniqueID, item.CheckItemUniqueID, item.CheckItemSeq, item.Seq)").colorbox({ rel: '@string.Format("{0}_{1}_{2}_{3}", item.FormUniqueID, item.CheckItemUniqueID, item.CheckItemSeq, item.Seq)', maxWidth: '100%', maxHeight: '100%' });</text>
+    }
+    else {
+        <text>$(".@item.TempUniqueID").colorbox({ rel: '@item.TempUniqueID', maxWidth: '100%', maxHeight: '100%' });</text>
+    }
+    }
+        });
+
+</script>
+
+    <ul class="ace-thumbnails clearfix">
+        @foreach (var photo in Model)
+        {
+            <li>
+                @if (photo.IsSaved)
+                {
+                    <a href="@Url.Content("~/QSPhoto/" + photo.FileName)" title="Photo Title" data-rel="colorbox" class="cboxElement @string.Format("{0}_{1}_{2}_{3}", photo.FormUniqueID, photo.CheckItemUniqueID, photo.CheckItemSeq, photo.Seq)">
+                        <img width="150" height="150" alt="150x150" src="@Url.Content("~/QSPhoto/" + photo.FileName)">
+                    </a>
+                }
+                else
+                {
+                    <a href="@Url.Content("~/Temp/" + photo.TempFileName)" title="Photo Title" data-rel="colorbox" class="cboxElement @photo.TempUniqueID">
+                        <img width="150" height="150" alt="150x150" src="@Url.Content("~/Temp/" + photo.TempFileName)">
+                    </a>
+                }
+                <div class="tools">
+                    <a href="#" onclick="DeletePhoto('@photo.CheckItemUniqueID', '@photo.CheckItemSeq', '@photo.Seq'); return false;">
+                        <i class="ace-icon fa fa-times red"></i>
+                    </a>
+                </div>
+            </li>
+        }
+    </ul>
+}
+else
+{ 
+    <script type="text/javascript" id="@tmpID">
+    $(document).ready(function () {
+        $('#' + '@tmpID').parent().parent().parent().parent().hide();
+    });
+    </script>
+}
+
+
+
+

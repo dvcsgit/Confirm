@@ -1,0 +1,60 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitTree();
+    });
+
+    function InitTree() {
+        var container = $('#divTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var CreateRepairForm = function () {
+        var organizationUniqueID = '';
+
+        $("#divTree").jstree("get_selected").each(function () {
+            organizationUniqueID = $(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID");
+        });
+
+        if (organizationUniqueID == '') {
+            $.InfoDialog('@string.Format("{0} {1}", Resources.Resource.SelectOne, Resources.Resource.Organization)');
+        }
+        else {
+            Form('@Url.Action("CreateRepairForm")', { QFormUniqueID: '@Model', OrganizationUniqueID: organizationUniqueID });
+        }
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="CreateRepairForm();" type="button">
+        <i class="ace-icon fa fa-wrench bigger-160"></i>
+        @Resources.Resource.RepairForm
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Edit('@Model');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.ParentOrganization</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4" style="overflow-x:scroll;">
+            <div id="divTreeContainer" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

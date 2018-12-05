@@ -1,0 +1,73 @@
+﻿@model Report.EquipmentMaintenance.Models.UnCheckResultAnalyze.GridViewModel
+
+@*<p>
+    <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})" class="btn btn-app btn-primary" style="width:100%;">
+        <i class="ace-icon fa fa-file-excel-o bigger-230"></i>
+        Excel 2003
+    </a>
+</p>
+
+<p>
+    <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007 })" class="btn btn-app btn-primary" style="width:100%;">
+        <i class="ace-icon fa fa-file-excel-o bigger-230"></i>
+        Excel 2007
+    </a>
+</p>*@
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Resources.Resource.SearchResults
+        </h5>
+        <div class="widget-toolbar">
+            <div class="widget-menu">
+                <a href="#" data-toggle="dropdown">
+                    <i class="ace-icon fa fa-cloud-download white"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2003})">Excel 2003</a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("Export", new { ExcelVersion = Utility.Define.EnumExcelVersion._2007 })">Excel 2007</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th>@Resources.Resource.Job</th>
+                        <th>@Resources.Resource.Route</th>
+                        <th>@Resources.Resource.ControlPoint</th>
+                        <th>@Resources.Resource.Equipment</th>
+                        <th>@Resources.Resource.EquipmentPart</th>
+                        <th>@Resources.Resource.CheckItem</th>
+                        <th>@Resources.Resource.CheckDate</th>
+                        <th>@Resources.Resource.CheckUser</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemList)
+                    {
+                        <tr>
+                            <td>@item.JobDescription</td>
+                            <td>@item.Route</td>
+                            <td>@item.ControlPoint</td>
+                            <td>@item.Equipment</td>
+                            <td>@item.PartDescription</td>
+                            <td>@item.CheckItem</td>
+                            <td>@item.ArriveDate</td>
+                            <td>@item.User</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

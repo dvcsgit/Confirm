@@ -1,0 +1,170 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetMaterialSelectedList();
+
+        InitMaterialSelectTree();
+
+        $('#divMaterialSelectTreeWidget').hide();
+    });
+
+    function GetMaterialSelectedList() {
+        var list = $('#divMaterialSelectedList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetMaterialSelectedList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitMaterialSelectTree() {
+        var container = $('#divMaterialSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitMaterialSelectTree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectMaterial = function () {
+        $('#divMaterialSelectedListWidget').hide();
+        $('#divMaterialSelectTreeWidget').show();
+    };
+
+    var CancelSelectMaterial = function () {
+        $('#divMaterialSelectedListWidget').show();
+        $('#divMaterialSelectTreeWidget').hide();
+    };
+
+    var MaterialPageState = function () {
+        var pageState = [];
+
+        $('.Material').each(function () {
+            var materialUniqueid = $(this).data('materialuniqueid');
+            var qty = $(this).val();
+
+            pageState.push(materialUniqueid + '@Utility.Define.Seperator' + qty);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddMaterial = function () {
+        var data = [];
+
+        $("#divMaterialSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.EquipmentType") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.MaterialUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddMaterial")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                PageStates: MaterialPageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divMaterialSelectTreeWidget').hide();
+                $('#divMaterialSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divMaterialSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetMaterialSelectedList();
+                    $("#divMaterialSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divMaterialSelectedListWidget').Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteMaterial = function (materialUniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteMaterial")',
+            data: {
+                'MaterialUniqueID': materialUniqueID,
+                'PageStates': MaterialPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divMaterialSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divMaterialSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetMaterialSelectedList();
+                    $("#divMaterialSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divMaterialSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+
+<div id="divMaterialSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Equipment @Resources.Resource.Material</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divMaterialSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddMaterial(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectMaterial(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divMaterialSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Equipment @Resources.Resource.Material</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="SelectMaterial(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:50px;">
+            <div id="divMaterialSelectedList"></div>
+        </div>
+    </div>
+</div>

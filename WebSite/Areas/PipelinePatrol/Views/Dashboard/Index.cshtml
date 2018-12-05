@@ -1,0 +1,133 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+    <link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+}
+
+@section Scripts
+{
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing&key=AIzaSyByPZwdPAsaiBHq9w05-e14fKZAEjxX7l0"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+
+<script type="text/javascript">
+    var timer;
+
+    $(function () {
+        InitTree();
+
+        $('.widget-toolbar').find('a[data-action="collapse"]').trigger('click');
+
+        //timer = setInterval(function () {
+        //    var zoom = map.getZoom();
+        //    var mapCenter = map.getCenter();
+
+        //    Query(zoom, mapCenter.lat, mapCenter.lng);
+
+        //}, 30 * 1000);
+    });
+
+    var InitTree = function () {
+        var container = $('#divTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitTree")',
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var Query = function (zoom, mapCenterLAT, mapCenterLNG) {
+        var data = [];
+
+        $("#divTree").jstree("get_checked", null, true).each(function () {
+            data.push(
+                $(this).attr("@Utility.Define.EnumTreeAttribute.NodeType") +
+                '@Utility.Define.Seperator' +
+                $(this).attr("@Utility.Define.EnumTreeAttribute.InspectionUniqueID") +
+                '@Utility.Define.Seperator' +
+                $(this).attr("@Utility.Define.EnumTreeAttribute.ConstructionUniqueID") +
+                '@Utility.Define.Seperator' +
+                $(this).attr("@Utility.Define.EnumTreeAttribute.PipelineAbnormalUniqueID") +
+                '@Utility.Define.Seperator' +
+                $(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") +
+                '@Utility.Define.Seperator' +
+                $(this).attr("@Utility.Define.EnumTreeAttribute.PipelineUniqueID") +
+                '@Utility.Define.Seperator' +
+                $(this).attr("@Utility.Define.EnumTreeAttribute.PipePointType") +
+                '@Utility.Define.Seperator' +
+                $(this).attr("@Utility.Define.EnumTreeAttribute.PipePointUniqueID") +
+                '@Utility.Define.Seperator' +
+                $(this).attr("@Utility.Define.EnumTreeAttribute.UserID")
+                );
+        });
+
+        var div = $('#divDashboard');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Query")',
+            data: {
+                Zoom: zoom,
+                MapCenterLAT: mapCenterLAT,
+                MapCenterLNG: mapCenterLNG,
+                Temp: JSON.stringify(data)
+            },
+            dataType: "html",
+            beforeSend: function () { div.Overlay('show'); },
+            success: function (data) { div.Overlay('show').html(data); },
+            error: function (x, h, r) { div.Overlay('hide').html(x.responseText); }
+        });
+    }
+</script>
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">查詢條件</h5>
+                <div class="widget-toolbar">
+                    <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-up white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4" style="overflow-x:scroll;">
+                    <div id="divTreeContainer" style="min-height:200px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">管線動態</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <div id="divDashboard" style="height:600px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

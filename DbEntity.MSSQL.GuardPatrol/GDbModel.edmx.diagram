@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="050bd53a7d8e4824ae38e46112a4bba4" Name="Diagram1">
+        <EntityTypeShape EntityType="GDbModel.AbnormalReason" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="GDbModel.AbnormalReasonHandlingMethod" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="GDbModel.ArriveRecord" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="GDbModel.ArriveRecordPhoto" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="GDbModel.CheckItem" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="GDbModel.CheckItemAbnormalReason" Width="1.5" PointX="4.75" PointY="5.75" />
+        <EntityTypeShape EntityType="GDbModel.CheckItemFeelOption" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="GDbModel.CheckResult" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="GDbModel.CheckResultAbnormalHandling" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="GDbModel.CheckResultAbnormalReason" Width="1.5" PointX="2.75" PointY="8.75" />
+        <EntityTypeShape EntityType="GDbModel.CheckResultHandlingMethod" Width="1.5" PointX="8.75" PointY="3.75" />
+        <EntityTypeShape EntityType="GDbModel.CheckResultPhoto" Width="1.5" PointX="8.75" PointY="6.75" />
+        <EntityTypeShape EntityType="GDbModel.ControlPoint" Width="1.5" PointX="8.75" PointY="9.75" />
+        <EntityTypeShape EntityType="GDbModel.ControlPointCheckItem" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="GDbModel.HandlingMethod" Width="1.5" PointX="10.75" PointY="4.75" />
+        <EntityTypeShape EntityType="GDbModel.Job" Width="1.5" PointX="10.75" PointY="7.75" />
+        <EntityTypeShape EntityType="GDbModel.JobControlPoint" Width="1.5" PointX="0.75" PointY="11.75" />
+        <EntityTypeShape EntityType="GDbModel.JobControlPointCheckItem" Width="1.5" PointX="2.75" PointY="11.75" />
+        <EntityTypeShape EntityType="GDbModel.JobRoute" Width="1.5" PointX="4.75" PointY="11.75" />
+        <EntityTypeShape EntityType="GDbModel.JobUser" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="GDbModel.OverTimeReason" Width="1.5" PointX="12.75" PointY="3.75" />
+        <EntityTypeShape EntityType="GDbModel.Route" Width="1.5" PointX="12.75" PointY="6.75" />
+        <EntityTypeShape EntityType="GDbModel.RouteControlPoint" Width="1.5" PointX="12.75" PointY="9.75" />
+        <EntityTypeShape EntityType="GDbModel.RouteControlPointCheckItem" Width="1.5" PointX="10.75" PointY="12.75" />
+        <EntityTypeShape EntityType="GDbModel.RouteManager" Width="1.5" PointX="12.75" PointY="12.75" />
+        <EntityTypeShape EntityType="GDbModel.TimeSpanAbnormalReason" Width="1.5" PointX="6.75" PointY="13.75" />
+        <EntityTypeShape EntityType="GDbModel.UnPatrolReason" Width="1.5" PointX="14.75" PointY="0.75" />
+        <EntityTypeShape EntityType="GDbModel.UnPatrolRecord" Width="1.5" PointX="0.75" PointY="14.75" />
+        <EntityTypeShape EntityType="GDbModel.UnRFIDReason" Width="1.5" PointX="2.75" PointY="14.75" />
+        <EntityTypeShape EntityType="GDbModel.UploadLog" Width="1.5" PointX="14.75" PointY="3.75" />
+        <EntityTypeShape EntityType="GDbModel.Version" Width="1.5" PointX="14.75" PointY="6.75" />
+        <EntityTypeShape EntityType="GDbModel.View_ControlPointCheckItem" Width="1.5" PointX="14.75" PointY="10.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

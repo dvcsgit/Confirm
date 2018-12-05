@@ -1,0 +1,136 @@
+﻿@model Models.GuardPatrol.JobManagement.RouteModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#divTab a:first').tab('show');
+
+        $('.ControlPointCheckItem, .ControlPointCheckItemParent').each(function () {
+            if ($(this).data('checked') == 'Y') {
+                $(this).prop('checked', true);
+            }
+        });
+
+        $('.ControlPointCheckItemParent').click(function () {
+            var parent = $(this);
+            var controlPointUniqueID = parent.data('controlpointuniqueid');
+            var checked = parent.prop('checked') ? 'Y' : 'N';
+
+            $('.ControlPointCheckItem').each(function () {
+                var chk = $(this);
+                if (chk.data('controlpointuniqueid') == controlPointUniqueID) {
+                    chk.prop('checked', checked == 'Y');
+                }
+            });
+        });
+
+        $('#divTab').css('min-height', $('#tabLinkContainer').css('height')+30);
+    });
+
+     var ControlPointPageState = function () {
+         var pageState = [];
+
+         $('.tabLink').each(function () {
+             var controlPointUniqueID = $(this).data('controlpointuniqueid');
+
+             var minTimeSpan = $('.MinTimeSpan[data-controlpointuniqueid="' + controlPointUniqueID + '"]').val();
+
+             pageState.push(controlPointUniqueID + '@Utility.Define.Seperator' + minTimeSpan);
+         });
+
+         return JSON.stringify(pageState);
+     };
+
+    var ControlPointCheckItemPageState = function () {
+        var pageState = [];
+
+        $('.ControlPointCheckItem').each(function () {
+            var chk = $(this);
+            var checked = chk.prop('checked') ? 'Y' : 'N';
+            var controlPointUniqueID = chk.data('controlpointuniqueid');
+            var checkItemUniqueID = chk.data('checkitemuniqueid');
+
+            pageState.push(controlPointUniqueID + '@Utility.Define.Seperator' + checkItemUniqueID + '@Utility.Define.Seperator' + checked);
+        });
+
+        return JSON.stringify(pageState);
+    };
+</script>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Route @Resources.Resource.ControlPoint @Resources.Resource.CheckItem</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divTab" class="tabbable tabs-left">
+                <ul id="tabLinkContainer" class="nav nav-tabs">
+                    @foreach (var controlPoint in Model.ControlPointList)
+                    {
+                        <li class="tabLink" data-controlpointuniqueid="@controlPoint.UniqueID">
+                            <a data-toggle="tab" href="@("#" + controlPoint.UniqueID)" data-controlpointuniqueid="@controlPoint.UniqueID">
+                                @(controlPoint.ID + "/" + controlPoint.Description)
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+                <div class="tab-content">
+                    @foreach (var controlPoint in Model.ControlPointList)
+                    {
+                        <div id="@controlPoint.UniqueID" class="tab-pane">
+                            <p>@Resources.Resource.MinTimeSpan <input type="text" data-controlpointuniqueid="@controlPoint.UniqueID" class="MinTimeSpan col-sm-1" value="@controlPoint.MinTimeSpan" /> @Resources.Resource.Minute</p>
+
+                            <div id="@("AccordionControlPoint" + controlPoint.UniqueID)" class="accordionControlPointContainer accordion-style1 panel-group">
+
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead class="thin-border-bottom">
+                                        <tr>
+                                            <th class="col-sm-1 center">
+                                                <label>
+                                                    <input class="ace ace-checkbox-2 ControlPointCheckItemParent" type="checkbox" value="true" data-checked="@(controlPoint.CheckItemList.Any(x => x.IsChecked == false) ? "N" : "Y")" data-controlpointuniqueid="@controlPoint.UniqueID">
+                                                    <span class="lbl"> </span>
+                                                </label>
+                                            </th>
+                                            <th>@Resources.Resource.CheckType</th>
+                                            <th>@Resources.Resource.CheckItemID</th>
+                                            <th>@Resources.Resource.CheckItemDescription</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="ControlPointCheckItemTBody">
+                                        @foreach (var item in controlPoint.CheckItemList)
+                                        {
+                                            <tr>
+                                                <td class="center">
+                                                    <label>
+                                                        <input class="ace ace-checkbox-2 ControlPointCheckItem" type="checkbox" value="true" data-controlpointuniqueid="@controlPoint.UniqueID" data-checkitemuniqueid="@item.UniqueID" data-checked="@(item.IsChecked ? "Y" : "N")">
+                                                        <span class="lbl"> </span>
+                                                    </label>
+                                                </td>
+                                                <td>@item.CheckType</td>
+                                                <td>@item.CheckItemID</td>
+                                                <td>@item.CheckItemDescription</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="SaveRoute('@Model.UniqueID'); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Save
+            </button>
+            <button class="btn btn-success" onclick="CancelEditRoute(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>

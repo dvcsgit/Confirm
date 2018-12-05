@@ -1,0 +1,73 @@
+﻿@model Models.EquipmentMaintenance.EquipmentManagement.EditPartFormModel
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreatePartForm");
+    });
+
+    var EditPart = function () {
+        var form = $('#EditPartForm');
+
+        if (form.valid()) {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("EditPart")',
+                data: form.serialize() + '&PageStates=' + PartPageState(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        CancelEditPart();
+                        GetPartList('@Model.UniqueID');
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    var CancelEditPart = function () {
+        $('#divPartListWidget').show();
+        $('#divEditPartWidget').hide();
+    };
+</script>
+
+<div class="widget-main no-padding">
+    @using (Html.BeginForm("EditPart", null, FormMethod.Post, new { @ID = "EditPartForm" }))
+    {
+        @Html.HiddenFor(x => x.UniqueID)
+        
+        <table class="table table-bordered table-input">
+            <tr>
+                <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Description)</th>
+                <td class="col-sm-11">
+                    @Html.TextBoxFor(x => x.FormInput.Description)
+                    <br />
+                    @Html.ValidationMessageFor(x => x.FormInput.Description)
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+
+<div class="widget-toolbox padding-8 clearfix">
+    <button class="btn btn-primary" onclick="EditPart(); return false;">
+        <i class="ace-icon fa fa-save"></i>
+        @Resources.Resource.Save
+    </button>
+    <button class="btn btn-success" onclick="CancelEditPart(); return false;">
+        <i class="ace-icon fa fa-ban"></i>
+        @Resources.Resource.Cancel
+    </button>
+</div>
+

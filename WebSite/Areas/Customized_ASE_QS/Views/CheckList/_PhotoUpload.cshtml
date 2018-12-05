@@ -1,0 +1,68 @@
+﻿@model System.String
+
+@{
+    var tmp = Model.Split('_');
+    var CheckItemUniqueID = tmp[0];
+    var CheckItemSeq = int.Parse(tmp[1]);
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Photo_' + '@CheckItemUniqueID' + '_' + '@CheckItemSeq').on('change', function (e) {
+            var files = e.target.files;
+
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+
+                    for (var x = 0; x < files.length; x++) {
+                        data.append("file" + x, files[x]);
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("UploadPhoto")' + '?CheckItemUniqueID=' + '@CheckItemUniqueID' + '&CheckItemSeq=' + '@CheckItemSeq',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        dataType: "json",
+                        beforeSend: function () {
+                            $('#divUploadPhoto_' + '@CheckItemUniqueID' + '_' + '@CheckItemSeq').empty();
+                            $('#divUploadPhotoWidget_' + '@CheckItemUniqueID' + '_' + '@CheckItemSeq').hide();
+                            $('#divPhotoListWidget_' + '@CheckItemUniqueID' + '_' + '@CheckItemSeq').show().Overlay('show');
+                        },
+                        success: function (data) {
+                            $('#divPhotoListWidget_' + '@CheckItemUniqueID' + '_' + '@CheckItemSeq').Overlay('hide');
+
+                            if (data.IsSuccess) {
+                                GetPhotoList('@CheckItemUniqueID', '@CheckItemSeq');
+                            }
+                            else {
+                                $.ErrorDialog(data.Message);
+                            }
+                        },
+                        error: function (x, h, r) {
+                            $('#divPhotoListWidget_' + '@CheckItemUniqueID' + '_' + '@CheckItemSeq').Overlay('hide');
+
+                            $.ErrorDialog(x.responseText);
+                        }
+                    });
+                }
+                else {
+                    $.InfoDialog('無法上傳');
+                }
+            }
+            else {
+                $.InfoDialog('請選擇檔案');
+            }
+        });
+    });
+</script>
+
+<div class="widget-main padding-8">
+    <input type="file" name="@string.Format("Photo_{0}_{1}", CheckItemUniqueID, CheckItemSeq)" id="@string.Format("Photo_{0}_{1}", CheckItemUniqueID, CheckItemSeq)" />
+</div>
+
+
+    
+

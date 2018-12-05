@@ -1,0 +1,54 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitUserTree('@Model');
+    });
+
+    function InitUserTree(ancestorOrganizationUniqueID) {
+        var container = $('#divUserTreeContainer');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("InitUserTree")',
+            data: { AncestorOrganizationUniqueID: ancestorOrganizationUniqueID },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    function UserSelect() {
+        $('#divUserSelect').modal('show');
+    };
+
+    function Clear() {
+        $('#FormInput_UserID').val('');
+        $('#User').val('');
+        $('#FormInput_Title, #FormInput_Name').prop('disabled', false);
+    };
+
+    function Select() {
+        var nodeType;
+        var userID = '';
+        var user = '';
+
+        $("#divUserTree").jstree("get_selected").each(function () {
+            nodeType = $(this).attr("@Utility.Define.EnumTreeAttribute.NodeType");
+            userID = $(this).attr("@Utility.Define.EnumTreeAttribute.UserID");
+            user = $(this).attr("@Utility.Define.EnumTreeAttribute.ToolTip");
+        });
+
+        if (nodeType == '@Utility.Define.EnumTreeNodeType.User') {
+            $('#FormInput_UserID').val(userID);
+            $('#User').val(user);
+            $('#FormInput_Title, #FormInput_Name').prop('disabled', true).val('');
+            $('#divUserSelect').modal('hide');
+        }
+        else {
+            $.InfoDialog('@string.Format("{0} {1}", Resources.Resource.SelectOne, Resources.Resource.User)');
+        }
+    };
+</script>

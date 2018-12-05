@@ -1,0 +1,122 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetDetailItemList();
+
+        $('#divCreateDetailItemWidget').hide();
+        $('#divEditDetailItemWidget').hide();
+    });
+
+    function GetDetailItemList() {
+        var list = $('#divDetailItemList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetDetailItemList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var CreateDetailItem = function () {
+        $('#divDetailItemListWidget').hide();
+        $('#divCreateDetailItemWidget').show();
+
+        var form = $('#divCreateDetailItem');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("CreateDetailItem")',
+            data: { IchiUniqueID: $('#FormInput_IchiUniqueID').val(), CharacteristicType: $('#FormInput_CharacteristicType').val() },
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var EditDetailItem = function (seq) {
+        $('#divDetailItemListWidget').hide();
+        $('#divEditDetailItemWidget').show();
+
+        var form = $('#divEditDetailItem');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("EditDetailItem")',
+            data: { Seq: seq, IchiUniqueID: $('#FormInput_IchiUniqueID').val(), CharacteristicType: $('#FormInput_CharacteristicType').val() },
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var DeleteDetailItem = function (seq) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteDetailItem")',
+            data: { Seq: seq },
+            dataType: "json",
+            beforeSend: function () { $('#divDetailItemListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divDetailItemListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetDetailItemList();
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divDetailItemListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var CanelCreateDetailItem = function () {
+        $('#divDetailItemListWidget').show();
+        $('#divCreateDetailItem').empty();
+        $('#divCreateDetailItemWidget').hide();
+    };
+
+    var CanelEditDetailItem = function () {
+        $('#divDetailItemListWidget').show();
+        $('#divEditDetailItem').empty();
+        $('#divEditDetailItemWidget').hide();
+    };
+</script>
+
+<div id="divDetailItemListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">校驗資訊</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="CreateDetailItem(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+            <div id="divDetailItemList" style="min-height:20px;"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divCreateDetailItemWidget">
+    <div id="divCreateDetailItem" style="min-height:200px;"></div>
+</div>
+
+<div id="divEditDetailItemWidget">
+    <div id="divEditDetailItem" style="min-height:200px;"></div>
+</div>
+

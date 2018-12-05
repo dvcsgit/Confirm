@@ -1,0 +1,496 @@
+﻿@model Models.ASE.QA.CalibrationNotify.QAFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#QAForm");
+
+        $('.Reject').hide();
+
+        $('#FormInput_Comment').hide();
+
+        $('#CommentList').change(function () {
+            var val = $(this).val();
+
+            $('#FormInput_Comment').val('').hide();
+
+            if (val != '') {
+                if (val == '@Utility.Define.OTHER') {
+                    $('#FormInput_Comment').show();
+                }
+                else {
+                    $('#FormInput_Comment').val(val);
+                }
+            }
+        });
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        var type = $('input[name="FormInput.CalibrateType"]:checked').val();
+
+        if (type != 'IL') {
+            $('input[name="FormInput.CalibrateUnit"]').prop('disabled', false);
+        }
+        else {
+            $('input[name="FormInput.CalibrateUnit"]').each(function () {
+                if ($(this).val() == 'L') {
+                    $(this).prop('checked', true);
+                    $(this).trigger('click');
+                }
+                else {
+                    $(this).prop('checked', false);
+                }
+
+                $(this).prop('disabled', true);
+            });
+        }
+
+        $('input[name="FormInput.CalibrateType"]').click(function () {
+            var type = $('input[name="FormInput.CalibrateType"]:checked').val();
+
+            if (type != 'IL') {
+                $('input[name="FormInput.CalibrateUnit"]').prop('disabled', false);
+            }
+            else {
+                $('input[name="FormInput.CalibrateUnit"]').each(function () {
+                    if ($(this).val() == 'L') {
+                        $(this).prop('checked', true);
+                        $(this).trigger('click');
+                    }
+                    else {
+                        $(this).prop('checked', false);
+                    }
+
+                    $(this).prop('disabled', true);
+                });
+            }
+        });
+    });
+
+    var Reject = function () {
+        var comment = $('#FormInput_Comment').val();
+
+        if (comment == '') {
+            $.InfoDialog('@Resources.Resource.VerifyCommentRequired');
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("QAReject")',
+                data: $('#QAForm').serialize(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Detail('@Model.UniqueID');
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+
+    var RejectForm = function () {
+        $('.Initial').hide();
+        $('.Reject').show();
+    };
+
+    var CancelReject = function () {
+        $('.Initial').show();
+        $('.Reject').hide();
+    };
+</script>
+
+<script type="text/javascript">
+    var Approve = function () {
+        if ($('input[name="FormInput.CalibrateType"]:checked').length == 0) {
+            $.InfoDialog('請選擇校驗類別');
+        }
+        else if ($('input[name="FormInput.CalibrateUnit"]:checked').length == 0) {
+            $.InfoDialog('請選擇校驗負責單位');
+        }
+        else if ($('input[name="FormInput.CaseType"]:checked').length == 0) {
+            $.InfoDialog('請選擇案件類別');
+        }
+        else if ($('#FormInput_CalibratorID').val() == '') {
+            $.InfoDialog('@Resources.Resource.CalibratorRequired');
+        }
+        @*else if ($('#FormInput_CalibrateDateString').val() == '') {
+            $.InfoDialog('@Resources.Resource.CalibrateDateRequired');
+        }*@
+        else {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: '@Url.Action("QAApprove")',
+                data: $('#QAForm').serialize(),
+                dataType: "json",
+                beforeSend: function () { $.Overlay('show'); },
+                success: function (data) {
+                    $.Overlay('hide');
+
+                    if (data.IsSuccess) {
+                        Query();
+                        $.SuccessDialog(data.Message);
+                    }
+                    else {
+                        $.ErrorDialog(data.Message);
+                    }
+                },
+                error: function (x, h, r) {
+                    $.Overlay('hide');
+                    $.ErrorDialog(x.responseText);
+                }
+            });
+        }
+    };
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input:radio[name="FormInput.CaseType"]').click(function () {
+            if ($('input:radio:checked[name="FormInput.CaseType"]').val() == 'G') {
+                //$('#FormInput_CalibrateDateString').val('@string.Format("{1}{0}{2}{0}{3}", Utility.Define.DateTimeFormat_DateSeperator, DateTime.Today.AddDays(7).Year, DateTime.Today.AddDays(7).Month, DateTime.Today.AddDays(7).Day)');
+            }
+            else if ($('input:radio:checked[name="FormInput.CaseType"]').val() == 'E') {
+                //$('#FormInput_CalibrateDateString').val('@string.Format("{1}{0}{2}{0}{3}", Utility.Define.DateTimeFormat_DateSeperator, DateTime.Today.AddDays(3).Year, DateTime.Today.AddDays(3).Month, DateTime.Today.AddDays(3).Day)');
+            }
+        });
+
+        $('input:radio[name="FormInput.CalibrateUnit"]').click(function () {
+            CalibrateUnitChange();
+        });
+
+        CalibrateUnitChange();
+
+        $('#DDLCalibrator').change(function () {
+            $('#FormInput_CalibratorID').val($(this).val());
+        });
+    });
+
+    function CalibrateUnitChange() {
+        if ($('input:radio:checked[name="FormInput.CalibrateUnit"]').val() == 'F') {
+            $('#FormInput_CalibratorID').val('@Model.FormViewModel.OwnerID');
+            $('#DDLCalibrator').val('').hide();
+            $('#LabelCalibrator').text('@Model.FormViewModel.Owner').show();
+        }
+        else if ($('input:radio:checked[name="FormInput.CalibrateUnit"]').val() == 'L') {
+            $('#FormInput_CalibratorID').val('');
+            $('#DDLCalibrator').show();
+            $('#LabelCalibrator').text('').hide();
+        }
+    }
+</script>
+
+
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs Initial" onclick="Approve();" type="button">
+        <i class="ace-icon fa fa-check-circle-o bigger-160"></i>
+        @Resources.Resource.Approve
+    </button>
+
+    <button class="btn btn-app btn-danger btn-xs Initial" onclick="RejectForm();" type="button">
+        <i class="ace-icon fa fa-times-circle-o bigger-160"></i>
+        @Resources.Resource.Reject
+    </button>
+    
+    <button class="btn btn-app btn-success btn-xs Initial" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        返回
+    </button>
+
+    @if (Model.FormViewModel.Equipment != null && Model.FormViewModel.Equipment.IsQuatationExist)
+    {
+        <a class="btn btn-app btn-primary btn-xs Initial" style="width:100px;" href="@Url.Action("Quatation", new { UniqueID = Model.UniqueID })">
+            <i class="ace-icon fa fa-cloud-download bigger-160"></i>
+            報價單下載
+        </a>
+    }
+
+    <button class="btn btn-app btn-danger btn-xs Reject" onclick="Reject();" type="button">
+        <i class="ace-icon fa fa-times-circle-o bigger-160"></i>
+        @Resources.Resource.Reject
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs Reject" onclick="CancelReject();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+@using (Html.BeginForm("QA", null, FormMethod.Post, new { @ID = "QAForm" })) 
+{ 
+    @Html.HiddenFor(x => x.UniqueID)
+
+    <div class="Reject">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.VerifyComment</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Comment)</th>
+                            <td colspan="3" class="col-sm-11">
+                                <select id="CommentList">
+                                    <option value="">= @Resources.Resource.SelectOne =</option>
+                                    @foreach (var comment in Model.VerifyCommentList)
+                                    {
+                                        <option value="@comment.Description">@comment.Description</option>
+                                    }
+                                    <option value="@Utility.Define.OTHER">@Resources.Resource.Other</option>
+                                </select>
+                                @Html.TextBoxFor(x => x.FormInput.Comment, new { @class = "col-sm-5" })
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+    </div>
+
+    <div class="Initial">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Calibration @Resources.Resource.Information</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.CalibrateType)</th>
+                            <td colspan="3" class="col-sm-11">
+                                <div class="radio">
+                                    <label>
+                                        @Html.RadioButtonFor(x => x.FormInput.CalibrateType, "IF", new { @class = "ace" })
+                                        <span class="lbl"> @Resources.Resource.CalibrateType_IF</span>
+                                    </label>
+                                    <label>
+                                        @Html.RadioButtonFor(x => x.FormInput.CalibrateType, "IL", new { @class = "ace" })
+                                        <span class="lbl"> @Resources.Resource.CalibrateType_IL</span>
+                                    </label>
+                                    <label>
+                                        @Html.RadioButtonFor(x => x.FormInput.CalibrateType, "EF", new { @class = "ace" })
+                                        <span class="lbl"> @Resources.Resource.CalibrateType_EF</span>
+                                    </label>
+                                    <label>
+                                        @Html.RadioButtonFor(x => x.FormInput.CalibrateType, "EL", new { @class = "ace" })
+                                        <span class="lbl"> @Resources.Resource.CalibrateType_EL</span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.CalibrateUnit)</th>
+                            <td class="col-sm-5">
+                                <div class="radio">
+                                    <label>
+                                        @Html.RadioButtonFor(x => x.FormInput.CalibrateUnit, "F", new { @class = "ace" })
+                                        <span class="lbl"> @Resources.Resource.CalibrateUnit_F</span>
+                                    </label>
+                                    <label>
+                                        @Html.RadioButtonFor(x => x.FormInput.CalibrateUnit, "L", new { @class = "ace" })
+                                        <span class="lbl"> @Resources.Resource.CalibrateUnit_L</span>
+                                    </label>
+                                </div>
+                            </td>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.CaseType)</th>
+                            <td class="col-sm-5">
+                                <div class="radio">
+                                    <label>
+                                        @Html.RadioButtonFor(x => x.FormInput.CaseType, "G", new { @class = "ace" })
+                                        <span class="lbl"> @Resources.Resource.CaseType_G</span>
+                                    </label>
+                                    <label>
+                                        @Html.RadioButtonFor(x => x.FormInput.CaseType, "E", new { @class = "ace" })
+                                        <span class="lbl"> @Resources.Resource.CaseType_E</span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.CalibratorID)</th>
+                            <td class="col-sm-5">
+                                @Html.HiddenFor(x => x.FormInput.CalibratorID)
+                                @Html.DropDownList("DDLCalibrator", Model.CalibratorSelectItemList)
+                                <label id="LabelCalibrator"></label>
+                            </td>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.EstCalibrateDateString)</th>
+                            <td class="col-sm-5">@Html.DisplayFor(x => x.FormInput.EstCalibrateDateString)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+    </div>
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">儀器校驗通知單</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.VHNO)</th>
+                    <td>@Html.DisplayFor(x => x.FormViewModel.VHNO)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.Status.Display)</th>
+                    <td class="col-sm-5">
+                        @if (Model.FormViewModel.Status.Status == "1")
+                        {
+                            <span class="label label-lg label-purple arrowed-right">@Model.FormViewModel.Status.Display</span>
+                        }
+                        else if (Model.FormViewModel.Status.Status == "0" || Model.FormViewModel.Status.Status == "2")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.FormViewModel.Status.Display</span>
+                        }
+                        else if (Model.FormViewModel.Status.Status == "3")
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Model.FormViewModel.Status.Display</span>
+                        }
+                        else
+                        {
+                            <span>@Model.FormViewModel.Status.Display</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CalNo)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.CalNo)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormViewModel.CreateTimeString)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.FormViewModel.CreateTimeString)</td>
+                </tr>
+                @if (!string.IsNullOrEmpty(Model.FormViewModel.FormVHNO))
+                {
+                    <tr>
+                        <th><label>執行單號</label></th>
+                        <td colspan="3">
+                            <a class="blue" onclick="CalibrationForm('@Model.FormViewModel.FormUniqueID')" title="@Resources.Resource.Detail">
+                                @Model.FormViewModel.FormVHNO
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_Equipment", Model.FormViewModel.Equipment)
+
+@if (Model.FormViewModel.ItemList != null && Model.FormViewModel.ItemList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">校驗資訊</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Characteristic</th>
+                            <th>@Resources.Resource.Unit</th>
+                            <th>@Resources.Resource.UsingRange</th>
+                            <th>@Resources.Resource.UsingRangeTolerance</th>
+                            <th>校驗點</th>
+                            <th>@Resources.Resource.Tolerance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FormViewModel.ItemList)
+                        {
+                            foreach (var subitem in item.ItemList)
+                            {
+                                <tr>
+                                    <td>@item.Characteristic</td>
+                                    <td>@item.Unit</td>
+                                    <td>@item.UsingRange</td>
+                                    <td>@item.UsingRangeToleranceDisplay</td>
+                                    <td>@subitem.CalibrationPointDisplay</td>
+                                    <td>@subitem.ToleranceDisplay</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.FormViewModel.LogList != null && Model.FormViewModel.LogList.Count > 0)
+{
+    <div class="space"></div>
+    
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">簽核流程</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Role</th>
+                            <th>@Resources.Resource.VerifyUser</th>
+                            <th>@Resources.Resource.NotifyTime</th>
+                            <th>@Resources.Resource.VerifyTime</th>
+                            <th>@Resources.Resource.VerifyResult</th>
+                            <th>@Resources.Resource.VerifyComment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FormViewModel.LogList)
+                        {
+                            <tr>
+                                <td>@item.Role</td>
+                                <td>@item.User</td>
+                                <td>@item.NotifyTimeString</td>
+                                <td>@item.VerifyTimeString</td>
+                                <td>@item.VerifyResultDescription</td>
+                                <td>@item.VerifyComment</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+

@@ -1,0 +1,611 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DbModel.MSSQL.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AuthGroup">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AuthGroupWebPermissionFunction">
+          <Key>
+            <PropertyRef Name="AuthGroupID" />
+            <PropertyRef Name="WebPermissionID" />
+            <PropertyRef Name="WebFunctionID" />
+          </Key>
+          <Property Name="AuthGroupID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="WebPermissionID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="WebFunctionID" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EditableOrganization">
+          <Key>
+            <PropertyRef Name="OrganizationUniqueID" />
+            <PropertyRef Name="EditableOrganizationUniqueID" />
+          </Key>
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="EditableOrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmgContact">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="32" />
+          <Property Name="Title" Type="nvarchar" MaxLength="32" />
+          <Property Name="Name" Type="nvarchar" MaxLength="32" />
+          <Property Name="LastModifyTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmgContactTel">
+          <Key>
+            <PropertyRef Name="EmgContactUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="EmgContactUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Seq" Type="int" Nullable="false" />
+          <Property Name="Tel" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Flow">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FlowForm">
+          <Key>
+            <PropertyRef Name="FlowUniqueID" />
+            <PropertyRef Name="Form" />
+            <PropertyRef Name="RFormTypeUniqueID" />
+          </Key>
+          <Property Name="FlowUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Form" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="RFormTypeUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FlowVerifyOrganization">
+          <Key>
+            <PropertyRef Name="FlowUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="FlowUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Seq" Type="int" Nullable="false" />
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Organization">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="ParentUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="ManagerUserID" Type="nvarchar" MaxLength="32" />
+        </EntityType>
+        <EntityType Name="OrganizationManager">
+          <Key>
+            <PropertyRef Name="OrganizationUniqueID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="QueryableOrganization">
+          <Key>
+            <PropertyRef Name="OrganizationUniqueID" />
+            <PropertyRef Name="QueryableOrganizationUniqueID" />
+          </Key>
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="QueryableOrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="32" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="UID" Type="varchar" MaxLength="100" />
+          <Property Name="IsMobileUser" Type="bit" Nullable="false" />
+          <Property Name="LastModifyTime" Type="datetime" Nullable="false" />
+          <Property Name="LoginID" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="UserAuthGroup">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="AuthGroupID" />
+          </Key>
+          <Property Name="UserID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="AuthGroupID" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserPhoto">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="FileUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Extension" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WebFunction">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WebFunctionDescription">
+          <Key>
+            <PropertyRef Name="WebFunctionID" />
+            <PropertyRef Name="Language" />
+          </Key>
+          <Property Name="WebFunctionID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Language" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WebPermission">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="ParentID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Area" Type="nvarchar" MaxLength="64" />
+          <Property Name="Controller" Type="nvarchar" MaxLength="64" />
+          <Property Name="Action" Type="nvarchar" MaxLength="64" />
+          <Property Name="Icon" Type="nvarchar" MaxLength="64" />
+          <Property Name="Seq" Type="int" Nullable="false" />
+          <Property Name="IsEnabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WebPermissionDescription">
+          <Key>
+            <PropertyRef Name="WebPermissionID" />
+            <PropertyRef Name="Language" />
+          </Key>
+          <Property Name="WebPermissionID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Language" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WebPermissionFunction">
+          <Key>
+            <PropertyRef Name="WebPermissionID" />
+            <PropertyRef Name="WebFunctionID" />
+          </Key>
+          <Property Name="WebPermissionID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="WebFunctionID" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="DbModelMSSQLStoreContainer">
+          <EntitySet Name="AuthGroup" EntityType="Self.AuthGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AuthGroupWebPermissionFunction" EntityType="Self.AuthGroupWebPermissionFunction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EditableOrganization" EntityType="Self.EditableOrganization" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmgContact" EntityType="Self.EmgContact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmgContactTel" EntityType="Self.EmgContactTel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Flow" EntityType="Self.Flow" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FlowForm" EntityType="Self.FlowForm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FlowVerifyOrganization" EntityType="Self.FlowVerifyOrganization" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Organization" EntityType="Self.Organization" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrganizationManager" EntityType="Self.OrganizationManager" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="QueryableOrganization" EntityType="Self.QueryableOrganization" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserAuthGroup" EntityType="Self.UserAuthGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserPhoto" EntityType="Self.UserPhoto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WebFunction" EntityType="Self.WebFunction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WebFunctionDescription" EntityType="Self.WebFunctionDescription" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WebPermission" EntityType="Self.WebPermission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WebPermissionDescription" EntityType="Self.WebPermissionDescription" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WebPermissionFunction" EntityType="Self.WebPermissionFunction" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DbModel.MSSQL" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AuthGroup" EntityType="DbModel.MSSQL.AuthGroup" />
+          <EntitySet Name="AuthGroupWebPermissionFunction" EntityType="DbModel.MSSQL.AuthGroupWebPermissionFunction" />
+          <EntitySet Name="EditableOrganization" EntityType="DbModel.MSSQL.EditableOrganization" />
+          <EntitySet Name="EmgContact" EntityType="DbModel.MSSQL.EmgContact" />
+          <EntitySet Name="EmgContactTel" EntityType="DbModel.MSSQL.EmgContactTel" />
+          <EntitySet Name="Flow" EntityType="DbModel.MSSQL.Flow" />
+          <EntitySet Name="FlowForm" EntityType="DbModel.MSSQL.FlowForm" />
+          <EntitySet Name="FlowVerifyOrganization" EntityType="DbModel.MSSQL.FlowVerifyOrganization" />
+          <EntitySet Name="Organization" EntityType="DbModel.MSSQL.Organization" />
+          <EntitySet Name="OrganizationManager" EntityType="DbModel.MSSQL.OrganizationManager" />
+          <EntitySet Name="QueryableOrganization" EntityType="DbModel.MSSQL.QueryableOrganization" />
+          <EntitySet Name="User" EntityType="DbModel.MSSQL.User" />
+          <EntitySet Name="UserAuthGroup" EntityType="DbModel.MSSQL.UserAuthGroup" />
+          <EntitySet Name="UserPhoto" EntityType="DbModel.MSSQL.UserPhoto" />
+          <EntitySet Name="WebFunction" EntityType="DbModel.MSSQL.WebFunction" />
+          <EntitySet Name="WebFunctionDescription" EntityType="DbModel.MSSQL.WebFunctionDescription" />
+          <EntitySet Name="WebPermission" EntityType="DbModel.MSSQL.WebPermission" />
+          <EntitySet Name="WebPermissionDescription" EntityType="DbModel.MSSQL.WebPermissionDescription" />
+          <EntitySet Name="WebPermissionFunction" EntityType="DbModel.MSSQL.WebPermissionFunction" />
+        </EntityContainer>
+        <EntityType Name="AuthGroup">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="AuthGroupWebPermissionFunction">
+          <Key>
+            <PropertyRef Name="AuthGroupID" />
+            <PropertyRef Name="WebPermissionID" />
+            <PropertyRef Name="WebFunctionID" />
+          </Key>
+          <Property Name="AuthGroupID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="WebPermissionID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="WebFunctionID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="EditableOrganization">
+          <Key>
+            <PropertyRef Name="OrganizationUniqueID" />
+            <PropertyRef Name="EditableOrganizationUniqueID" />
+          </Key>
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="EditableOrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="EmgContact">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="UserID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="LastModifyTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="EmgContactTel">
+          <Key>
+            <PropertyRef Name="EmgContactUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="EmgContactUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Seq" Type="Int32" Nullable="false" />
+          <Property Name="Tel" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Flow">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="FlowForm">
+          <Key>
+            <PropertyRef Name="FlowUniqueID" />
+            <PropertyRef Name="Form" />
+            <PropertyRef Name="RFormTypeUniqueID" />
+          </Key>
+          <Property Name="FlowUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Form" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="RFormTypeUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="FlowVerifyOrganization">
+          <Key>
+            <PropertyRef Name="FlowUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="FlowUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Seq" Type="Int32" Nullable="false" />
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Organization">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="ParentUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="ManagerUserID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="OrganizationManager">
+          <Key>
+            <PropertyRef Name="OrganizationUniqueID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="UserID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="QueryableOrganization">
+          <Key>
+            <PropertyRef Name="OrganizationUniqueID" />
+            <PropertyRef Name="QueryableOrganizationUniqueID" />
+          </Key>
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="QueryableOrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="UID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsMobileUser" Type="Boolean" Nullable="false" />
+          <Property Name="LastModifyTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LoginID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="UserAuthGroup">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="AuthGroupID" />
+          </Key>
+          <Property Name="UserID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="AuthGroupID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="UserPhoto">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="FileUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Extension" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="WebFunction">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="WebFunctionDescription">
+          <Key>
+            <PropertyRef Name="WebFunctionID" />
+            <PropertyRef Name="Language" />
+          </Key>
+          <Property Name="WebFunctionID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Language" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="WebPermission">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="ParentID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Area" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Controller" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Action" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Icon" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Seq" Type="Int32" Nullable="false" />
+          <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WebPermissionDescription">
+          <Key>
+            <PropertyRef Name="WebPermissionID" />
+            <PropertyRef Name="Language" />
+          </Key>
+          <Property Name="WebPermissionID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Language" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="WebPermissionFunction">
+          <Key>
+            <PropertyRef Name="WebPermissionID" />
+            <PropertyRef Name="WebFunctionID" />
+          </Key>
+          <Property Name="WebPermissionID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="WebFunctionID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DbModelMSSQLStoreContainer" CdmEntityContainer="DbEntities">
+          <EntitySetMapping Name="AuthGroup">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.AuthGroup">
+              <MappingFragment StoreEntitySet="AuthGroup">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AuthGroupWebPermissionFunction">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.AuthGroupWebPermissionFunction">
+              <MappingFragment StoreEntitySet="AuthGroupWebPermissionFunction">
+                <ScalarProperty Name="WebFunctionID" ColumnName="WebFunctionID" />
+                <ScalarProperty Name="WebPermissionID" ColumnName="WebPermissionID" />
+                <ScalarProperty Name="AuthGroupID" ColumnName="AuthGroupID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EditableOrganization">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.EditableOrganization">
+              <MappingFragment StoreEntitySet="EditableOrganization">
+                <ScalarProperty Name="EditableOrganizationUniqueID" ColumnName="EditableOrganizationUniqueID" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmgContact">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.EmgContact">
+              <MappingFragment StoreEntitySet="EmgContact">
+                <ScalarProperty Name="LastModifyTime" ColumnName="LastModifyTime" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmgContactTel">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.EmgContactTel">
+              <MappingFragment StoreEntitySet="EmgContactTel">
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="EmgContactUniqueID" ColumnName="EmgContactUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Flow">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.Flow">
+              <MappingFragment StoreEntitySet="Flow">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FlowForm">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.FlowForm">
+              <MappingFragment StoreEntitySet="FlowForm">
+                <ScalarProperty Name="RFormTypeUniqueID" ColumnName="RFormTypeUniqueID" />
+                <ScalarProperty Name="Form" ColumnName="Form" />
+                <ScalarProperty Name="FlowUniqueID" ColumnName="FlowUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FlowVerifyOrganization">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.FlowVerifyOrganization">
+              <MappingFragment StoreEntitySet="FlowVerifyOrganization">
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="FlowUniqueID" ColumnName="FlowUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Organization">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.Organization">
+              <MappingFragment StoreEntitySet="Organization">
+                <ScalarProperty Name="ManagerUserID" ColumnName="ManagerUserID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ParentUniqueID" ColumnName="ParentUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrganizationManager">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.OrganizationManager">
+              <MappingFragment StoreEntitySet="OrganizationManager">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QueryableOrganization">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.QueryableOrganization">
+              <MappingFragment StoreEntitySet="QueryableOrganization">
+                <ScalarProperty Name="QueryableOrganizationUniqueID" ColumnName="QueryableOrganizationUniqueID" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="LoginID" ColumnName="LoginID" />
+                <ScalarProperty Name="LastModifyTime" ColumnName="LastModifyTime" />
+                <ScalarProperty Name="IsMobileUser" ColumnName="IsMobileUser" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAuthGroup">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.UserAuthGroup">
+              <MappingFragment StoreEntitySet="UserAuthGroup">
+                <ScalarProperty Name="AuthGroupID" ColumnName="AuthGroupID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserPhoto">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.UserPhoto">
+              <MappingFragment StoreEntitySet="UserPhoto">
+                <ScalarProperty Name="Extension" ColumnName="Extension" />
+                <ScalarProperty Name="FileUniqueID" ColumnName="FileUniqueID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WebFunction">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.WebFunction">
+              <MappingFragment StoreEntitySet="WebFunction">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WebFunctionDescription">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.WebFunctionDescription">
+              <MappingFragment StoreEntitySet="WebFunctionDescription">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
+                <ScalarProperty Name="WebFunctionID" ColumnName="WebFunctionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WebPermission">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.WebPermission">
+              <MappingFragment StoreEntitySet="WebPermission">
+                <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="Icon" ColumnName="Icon" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WebPermissionDescription">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.WebPermissionDescription">
+              <MappingFragment StoreEntitySet="WebPermissionDescription">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
+                <ScalarProperty Name="WebPermissionID" ColumnName="WebPermissionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WebPermissionFunction">
+            <EntityTypeMapping TypeName="DbModel.MSSQL.WebPermissionFunction">
+              <MappingFragment StoreEntitySet="WebPermissionFunction">
+                <ScalarProperty Name="WebFunctionID" ColumnName="WebFunctionID" />
+                <ScalarProperty Name="WebPermissionID" ColumnName="WebPermissionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

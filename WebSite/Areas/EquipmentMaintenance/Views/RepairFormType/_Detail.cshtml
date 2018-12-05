@@ -1,0 +1,123 @@
+﻿@model Models.EquipmentMaintenance.RepairFormTypeManagement.DetailViewModel
+
+
+<p>
+    @if (ViewBag.CanEdit)
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+            <i class="ace-icon fa fa-pencil bigger-160"></i>
+            @Resources.Resource.Edit
+        </button>
+    }
+
+    @if (ViewBag.CanDelete && Model.CanDelete)
+    {
+    <button class="btn btn-app btn-danger btn-xs" onclick="Delete('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-trash-o bigger-160"></i>
+        @Resources.Resource.Delete
+    </button>
+    }
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Back
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.RepairFormType</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.AncestorOrganizationDescription)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.AncestorOrganizationDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Description)</th>
+                    <td>@Html.DisplayFor(x => x.Description)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.MTTR)</th>
+                    <td>
+                        @if (Model.MTTR)
+                        {
+                            <i class="ace-icon fa fa-check bigger-110 red"></i>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.SubjectList.Count > 0)
+{ 
+<div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.RepairFormSubject</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th class="col-sm-2">@Resources.Resource.RepairFormSubjectID</th>
+                            <th class="col-sm-10">@Resources.Resource.RepairFormSubjectDescription</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model.SubjectList)
+                        {
+                            <tr>
+                                <td>@item.ID</td>
+                                <td>@item.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.ColumnList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.RepairFormColumn</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th class="col-sm-2">@Resources.Resource.RepairFormColumnDescription</th>
+                            <th class="col-sm-10">@Resources.Resource.Option</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model.ColumnList)
+                        {
+                            <tr>
+                                <td>@item.Description</td>
+                                <td>@item.Options</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

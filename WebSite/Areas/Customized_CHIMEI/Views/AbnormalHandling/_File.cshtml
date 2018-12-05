@@ -1,0 +1,97 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetFileList();
+
+        $('#divUploadFileWidget').hide();
+    });
+
+    function GetFileList() {
+        var list = $('#divFileList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetFileList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var UploadFile = function () {
+        $('#divFileListWidget').hide();
+        $('#divUploadFileWidget').show();
+
+        var form = $('#divUploadFile');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("FileUpload")',
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var CanelUploadFile = function () {
+        $('#divFileListWidget').show();
+        $('#divUploadFile').empty();
+        $('#divUploadFileWidget').hide();
+    };
+
+    var DeleteFile = function (abnormalUniqueID, seq) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteFile")',
+            data: { AbnormalUniqueID: abnormalUniqueID, Seq: seq },
+            dataType: "json",
+            beforeSend: function () { $('#divFileListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divFileListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetFileList();
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divFileListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<div id="divFileListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.File</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="UploadFile(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:150px;">
+            <div id="divFileList"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divUploadFileWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Upload @Resources.Resource.File</h5>
+    </div>
+
+    <div class="widget-body">
+        <div id="divUploadFile"></div>
+    </div>
+</div>

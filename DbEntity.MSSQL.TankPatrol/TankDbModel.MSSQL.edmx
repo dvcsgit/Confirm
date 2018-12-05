@@ -1,0 +1,926 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TankDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AbnormalReason">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="AbnormalType" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="LastModifyTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AbnormalReasonHandlingMethod">
+          <Key>
+            <PropertyRef Name="AbnormalReasonUniqueID" />
+            <PropertyRef Name="HandlingMethodUniqueID" />
+          </Key>
+          <Property Name="AbnormalReasonUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="HandlingMethodUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ArriveRecord">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" />
+          <Property Name="OrganizationDescription" Type="nvarchar" MaxLength="64" />
+          <Property Name="StationUniqueID" Type="varchar" MaxLength="40" />
+          <Property Name="StationID" Type="nvarchar" MaxLength="32" />
+          <Property Name="StationDescription" Type="nvarchar" MaxLength="64" />
+          <Property Name="IslandUniqueID" Type="varchar" MaxLength="40" />
+          <Property Name="IslandID" Type="nvarchar" MaxLength="32" />
+          <Property Name="IslandDescription" Type="nvarchar" MaxLength="64" />
+          <Property Name="PortUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="PortID" Type="nvarchar" MaxLength="32" />
+          <Property Name="PortDescription" Type="nvarchar" MaxLength="64" />
+          <Property Name="CheckType" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="TankNo" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Driver" Type="nvarchar" MaxLength="64" />
+          <Property Name="Owner" Type="nvarchar" MaxLength="64" />
+          <Property Name="LastTimeMaterial" Type="nvarchar" MaxLength="64" />
+          <Property Name="ThisTimeMaterial" Type="nvarchar" MaxLength="64" />
+          <Property Name="ArriveDate" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="ArriveTime" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="32" />
+          <Property Name="UnRFIDReasonUniqueID" Type="varchar" MaxLength="40" />
+          <Property Name="UnRFIDReasonID" Type="nvarchar" MaxLength="32" />
+          <Property Name="UnRFIDReasonDescription" Type="nvarchar" MaxLength="64" />
+          <Property Name="UnRFIDReasonRemark" Type="nvarchar" MaxLength="128" />
+          <Property Name="SignExtension" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="ArriveRecordPhoto">
+          <Key>
+            <PropertyRef Name="ArriveRecordUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="ArriveRecordUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Seq" Type="int" Nullable="false" />
+          <Property Name="Extension" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CheckItem">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="CheckType" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="IsFeelItem" Type="bit" Nullable="false" />
+          <Property Name="IsAccumulation" Type="bit" Nullable="false" />
+          <Property Name="LowerLimit" Type="float" />
+          <Property Name="LowerAlertLimit" Type="float" />
+          <Property Name="UpperAlertLimit" Type="float" />
+          <Property Name="UpperLimit" Type="float" />
+          <Property Name="AccumulationBase" Type="float" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="32" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="256" />
+          <Property Name="LastModifyTime" Type="datetime" Nullable="false" />
+          <Property Name="TextValueType" Type="int" />
+        </EntityType>
+        <EntityType Name="CheckItemAbnormalReason">
+          <Key>
+            <PropertyRef Name="CheckItemUniqueID" />
+            <PropertyRef Name="AbnormalReasonUniqueID" />
+          </Key>
+          <Property Name="CheckItemUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="AbnormalReasonUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CheckItemFeelOption">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="CheckItemUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Seq" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="IsAbnormal" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CheckResult">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="ArriveRecordUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Procedure" Type="varchar" MaxLength="1" />
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" />
+          <Property Name="OrganizationDescription" Type="nvarchar" MaxLength="64" />
+          <Property Name="StationUniqueID" Type="varchar" MaxLength="40" />
+          <Property Name="StationID" Type="nvarchar" MaxLength="32" />
+          <Property Name="StationDescription" Type="nvarchar" MaxLength="64" />
+          <Property Name="IslandUniqueID" Type="varchar" MaxLength="40" />
+          <Property Name="IslandID" Type="nvarchar" MaxLength="32" />
+          <Property Name="IslandDescription" Type="nvarchar" MaxLength="64" />
+          <Property Name="PortUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="PortID" Type="nvarchar" MaxLength="32" />
+          <Property Name="PortDescription" Type="nvarchar" MaxLength="64" />
+          <Property Name="CheckItemUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="CheckItemID" Type="nvarchar" MaxLength="32" />
+          <Property Name="CheckItemDescription" Type="nvarchar" MaxLength="256" />
+          <Property Name="LowerLimit" Type="float" />
+          <Property Name="LowerAlertLimit" Type="float" />
+          <Property Name="UpperAlertLimit" Type="float" />
+          <Property Name="UpperLimit" Type="float" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="32" />
+          <Property Name="CheckDate" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="CheckTime" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="FeelOptionUniqueID" Type="varchar" MaxLength="40" />
+          <Property Name="FeelOptionDescription" Type="nvarchar" MaxLength="32" />
+          <Property Name="Value" Type="float" />
+          <Property Name="NetValue" Type="float" />
+          <Property Name="IsAbnormal" Type="bit" Nullable="false" />
+          <Property Name="IsAlert" Type="bit" Nullable="false" />
+          <Property Name="Result" Type="nvarchar" MaxLength="32" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="256" />
+        </EntityType>
+        <EntityType Name="CheckResultAbnormalReason">
+          <Key>
+            <PropertyRef Name="CheckResultUniqueID" />
+            <PropertyRef Name="AbnormalReasonUniqueID" />
+          </Key>
+          <Property Name="CheckResultUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="AbnormalReasonUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="AbnormalReasonID" Type="nvarchar" MaxLength="32" />
+          <Property Name="AbnormalReasonDescription" Type="nvarchar" MaxLength="64" />
+          <Property Name="AbnormalReasonRemark" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="CheckResultHandlingMethod">
+          <Key>
+            <PropertyRef Name="CheckResultUniqueID" />
+            <PropertyRef Name="AbnormalReasonUniqueID" />
+            <PropertyRef Name="HandlingMethodUniqueID" />
+          </Key>
+          <Property Name="CheckResultUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="AbnormalReasonUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="HandlingMethodUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="HandlingMethodID" Type="nvarchar" MaxLength="32" />
+          <Property Name="HandlingMethodDescription" Type="nvarchar" MaxLength="64" />
+          <Property Name="HandlingMethodRemark" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="CheckResultPhoto">
+          <Key>
+            <PropertyRef Name="CheckResultUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="CheckResultUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Seq" Type="int" Nullable="false" />
+          <Property Name="Extension" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="HandlingMethod">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="HandlingMethodType" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="LastModifyTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Island">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="StationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Option">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="256" />
+        </EntityType>
+        <EntityType Name="Port">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="IslandUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="TagID" Type="varchar" MaxLength="100" />
+          <Property Name="LB2LPTimeSpan" Type="int" />
+          <Property Name="LP2LATimeSpan" Type="int" />
+          <Property Name="LA2LDTimeSpan" Type="int" />
+          <Property Name="UB2UPTimeSpan" Type="int" />
+          <Property Name="UP2UATimeSpan" Type="int" />
+          <Property Name="UA2UDTimeSpan" Type="int" />
+        </EntityType>
+        <EntityType Name="PortCheckItem">
+          <Key>
+            <PropertyRef Name="PortUniqueID" />
+            <PropertyRef Name="CheckItemUniqueID" />
+            <PropertyRef Name="CheckType" />
+            <PropertyRef Name="Procedure" />
+          </Key>
+          <Property Name="PortUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="CheckItemUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="CheckType" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="Procedure" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="TagID" Type="varchar" MaxLength="100" />
+          <Property Name="IsInherit" Type="bit" Nullable="false" />
+          <Property Name="LowerLimit" Type="float" />
+          <Property Name="LowerAlertLimit" Type="float" />
+          <Property Name="UpperAlertLimit" Type="float" />
+          <Property Name="UpperLimit" Type="float" />
+          <Property Name="AccumulationBase" Type="float" />
+          <Property Name="Unit" Type="nvarchar" MaxLength="32" />
+        </EntityType>
+        <EntityType Name="Station">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="OrganizationUniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UnRFIDReason">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="LastModifyTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UploadLog">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="UploadUserID" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="UploadTime" Type="datetime" Nullable="false" />
+          <Property Name="TransTime" Type="datetime" />
+          <Property Name="Message" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Version">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AppName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ApkName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="VerName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="VerCode" Type="int" Nullable="false" />
+          <Property Name="ReleaseNote" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="IsForceUpdate" Type="bit" Nullable="false" />
+          <Property Name="DateReleased" Type="datetime" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="Device" Type="varchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="TankDbModelStoreContainer">
+          <EntitySet Name="AbnormalReason" EntityType="Self.AbnormalReason" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AbnormalReasonHandlingMethod" EntityType="Self.AbnormalReasonHandlingMethod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ArriveRecord" EntityType="Self.ArriveRecord" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ArriveRecordPhoto" EntityType="Self.ArriveRecordPhoto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CheckItem" EntityType="Self.CheckItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CheckItemAbnormalReason" EntityType="Self.CheckItemAbnormalReason" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CheckItemFeelOption" EntityType="Self.CheckItemFeelOption" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CheckResult" EntityType="Self.CheckResult" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CheckResultAbnormalReason" EntityType="Self.CheckResultAbnormalReason" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CheckResultHandlingMethod" EntityType="Self.CheckResultHandlingMethod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CheckResultPhoto" EntityType="Self.CheckResultPhoto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HandlingMethod" EntityType="Self.HandlingMethod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Island" EntityType="Self.Island" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Option" EntityType="Self.Option" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Port" EntityType="Self.Port" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PortCheckItem" EntityType="Self.PortCheckItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Station" EntityType="Self.Station" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UnRFIDReason" EntityType="Self.UnRFIDReason" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UploadLog" EntityType="Self.UploadLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Version" EntityType="Self.Version" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TankDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TankDbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AbnormalReason" EntityType="TankDbModel.AbnormalReason" />
+          <EntitySet Name="AbnormalReasonHandlingMethod" EntityType="TankDbModel.AbnormalReasonHandlingMethod" />
+          <EntitySet Name="ArriveRecord" EntityType="TankDbModel.ArriveRecord" />
+          <EntitySet Name="ArriveRecordPhoto" EntityType="TankDbModel.ArriveRecordPhoto" />
+          <EntitySet Name="CheckItemAbnormalReason" EntityType="TankDbModel.CheckItemAbnormalReason" />
+          <EntitySet Name="CheckItemFeelOption" EntityType="TankDbModel.CheckItemFeelOption" />
+          <EntitySet Name="CheckResult" EntityType="TankDbModel.CheckResult" />
+          <EntitySet Name="CheckResultAbnormalReason" EntityType="TankDbModel.CheckResultAbnormalReason" />
+          <EntitySet Name="CheckResultHandlingMethod" EntityType="TankDbModel.CheckResultHandlingMethod" />
+          <EntitySet Name="CheckResultPhoto" EntityType="TankDbModel.CheckResultPhoto" />
+          <EntitySet Name="HandlingMethod" EntityType="TankDbModel.HandlingMethod" />
+          <EntitySet Name="Island" EntityType="TankDbModel.Island" />
+          <EntitySet Name="Port" EntityType="TankDbModel.Port" />
+          <EntitySet Name="PortCheckItem" EntityType="TankDbModel.PortCheckItem" />
+          <EntitySet Name="Station" EntityType="TankDbModel.Station" />
+          <EntitySet Name="UnRFIDReason" EntityType="TankDbModel.UnRFIDReason" />
+          <EntitySet Name="UploadLog" EntityType="TankDbModel.UploadLog" />
+          <EntitySet Name="Version" EntityType="TankDbModel.Version" />
+          <EntitySet Name="Option" EntityType="TankDbModel.Option" />
+          <EntitySet Name="CheckItem" EntityType="TankDbModel.CheckItem" />
+        </EntityContainer>
+        <EntityType Name="AbnormalReason">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="AbnormalType" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="LastModifyTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="AbnormalReasonHandlingMethod">
+          <Key>
+            <PropertyRef Name="AbnormalReasonUniqueID" />
+            <PropertyRef Name="HandlingMethodUniqueID" />
+          </Key>
+          <Property Name="AbnormalReasonUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="HandlingMethodUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ArriveRecord">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizationUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizationDescription" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="StationUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="StationID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="StationDescription" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="IslandUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="IslandID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="IslandDescription" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="PortUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="PortID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="PortDescription" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="CheckType" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="TankNo" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Driver" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Owner" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="LastTimeMaterial" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="ThisTimeMaterial" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="ArriveDate" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="ArriveTime" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="UserID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="UserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="UnRFIDReasonUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="UnRFIDReasonID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="UnRFIDReasonDescription" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="UnRFIDReasonRemark" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="SignExtension" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ArriveRecordPhoto">
+          <Key>
+            <PropertyRef Name="ArriveRecordUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="ArriveRecordUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Seq" Type="Int32" Nullable="false" />
+          <Property Name="Extension" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="CheckItemAbnormalReason">
+          <Key>
+            <PropertyRef Name="CheckItemUniqueID" />
+            <PropertyRef Name="AbnormalReasonUniqueID" />
+          </Key>
+          <Property Name="CheckItemUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="AbnormalReasonUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="CheckItemFeelOption">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="CheckItemUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Seq" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="IsAbnormal" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CheckResult">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="ArriveRecordUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Procedure" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizationUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizationDescription" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="StationUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="StationID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="StationDescription" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="IslandUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="IslandID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="IslandDescription" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="PortUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="PortID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="PortDescription" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="CheckItemUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="CheckItemID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="CheckItemDescription" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="LowerLimit" Type="Double" />
+          <Property Name="LowerAlertLimit" Type="Double" />
+          <Property Name="UpperAlertLimit" Type="Double" />
+          <Property Name="UpperLimit" Type="Double" />
+          <Property Name="Unit" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="CheckDate" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="CheckTime" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="FeelOptionUniqueID" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="FeelOptionDescription" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="Double" />
+          <Property Name="NetValue" Type="Double" />
+          <Property Name="IsAbnormal" Type="Boolean" Nullable="false" />
+          <Property Name="IsAlert" Type="Boolean" Nullable="false" />
+          <Property Name="Result" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CheckResultAbnormalReason">
+          <Key>
+            <PropertyRef Name="CheckResultUniqueID" />
+            <PropertyRef Name="AbnormalReasonUniqueID" />
+          </Key>
+          <Property Name="CheckResultUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="AbnormalReasonUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="AbnormalReasonID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="AbnormalReasonDescription" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="AbnormalReasonRemark" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CheckResultHandlingMethod">
+          <Key>
+            <PropertyRef Name="CheckResultUniqueID" />
+            <PropertyRef Name="AbnormalReasonUniqueID" />
+            <PropertyRef Name="HandlingMethodUniqueID" />
+          </Key>
+          <Property Name="CheckResultUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="AbnormalReasonUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="HandlingMethodUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="HandlingMethodID" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="HandlingMethodDescription" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="HandlingMethodRemark" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CheckResultPhoto">
+          <Key>
+            <PropertyRef Name="CheckResultUniqueID" />
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="CheckResultUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Seq" Type="Int32" Nullable="false" />
+          <Property Name="Extension" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="HandlingMethod">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="HandlingMethodType" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="LastModifyTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Island">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="StationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Port">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="IslandUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="TagID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LB2LPTimeSpan" Type="Int32" />
+          <Property Name="LP2LATimeSpan" Type="Int32" />
+          <Property Name="LA2LDTimeSpan" Type="Int32" />
+          <Property Name="UB2UPTimeSpan" Type="Int32" />
+          <Property Name="UP2UATimeSpan" Type="Int32" />
+          <Property Name="UA2UDTimeSpan" Type="Int32" />
+        </EntityType>
+        <EntityType Name="PortCheckItem">
+          <Key>
+            <PropertyRef Name="PortUniqueID" />
+            <PropertyRef Name="CheckItemUniqueID" />
+            <PropertyRef Name="CheckType" />
+            <PropertyRef Name="Procedure" />
+          </Key>
+          <Property Name="PortUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="CheckItemUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="CheckType" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Procedure" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="TagID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsInherit" Type="Boolean" Nullable="false" />
+          <Property Name="LowerLimit" Type="Double" />
+          <Property Name="LowerAlertLimit" Type="Double" />
+          <Property Name="UpperAlertLimit" Type="Double" />
+          <Property Name="UpperLimit" Type="Double" />
+          <Property Name="AccumulationBase" Type="Double" />
+          <Property Name="Unit" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Station">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="UnRFIDReason">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="LastModifyTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="UploadLog">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="UploadUserID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="UploadTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TransTime" Type="DateTime" Precision="3" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Version">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AppName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ApkName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="VerName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="VerCode" Type="Int32" Nullable="false" />
+          <Property Name="ReleaseNote" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="IsForceUpdate" Type="Boolean" Nullable="false" />
+          <Property Name="DateReleased" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Device" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Option">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CheckItem">
+          <Key>
+            <PropertyRef Name="UniqueID" />
+          </Key>
+          <Property Name="UniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizationUniqueID" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="CheckType" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="IsFeelItem" Type="Boolean" Nullable="false" />
+          <Property Name="IsAccumulation" Type="Boolean" Nullable="false" />
+          <Property Name="LowerLimit" Type="Double" />
+          <Property Name="LowerAlertLimit" Type="Double" />
+          <Property Name="UpperAlertLimit" Type="Double" />
+          <Property Name="UpperLimit" Type="Double" />
+          <Property Name="AccumulationBase" Type="Double" />
+          <Property Name="Unit" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="LastModifyTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TextValueType" Type="Int32" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TankDbModelStoreContainer" CdmEntityContainer="TankDbEntities">
+          <EntitySetMapping Name="AbnormalReason">
+            <EntityTypeMapping TypeName="TankDbModel.AbnormalReason">
+              <MappingFragment StoreEntitySet="AbnormalReason">
+                <ScalarProperty Name="LastModifyTime" ColumnName="LastModifyTime" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="AbnormalType" ColumnName="AbnormalType" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AbnormalReasonHandlingMethod">
+            <EntityTypeMapping TypeName="TankDbModel.AbnormalReasonHandlingMethod">
+              <MappingFragment StoreEntitySet="AbnormalReasonHandlingMethod">
+                <ScalarProperty Name="HandlingMethodUniqueID" ColumnName="HandlingMethodUniqueID" />
+                <ScalarProperty Name="AbnormalReasonUniqueID" ColumnName="AbnormalReasonUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ArriveRecord">
+            <EntityTypeMapping TypeName="TankDbModel.ArriveRecord">
+              <MappingFragment StoreEntitySet="ArriveRecord">
+                <ScalarProperty Name="SignExtension" ColumnName="SignExtension" />
+                <ScalarProperty Name="UnRFIDReasonRemark" ColumnName="UnRFIDReasonRemark" />
+                <ScalarProperty Name="UnRFIDReasonDescription" ColumnName="UnRFIDReasonDescription" />
+                <ScalarProperty Name="UnRFIDReasonID" ColumnName="UnRFIDReasonID" />
+                <ScalarProperty Name="UnRFIDReasonUniqueID" ColumnName="UnRFIDReasonUniqueID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ArriveTime" ColumnName="ArriveTime" />
+                <ScalarProperty Name="ArriveDate" ColumnName="ArriveDate" />
+                <ScalarProperty Name="ThisTimeMaterial" ColumnName="ThisTimeMaterial" />
+                <ScalarProperty Name="LastTimeMaterial" ColumnName="LastTimeMaterial" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="Driver" ColumnName="Driver" />
+                <ScalarProperty Name="TankNo" ColumnName="TankNo" />
+                <ScalarProperty Name="CheckType" ColumnName="CheckType" />
+                <ScalarProperty Name="PortDescription" ColumnName="PortDescription" />
+                <ScalarProperty Name="PortID" ColumnName="PortID" />
+                <ScalarProperty Name="PortUniqueID" ColumnName="PortUniqueID" />
+                <ScalarProperty Name="IslandDescription" ColumnName="IslandDescription" />
+                <ScalarProperty Name="IslandID" ColumnName="IslandID" />
+                <ScalarProperty Name="IslandUniqueID" ColumnName="IslandUniqueID" />
+                <ScalarProperty Name="StationDescription" ColumnName="StationDescription" />
+                <ScalarProperty Name="StationID" ColumnName="StationID" />
+                <ScalarProperty Name="StationUniqueID" ColumnName="StationUniqueID" />
+                <ScalarProperty Name="OrganizationDescription" ColumnName="OrganizationDescription" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ArriveRecordPhoto">
+            <EntityTypeMapping TypeName="TankDbModel.ArriveRecordPhoto">
+              <MappingFragment StoreEntitySet="ArriveRecordPhoto">
+                <ScalarProperty Name="Extension" ColumnName="Extension" />
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="ArriveRecordUniqueID" ColumnName="ArriveRecordUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CheckItemAbnormalReason">
+            <EntityTypeMapping TypeName="TankDbModel.CheckItemAbnormalReason">
+              <MappingFragment StoreEntitySet="CheckItemAbnormalReason">
+                <ScalarProperty Name="AbnormalReasonUniqueID" ColumnName="AbnormalReasonUniqueID" />
+                <ScalarProperty Name="CheckItemUniqueID" ColumnName="CheckItemUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CheckItemFeelOption">
+            <EntityTypeMapping TypeName="TankDbModel.CheckItemFeelOption">
+              <MappingFragment StoreEntitySet="CheckItemFeelOption">
+                <ScalarProperty Name="IsAbnormal" ColumnName="IsAbnormal" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="CheckItemUniqueID" ColumnName="CheckItemUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CheckResult">
+            <EntityTypeMapping TypeName="TankDbModel.CheckResult">
+              <MappingFragment StoreEntitySet="CheckResult">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+                <ScalarProperty Name="IsAlert" ColumnName="IsAlert" />
+                <ScalarProperty Name="IsAbnormal" ColumnName="IsAbnormal" />
+                <ScalarProperty Name="NetValue" ColumnName="NetValue" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="FeelOptionDescription" ColumnName="FeelOptionDescription" />
+                <ScalarProperty Name="FeelOptionUniqueID" ColumnName="FeelOptionUniqueID" />
+                <ScalarProperty Name="CheckTime" ColumnName="CheckTime" />
+                <ScalarProperty Name="CheckDate" ColumnName="CheckDate" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="UpperLimit" ColumnName="UpperLimit" />
+                <ScalarProperty Name="UpperAlertLimit" ColumnName="UpperAlertLimit" />
+                <ScalarProperty Name="LowerAlertLimit" ColumnName="LowerAlertLimit" />
+                <ScalarProperty Name="LowerLimit" ColumnName="LowerLimit" />
+                <ScalarProperty Name="CheckItemDescription" ColumnName="CheckItemDescription" />
+                <ScalarProperty Name="CheckItemID" ColumnName="CheckItemID" />
+                <ScalarProperty Name="CheckItemUniqueID" ColumnName="CheckItemUniqueID" />
+                <ScalarProperty Name="PortDescription" ColumnName="PortDescription" />
+                <ScalarProperty Name="PortID" ColumnName="PortID" />
+                <ScalarProperty Name="PortUniqueID" ColumnName="PortUniqueID" />
+                <ScalarProperty Name="IslandDescription" ColumnName="IslandDescription" />
+                <ScalarProperty Name="IslandID" ColumnName="IslandID" />
+                <ScalarProperty Name="IslandUniqueID" ColumnName="IslandUniqueID" />
+                <ScalarProperty Name="StationDescription" ColumnName="StationDescription" />
+                <ScalarProperty Name="StationID" ColumnName="StationID" />
+                <ScalarProperty Name="StationUniqueID" ColumnName="StationUniqueID" />
+                <ScalarProperty Name="OrganizationDescription" ColumnName="OrganizationDescription" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+                <ScalarProperty Name="Procedure" ColumnName="Procedure" />
+                <ScalarProperty Name="ArriveRecordUniqueID" ColumnName="ArriveRecordUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CheckResultAbnormalReason">
+            <EntityTypeMapping TypeName="TankDbModel.CheckResultAbnormalReason">
+              <MappingFragment StoreEntitySet="CheckResultAbnormalReason">
+                <ScalarProperty Name="AbnormalReasonRemark" ColumnName="AbnormalReasonRemark" />
+                <ScalarProperty Name="AbnormalReasonDescription" ColumnName="AbnormalReasonDescription" />
+                <ScalarProperty Name="AbnormalReasonID" ColumnName="AbnormalReasonID" />
+                <ScalarProperty Name="AbnormalReasonUniqueID" ColumnName="AbnormalReasonUniqueID" />
+                <ScalarProperty Name="CheckResultUniqueID" ColumnName="CheckResultUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CheckResultHandlingMethod">
+            <EntityTypeMapping TypeName="TankDbModel.CheckResultHandlingMethod">
+              <MappingFragment StoreEntitySet="CheckResultHandlingMethod">
+                <ScalarProperty Name="HandlingMethodRemark" ColumnName="HandlingMethodRemark" />
+                <ScalarProperty Name="HandlingMethodDescription" ColumnName="HandlingMethodDescription" />
+                <ScalarProperty Name="HandlingMethodID" ColumnName="HandlingMethodID" />
+                <ScalarProperty Name="HandlingMethodUniqueID" ColumnName="HandlingMethodUniqueID" />
+                <ScalarProperty Name="AbnormalReasonUniqueID" ColumnName="AbnormalReasonUniqueID" />
+                <ScalarProperty Name="CheckResultUniqueID" ColumnName="CheckResultUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CheckResultPhoto">
+            <EntityTypeMapping TypeName="TankDbModel.CheckResultPhoto">
+              <MappingFragment StoreEntitySet="CheckResultPhoto">
+                <ScalarProperty Name="Extension" ColumnName="Extension" />
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="CheckResultUniqueID" ColumnName="CheckResultUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HandlingMethod">
+            <EntityTypeMapping TypeName="TankDbModel.HandlingMethod">
+              <MappingFragment StoreEntitySet="HandlingMethod">
+                <ScalarProperty Name="LastModifyTime" ColumnName="LastModifyTime" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="HandlingMethodType" ColumnName="HandlingMethodType" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Island">
+            <EntityTypeMapping TypeName="TankDbModel.Island">
+              <MappingFragment StoreEntitySet="Island">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="StationUniqueID" ColumnName="StationUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Port">
+            <EntityTypeMapping TypeName="TankDbModel.Port">
+              <MappingFragment StoreEntitySet="Port">
+                <ScalarProperty Name="UA2UDTimeSpan" ColumnName="UA2UDTimeSpan" />
+                <ScalarProperty Name="UP2UATimeSpan" ColumnName="UP2UATimeSpan" />
+                <ScalarProperty Name="UB2UPTimeSpan" ColumnName="UB2UPTimeSpan" />
+                <ScalarProperty Name="LA2LDTimeSpan" ColumnName="LA2LDTimeSpan" />
+                <ScalarProperty Name="LP2LATimeSpan" ColumnName="LP2LATimeSpan" />
+                <ScalarProperty Name="LB2LPTimeSpan" ColumnName="LB2LPTimeSpan" />
+                <ScalarProperty Name="TagID" ColumnName="TagID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="IslandUniqueID" ColumnName="IslandUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PortCheckItem">
+            <EntityTypeMapping TypeName="TankDbModel.PortCheckItem">
+              <MappingFragment StoreEntitySet="PortCheckItem">
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="AccumulationBase" ColumnName="AccumulationBase" />
+                <ScalarProperty Name="UpperLimit" ColumnName="UpperLimit" />
+                <ScalarProperty Name="UpperAlertLimit" ColumnName="UpperAlertLimit" />
+                <ScalarProperty Name="LowerAlertLimit" ColumnName="LowerAlertLimit" />
+                <ScalarProperty Name="LowerLimit" ColumnName="LowerLimit" />
+                <ScalarProperty Name="IsInherit" ColumnName="IsInherit" />
+                <ScalarProperty Name="TagID" ColumnName="TagID" />
+                <ScalarProperty Name="Procedure" ColumnName="Procedure" />
+                <ScalarProperty Name="CheckType" ColumnName="CheckType" />
+                <ScalarProperty Name="CheckItemUniqueID" ColumnName="CheckItemUniqueID" />
+                <ScalarProperty Name="PortUniqueID" ColumnName="PortUniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Station">
+            <EntityTypeMapping TypeName="TankDbModel.Station">
+              <MappingFragment StoreEntitySet="Station">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UnRFIDReason">
+            <EntityTypeMapping TypeName="TankDbModel.UnRFIDReason">
+              <MappingFragment StoreEntitySet="UnRFIDReason">
+                <ScalarProperty Name="LastModifyTime" ColumnName="LastModifyTime" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UploadLog">
+            <EntityTypeMapping TypeName="TankDbModel.UploadLog">
+              <MappingFragment StoreEntitySet="UploadLog">
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="TransTime" ColumnName="TransTime" />
+                <ScalarProperty Name="UploadTime" ColumnName="UploadTime" />
+                <ScalarProperty Name="UploadUserID" ColumnName="UploadUserID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Version">
+            <EntityTypeMapping TypeName="TankDbModel.Version">
+              <MappingFragment StoreEntitySet="Version">
+                <ScalarProperty Name="Device" ColumnName="Device" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="DateReleased" ColumnName="DateReleased" />
+                <ScalarProperty Name="IsForceUpdate" ColumnName="IsForceUpdate" />
+                <ScalarProperty Name="ReleaseNote" ColumnName="ReleaseNote" />
+                <ScalarProperty Name="VerCode" ColumnName="VerCode" />
+                <ScalarProperty Name="VerName" ColumnName="VerName" />
+                <ScalarProperty Name="ApkName" ColumnName="ApkName" />
+                <ScalarProperty Name="AppName" ColumnName="AppName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Option">
+            <EntityTypeMapping TypeName="TankDbModel.Option">
+              <MappingFragment StoreEntitySet="Option">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CheckItem">
+            <EntityTypeMapping TypeName="TankDbModel.CheckItem">
+              <MappingFragment StoreEntitySet="CheckItem">
+                <ScalarProperty Name="TextValueType" ColumnName="TextValueType" />
+                <ScalarProperty Name="LastModifyTime" ColumnName="LastModifyTime" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="AccumulationBase" ColumnName="AccumulationBase" />
+                <ScalarProperty Name="UpperLimit" ColumnName="UpperLimit" />
+                <ScalarProperty Name="UpperAlertLimit" ColumnName="UpperAlertLimit" />
+                <ScalarProperty Name="LowerAlertLimit" ColumnName="LowerAlertLimit" />
+                <ScalarProperty Name="LowerLimit" ColumnName="LowerLimit" />
+                <ScalarProperty Name="IsAccumulation" ColumnName="IsAccumulation" />
+                <ScalarProperty Name="IsFeelItem" ColumnName="IsFeelItem" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CheckType" ColumnName="CheckType" />
+                <ScalarProperty Name="OrganizationUniqueID" ColumnName="OrganizationUniqueID" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

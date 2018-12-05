@@ -1,0 +1,67 @@
+﻿@model Models.ASE.QA.UnitManagement.DetailViewModel
+
+<p>
+    @if (ViewBag.CanEdit)
+    {
+        <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.UniqueID');" type="button">
+            <i class="ace-icon fa fa-edit bigger-160"></i>
+            @Resources.Resource.Edit
+        </button>
+    }
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="bigger lighter">單位</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Description)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.Description)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">允差單位</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table id="ToleranceUnitList" class="table table-bordered">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-6 center">單位</th>
+                        <th class="col-sm-6 center">倍率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var unit in Model.ToleranceUnitList)
+                    {
+                        <tr>
+                            <td class="col-sm-6 center">@unit.Description</td>
+                            <td class="col-sm-6 center">@unit.Rate</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+

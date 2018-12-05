@@ -1,0 +1,66 @@
+﻿@model Models.PipelinePatrol.FileManagement.DetailViewModel
+
+<p>
+    <a class="btn btn-app btn-purple btn-xs" href="@Url.Action("Download", new { UniqueID = Model.UniqueID })">
+        <i class="ace-icon fa fa-cloud-download bigger-160"></i>
+        @Resources.Resource.Download
+    </a>
+
+    <button class="btn btn-app btn-primary btn-xs" onclick="EditFile('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-pencil bigger-160"></i>
+        @Resources.Resource.Edit
+    </button>
+
+    <button class="btn btn-app btn-danger btn-xs" onclick="DeleteFile('@Model.UniqueID');" type="button">
+        <i class="ace-icon fa fa-trash-o bigger-160"></i>
+        @Resources.Resource.Delete
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.File</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FullPathDescription)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.FullPathDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Display)</th>
+                    <td>@Html.DisplayFor(x => x.Display)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.IsDownload2Mobile)</th>
+                    <td>
+                        @if (Model.IsDownload2Mobile)
+                        {
+                            <i class="ace-icon fa fa-check bigger-110 red"></i>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.FileSize)</th>
+                    <td>@Html.DisplayFor(x => x.FileSize)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.User)</th>
+                    <td>@Html.DisplayFor(x => x.User.User)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.LastModifyTimeString)</th>
+                    <td>@Html.DisplayFor(x => x.LastModifyTimeString)</td>
+                </tr>
+                
+            </table>
+        </div>
+    </div>
+</div>

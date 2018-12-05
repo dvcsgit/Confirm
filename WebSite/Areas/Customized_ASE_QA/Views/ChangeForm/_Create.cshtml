@@ -1,0 +1,451 @@
+﻿@model Models.ASE.QA.ChangeForm.CreateFormModel
+
+@if (Model.ChangeType == "5")
+{ 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#FormInput_OwnerID").select2(select2GetUserOptions());
+        $("#FormInput_OwnerManagerID").select2(select2GetUserOptions());
+        $("#FormInput_PEID").select2(select2GetUserOptions());
+        $("#FormInput_PEManagerID").select2(select2GetUserOptions());
+
+        $("#FormInput_OwnerID").change(function () {
+            if ($("#FormInput_OwnerID").val() != '') {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetManagerID")',
+                    data: { UserID: $("#FormInput_OwnerID").val() },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            $("#FormInput_OwnerManagerID").val(data.Data);
+                            $("#FormInput_OwnerManagerID").select2(select2GetUserOptions());
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+
+        $("#FormInput_PEID").change(function () {
+            if ($("#FormInput_PEID").val() != '') {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetManagerID")',
+                    data: { UserID: $("#FormInput_PEID").val() },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            $("#FormInput_PEManagerID").val(data.Data);
+                            $("#FormInput_PEManagerID").select2(select2GetUserOptions());
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+    });
+
+    
+</script>
+}
+
+@if (Model.ChangeType == "4")
+{ 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+    });
+</script>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#CreateForm");
+
+        $('.Equipment').click(function () {
+            var currentOwnerID = $(this).data('ownerid');
+            var currentOwnerManagerID = $(this).data('ownermanagerid');
+            var currentPEID = $(this).data('peid');
+            var currentPEManagerID = $(this).data('pemanagerid');
+
+            $('.Equipment').each(function () {
+                var ownerID = $(this).data('ownerid');
+                var ownerManagerID = $(this).data('ownermanagerid');
+                var peID = $(this).data('peid');
+                var peManagerID = $(this).data('pemanagerid');
+
+                if (ownerID != currentOwnerID || ownerManagerID != currentOwnerManagerID || peID != currentPEID || peManagerID != currentPEManagerID) {
+                    $(this).prop({ 'checked': false, 'disabled': true });
+                }
+                else {
+                    $(this).prop('disabled', false);
+                }
+            });
+        });
+    });
+
+    var Save = function () {
+        if ($('#FormInput_Reason').val() == '') {
+            $.InfoDialog('@Resources.Resource.ChangeReasonRequired');
+        }
+        else if ($('#ChangeType').val() == '4' && $('#FormInput_FixFinishedDateString').val() == '') {
+            $.InfoDialog('@Resources.Resource.FixFinishedDateRequired');
+        }
+        else if ($('#ChangeType').val() == '5' && $('#FormInput_OwnerID').val() == '') {
+            $.InfoDialog('@Resources.Resource.EquipmentOwnerRequired');
+        }
+        else if ($('#ChangeType').val() == '5' && $('#FormInput_OwnerManagerID').val() == '') {
+            $.InfoDialog('@Resources.Resource.EquipmentOwnerManagerRequired');
+        }
+        else if ($('#ChangeType').val() == '5' && $('#FormInput_PEID').val() == '') {
+            $.InfoDialog('@Resources.Resource.PERequired');
+        }
+        else if ($('#ChangeType').val() == '5' && $('#FormInput_PEManagerID').val() == '') {
+            $.InfoDialog('@Resources.Resource.PEManagerRequired');
+        }
+        else if ($('#ChangeType').val() == '9' && $('#FormInput_NewCALCycle').val() == '') {
+            $.InfoDialog('請輸入校正週期');
+        }
+        else if ($('#ChangeType').val() == 'A' && $('#FormInput_NewMSACycle').val() == '') {
+            $.InfoDialog('請輸入MSA週期');
+        }
+        else {
+            var equipments = [];
+
+            $('.Equipment:checked').each(function () {
+                equipments.push($(this).val());
+            });
+
+            if (equipments.length > 0)
+            {
+                $('#FormInput_Equipments').val(JSON.stringify(equipments));
+
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Create")',
+                    data: $('#CreateForm').serialize(),
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+            else
+            {
+                $.InfoDialog('請選擇異動設備');
+            }
+        }
+    };
+
+    function BindRemoveEvent() {
+        $('.Remove').click(function () {
+            $(this).closest('tr').remove();
+
+            return false;
+        });
+    }
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Submit
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+@using (Html.BeginForm("Create", null, FormMethod.Post, new { @ID = "CreateForm" }))
+{
+    @Html.HiddenFor(x => x.AbnormalFormUniqueID)
+    @Html.HiddenFor(x => x.ChangeType)
+    @Html.HiddenFor(x => x.FormInput.Equipments)
+    
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.ChangeReason</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.Reason)</th>
+                    <td class="col-sm-11">@Html.TextBoxFor(x => x.FormInput.Reason, new { @class = "col-sm-11" })</td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+    if (Model.ChangeType == "4")
+    {
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.FixFinishedDate</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.FixFinishedDateString)</th>
+                            <td class="col-sm-11">@Html.TextBoxFor(x => x.FormInput.FixFinishedDateString, new { @class = "datepicker" })</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+    }
+
+    if (Model.ChangeType == "5")
+    {
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title"></h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.OwnerID)</th>
+                            <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.OwnerID)</td>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.PEID)</th>
+                            <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.PEID)</td>
+                        </tr>
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.OwnerManagerID)</th>
+                            <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.OwnerManagerID)</td>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.PEManagerID)</th>
+                            <td class="col-sm-5">@Html.TextBoxFor(x => x.FormInput.PEManagerID)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+    }
+
+    if (Model.ChangeType == "9")
+    {
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">變更校正週期</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.NewCALCycle)</th>
+                            <td class="col-sm-11">@Html.TextBoxFor(x => x.FormInput.NewCALCycle)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+    }
+    
+    if (Model.ChangeType == "A")
+    {
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">變更MSA週期</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.NewMSACycle)</th>
+                            <td class="col-sm-11">@Html.TextBoxFor(x => x.FormInput.NewMSACycle)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+    }
+
+    if (Model.ChangeType == "B")
+    {
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">新增校驗</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.CALCycle)</th>
+                            <td class="col-sm-11">@Html.TextBoxFor(x => x.FormInput.CALCycle)</td>
+                        </tr>
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.NextCALDateString)</th>
+                            <td class="col-sm-11">@Html.TextBoxFor(x => x.FormInput.NextCALDateString, new { @class = "datepicker" })</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+    }
+    
+    if (Model.ChangeType == "C")
+    {
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">新增MSA</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    <table class="table table-bordered table-input">
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.MSACycle)</th>
+                            <td class="col-sm-11">@Html.TextBoxFor(x => x.FormInput.MSACycle)</td>
+                        </tr>
+                        <tr>
+                            <th class="col-sm-1">@Html.LabelFor(x => x.FormInput.NextMSADateString)</th>
+                            <td class="col-sm-11">@Html.TextBoxFor(x => x.FormInput.NextMSADateString, new { @class = "datepicker" })</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+    }
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.CalibrationChangeForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ChangeTypeDescription)</th>
+                    <td class="col-sm-11">@Html.DisplayFor(x => x.ChangeTypeDescription)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">異動設備</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="min-height:30px; overflow-x:scroll">
+            <table id="EquipmentList" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="center"></th>
+                        <th class="center">@Resources.Resource.CalNo</th>
+                        <th class="center">@Resources.Resource.Status</th>
+                        <th>廠別</th>
+                        <th>@Resources.Resource.Department</th>
+                        <th>校驗編號</th>
+                        <th>MSA校驗編號</th>
+                        <th>@Resources.Resource.SerialNo</th>
+                        <th>@Resources.Resource.IchiName</th>
+                        <th>@Resources.Resource.Brand</th>
+                        <th>@Resources.Resource.Model</th>
+                        <th>@Resources.Resource.EquipmentOwner</th>
+                        <th>@Resources.Resource.EquipmentOwnerManager</th>
+                        <th>@Resources.Resource.PE</th>
+                        <th>@Resources.Resource.PEManager</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.EquipmentList)
+                    {
+                        <tr>
+                            <td class="center">
+                                <label>
+                                    <input class="ace ace-checkbox-2 Equipment" type="checkbox" value="@item.UniqueID" data-ownerid="@item.OwnerID" data-ownermanagerid="@item.OwnerManagerID" data-peid="@item.PEID" data-pemanagerid="@item.PEManagerID">
+                                    <span class="lbl"></span>
+                                </label>
+                            </td>
+                            <td class="center">@item.CalNo</td>
+                            <td class="center">@item.StatusDescription</td>
+                            <td>@item.Factory</td>
+                            <td>@item.OrganizationDescription</td>
+                            <td>@item.CalNo</td>
+                            <td>@item.MSACalNo</td>
+                            <td>@item.SerialNo</td>
+                            <td>@item.IchiDisplay</td>
+                            <td>@item.Brand</td>
+                            <td>@item.Model</td>
+                            <td>@item.Owner</td>
+                            <td>@item.OwnerManager</td>
+                            <td>@item.PE</td>
+                            <td>@item.PEManager</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

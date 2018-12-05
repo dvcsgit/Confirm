@@ -1,0 +1,68 @@
+﻿@model System.String
+
+<script type="text/javascript">
+    $(function () {
+        $('#divAbnormalReasonTree').jstree({
+            "core": { animation: 0 },
+            "json_data": {
+                "data": [@(Html.Raw(Model))],
+                "ajax": {
+                    "url": '@Url.Action("GetAbnormalReasonTreeItem")',
+                    'cache': false,
+                    "data": function (n) {
+                        return {
+                            OrganizationUniqueID: n.attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID"),
+                            AbnormalType: n.attr("@Utility.Define.EnumTreeAttribute.AbnormalType"),
+                            AbnormalReasonUniqueID: n.attr("@Utility.Define.EnumTreeAttribute.AbnormalReasonUniqueID")
+                        };
+                    }
+                }
+            },
+            "animation": 0,
+            "plugins": ["themes", "json_data", "ui"],
+            "themes": { "theme": "apple", "dots": true, "icons": true },
+            "ui": { "select_limit": 1 }
+        }).bind("select_node.jstree", function (e, data) {
+
+            e.preventDefault();
+        }).bind("hover_node.jstree", function (e, data) {
+            var tooltip = data.rslt.obj.attr("@Utility.Define.EnumTreeAttribute.ToolTip");
+
+            if (tooltip != '') {
+                var a = data.rslt.obj.find('a:first');
+
+                a.tooltip({
+                    'title': tooltip
+                });
+
+                a.tooltip('show');
+            }
+
+            e.preventDefault();
+        }).bind("load_node.jstree", function (e, data) {
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Organization"]').find('a:first ins').remove();
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.AbnormalType"]').find('a:first ins').addClass('fa fa-chevron-right').removeClass('jstree-icon');
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.AbnormalReason"]').find('a:first ins').addClass('fa fa-exclamation-circle').removeClass('jstree-icon');
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.HandlingMethod"]').find('a:first ins').addClass('fa fa-check-circle-o').removeClass('jstree-icon');
+
+            $('.jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.Organization"], .jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.AbnormalReason"], .jstree-apple li[nodetype="@Utility.Define.EnumTreeNodeType.HandlingMethod"]').each(function () {
+                if ($(this).attr('@Utility.Define.EnumTreeAttribute.IsNew') == 'Y') {
+                    if ($(this).attr('@Utility.Define.EnumTreeAttribute.IsError') == 'Y') {
+                        $(this).find('a').removeClass('green').addClass('red');
+                        $(this).find('a:first ins').removeClass('green').addClass('red');
+                    }
+                    else {
+                        $(this).find('a').removeClass('red').addClass('green');
+                        $(this).find('a:first ins').removeClass('red').addClass('green');
+                    }
+                }
+            });
+
+            e.preventDefault();
+        });
+    });
+</script>
+
+<div id="divAbnormalReasonTree"></div>
+
+

@@ -1,0 +1,150 @@
+﻿@model Models.PipelinePatrol.ResultQuery.PipePointModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        @foreach (var item in Model.CheckItemList)
+        {
+            foreach (var result in item.CheckResultList.Where(x => x.HavePhoto))
+            {
+                <text>$(".@result.UniqueID").colorbox({ rel: '@result.UniqueID', maxWidth: '100%', maxHeight: '100%' });</text>
+            }
+        }
+    });
+</script>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Model.RouteDisplay @Model.Display
+        </h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="Detail('@Model.JobUniqueID', '@Model.CheckDate', '', '');">
+                <i class="ace-icon fa fa-times white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="center">@Resources.Resource.Abnormal</th>
+                        <th class="center"><i class="ace-icon fa fa-image bigger-130"></i></th>
+                        <th>@Resources.Resource.CheckItem</th>
+                        <th class="center">@Resources.Resource.CheckDate</th>
+                        <th class="center">@Resources.Resource.CheckTime</th>
+                        <th>@Resources.Resource.CheckUser</th>
+                        <th>@Resources.Resource.CheckResult</th>
+                        <th class="center">@Resources.Resource.LowerLimit</th>
+                        <th class="center">@Resources.Resource.LowerAlertLimit</th>
+                        <th class="center">@Resources.Resource.UpperAlertLimit</th>
+                        <th class="center">@Resources.Resource.UpperLimit</th>
+                        <th class="center">@Resources.Resource.Unit</th>
+                        <th>@Resources.Resource.AbnormalReason @Resources.Resource.And @Resources.Resource.HandlingMethod</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var checkItem in Model.CheckItemList)
+                    {
+                        if (checkItem.CheckResultList.Count > 0)
+                        {
+                            <tr>
+                                <td class="center">
+                                    @if (checkItem.CheckResultList[0].IsAbnormal)
+                                    {
+                                        <span class="label label-lg label-danger arrowed-right">@Resources.Resource.Abnormal</span>
+                                    }
+                                    else if (checkItem.CheckResultList[0].IsAlert)
+                                    {
+                                        <span class="label label-lg label-warning arrowed-right">@Resources.Resource.Warning</span>
+                                    }
+                                </td>
+                                <td class="center">
+                                    @if (checkItem.CheckResultList[0].HavePhoto)
+                                    {
+                                        <a class="purple @checkItem.CheckResultList[0].UniqueID" href="@Url.Content("~/PipelinePatrolPhoto/" + checkItem.CheckResultList[0].PhotoList[0])">
+                                            <i class="ace-icon fa fa-image bigger-130"></i>
+                                        </a>
+
+                                        for (int j = 1; j < checkItem.CheckResultList[0].PhotoList.Count; j++)
+                                        {
+                                            <a class="@checkItem.CheckResultList[0].UniqueID hide" href="@Url.Content("~/PipelinePatrolPhoto/" + checkItem.CheckResultList[0].PhotoList[j])">
+                                                <i class="ace-icon fa fa-image bigger-130"></i>
+                                            </a>
+                                        }
+                                    }
+                                </td>
+                                <td rowspan="@checkItem.CheckResultList.Count">@checkItem.Display</td>
+                                <td class="center">@checkItem.CheckResultList[0].CheckDate</td>
+                                <td class="center">@checkItem.CheckResultList[0].CheckTime</td>
+                                <td>@Model.ArriveRecordList.First(x => x.UniqueID == checkItem.CheckResultList[0].ArriveRecordUniqueID).User</td>
+                                <td>@checkItem.CheckResultList[0].Result</td>
+                                <td class="center" rowspan="@checkItem.CheckResultList.Count">@checkItem.LowerLimit</td>
+                                <td class="center" rowspan="@checkItem.CheckResultList.Count">@checkItem.LowerAlertLimit</td>
+                                <td class="center" rowspan="@checkItem.CheckResultList.Count">@checkItem.UpperAlertLimit</td>
+                                <td class="center" rowspan="@checkItem.CheckResultList.Count">@checkItem.UpperLimit</td>
+                                <td class="center" rowspan="@checkItem.CheckResultList.Count">@checkItem.Unit</td>
+                                <td>@checkItem.CheckResultList[0].AbnormalReasons</td>
+                            </tr>
+
+                            for (int i = 1; i < checkItem.CheckResultList.Count; i++)
+                            {
+                                <tr>
+                                    <td class="center">
+                                        @if (checkItem.CheckResultList[i].IsAbnormal)
+                                        {
+                                            <span class="label label-lg label-danger arrowed-right">@Resources.Resource.Abnormal</span>
+                                        }
+                                        else if (checkItem.CheckResultList[i].IsAlert)
+                                        {
+                                            <span class="label label-lg label-warning arrowed-right">@Resources.Resource.Warning</span>
+                                        }
+                                    </td>
+                                    <td class="center">
+                                        @if (checkItem.CheckResultList[i].HavePhoto)
+                                        {
+                                            <a class="purple @checkItem.CheckResultList[i].UniqueID" href="@Url.Content("~/PipelinePatrolPhoto/" + checkItem.CheckResultList[i].PhotoList[0])">
+                                                <i class="ace-icon fa fa-image bigger-130"></i>
+                                            </a>
+
+                                            for (int j = 1; j < checkItem.CheckResultList[i].PhotoList.Count; j++)
+                                            {
+                                                <a class="@checkItem.CheckResultList[i].UniqueID hide" href="@Url.Content("~/PipelinePatrolPhoto/" + checkItem.CheckResultList[i].PhotoList[j])">
+                                                    <i class="ace-icon fa fa-image bigger-130"></i>
+                                                </a>
+                                            }
+                                        }
+                                    </td>
+                                    <td class="center">@checkItem.CheckResultList[i].CheckDate</td>
+                                    <td class="center">@checkItem.CheckResultList[i].CheckTime</td>
+                                    <td>@Model.ArriveRecordList.First(x => x.UniqueID == checkItem.CheckResultList[i].ArriveRecordUniqueID).User</td>
+                                    <td>@checkItem.CheckResultList[i].Result</td>
+                                    <td>@checkItem.CheckResultList[i].AbnormalReasons</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>@checkItem.Display</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="center">@checkItem.LowerLimit</td>
+                                <td class="center">@checkItem.LowerAlertLimit</td>
+                                <td class="center">@checkItem.UpperAlertLimit</td>
+                                <td class="center">@checkItem.UpperLimit</td>
+                                <td class="center">@checkItem.Unit</td>
+                                <td></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

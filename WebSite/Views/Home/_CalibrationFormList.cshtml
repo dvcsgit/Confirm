@@ -1,0 +1,32 @@
+﻿@model Models.ASE.QA.CalibrationForm.SummaryViewModel
+
+@if (Model != null && Model.Count > 0)
+{
+    <div class="well well-lg">
+        <h4 class="blue">@Resources.Resource.CalibrationOperationManagement</h4>
+        <hr />
+        <div class="row">
+            @foreach (var item in Model.ItemList)
+            {
+                <div class="infobox @item.BoxColor" style="width:160px;">
+                    <div class="infobox-icon">
+                        <i class="ace-icon fa @item.Icon"></i>
+                    </div>
+
+                    <div class="infobox-data" style="min-width:90px;">
+                        <span class="infobox-data-number"><a href="@Url.Action("Index", "CalibrationForm", new { Area = "Customized_ASE_QA", Status = item.Status })">@item.Count</a></span>
+                        <div class="infobox-content">@item.Text</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#divCalibrationFormList').hide();
+        });
+    </script>
+}

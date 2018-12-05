@@ -1,0 +1,17 @@
+﻿{
+	"sProcessing": "處理中...",
+	"sLengthMenu": "每次顯示 _MENU_ 筆資料",
+	"sZeroRecords": "查無資料",
+	"sInfo": "共 _TOTAL_ 筆資料，目前顯示第 _START_ 至 _END_ 筆",
+	"sInfoEmpty": "查無資料",
+	"sInfoFiltered": "(從 _MAX_ 項結果過濾)",
+	"sInfoPostFix": "",
+	"sSearch": "搜尋:",
+	"sUrl": "",
+	"oPaginate": {
+		"sFirst": "首頁",
+		"sPrevious": "上頁",
+		"sNext": "下頁",
+		"sLast": "尾頁"
+	}
+}

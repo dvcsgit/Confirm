@@ -1,0 +1,214 @@
+﻿@model Models.EquipmentMaintenance.TrendQuery_CheckItem.GridViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        $('.Key').click(function () {
+            var checked = $('.Key:checked:first');
+
+            if (checked.length > 0)
+            {
+                var lowerLimit = checked.data('lowerlimit');
+                var lowerAlertLimit = checked.data('loweralertlimit');
+                var upperAlertLimit = checked.data('upperalertlimit');
+                var upperLimit = checked.data('upperlimit');
+
+                $('.Key').each(function () {
+                    if ($(this).data('lowerlimit') == lowerLimit && $(this).data('loweralertlimit') == lowerAlertLimit && $(this).data('upperalertlimit') == upperAlertLimit && $(this).data('upperlimit') == upperLimit)
+                    {
+                        $(this).prop('disabled', false);
+                    }
+                    else
+                    {
+                        $(this).prop({ 'checked': false, 'disabled': true });
+                    }
+                });
+            }
+            else
+            {
+                $('.Key').prop({ 'checked': false, 'disabled': false });
+            }
+        });
+    });
+
+    var Draw = function () {
+        var chart = $('#divChartContainer');
+
+        chart.empty();
+
+        var controlPoints = [];
+        var equipments = [];
+        var equipmentParts = [];
+
+        $('.ControlPoint:checked').each(function () {
+            controlPoints.push($(this).val());
+        });
+
+        $('.Equipment:checked').each(function () {
+            equipments.push($(this).val());
+        });
+
+        $('.EquipmentPart:checked').each(function () {
+            equipmentParts.push($(this).val());
+        });
+
+        if (controlPoints.length + equipments.length + equipmentParts.length == 0) {
+            $.InfoDialog('請選擇管制點或設備');
+        }
+        else if (controlPoints.length + equipments.length + equipmentParts.length > 20) {
+            $.InfoDialog('最多只能選擇20筆管制點或設備');
+        }
+        else {
+            $('#Parameters_ControlPoints').val(JSON.stringify(controlPoints));
+            $('#Parameters_Equipments').val(JSON.stringify(equipments));
+            $('#Parameters_EquipmentParts').val(JSON.stringify(equipmentParts));
+
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: '@Url.Action("Draw")',
+                data: $('#QueryForm').serialize(),
+                dataType: "html",
+                beforeSend: function () { chart.Overlay('show'); },
+                success: function (data) { chart.Overlay('show').html(data); },
+                error: function (x, h, r) { chart.Overlay('hide').html(x.responseText); }
+            });
+        }
+    };
+</script>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.CheckDate</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="Draw(); return false;">
+                <i class="ace-icon fa fa-line-chart white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+            {
+                @Html.HiddenFor(x => x.Parameters.CheckItemUniqueID)
+                @Html.HiddenFor(x => x.Parameters.ControlPoints)
+                @Html.HiddenFor(x => x.Parameters.Equipments)
+                @Html.HiddenFor(x => x.Parameters.EquipmentParts)
+
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.BeginDateString)</th>
+                        <td class="col-sm-5">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.Parameters.BeginDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.EndDateString)</th>
+                        <td class="col-sm-5">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.Parameters.EndDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            @Model.CheckItemDescription
+        </h5>
+        <div class="widget-toolbar">
+            <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+
+   
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="col-sm-1 center"></th>
+                        <th>@Resources.Resource.Organization</th>
+                        <th>@Resources.Resource.ID</th>
+                        <th>@Resources.Resource.Name</th>
+                        <th>@Resources.Resource.LowerLimit</th>
+                        <th>@Resources.Resource.LowerAlertLimit</th>
+                        <th>@Resources.Resource.UpperAlertLimit</th>
+                        <th>@Resources.Resource.UpperLimit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ItemList)
+                    {
+                        <tr>
+                            <td class="col-sm-1 center">
+                                @if (item.Type==Utility.Define.EnumTreeNodeType.ControlPoint)
+                                {
+                                    <label>
+                                        <input class="ace ace-checkbox-2 Key ControlPoint" type="checkbox" value="@item.ControlPointUniqueID" data-lowerlimit="@item.LowerLimit" data-loweralertlimit="@item.LowerAlertLimit" data-upperalertlimit="@item.UpperAlertLimit" data-upperlimit="@item.UpperLimit">
+                                        <span class="lbl"></span>
+                                    </label>
+                                }
+                                else if (item.Type == Utility.Define.EnumTreeNodeType.Equipment)
+                                {
+                                    <label>
+                                        <input class="ace ace-checkbox-2 Key Equipment" type="checkbox" value="@item.EquipmentUniqueID" data-lowerlimit="@item.LowerLimit" data-loweralertlimit="@item.LowerAlertLimit" data-upperalertlimit="@item.UpperAlertLimit" data-upperlimit="@item.UpperLimit">
+                                        <span class="lbl"></span>
+                                    </label>
+                                }
+                                else if (item.Type == Utility.Define.EnumTreeNodeType.EquipmentPart)
+                                {
+                                    <label>
+                                        <input class="ace ace-checkbox-2 Key EquipmentPart" type="checkbox" value="@item.PartUniqueID" data-lowerlimit="@item.LowerLimit" data-loweralertlimit="@item.LowerAlertLimit" data-upperalertlimit="@item.UpperAlertLimit" data-upperlimit="@item.UpperLimit">
+                                        <span class="lbl"></span>
+                                    </label>
+                                }
+                            </td>
+                            <td>@item.OrganizationDescription</td>
+                            <td>@item.ID</td>
+                            <td>@item.Name</td>
+                            <td>@item.LowerLimit</td>
+                            <td>@item.LowerAlertLimit</td>
+                            <td>@item.UpperAlertLimit</td>
+                            <td>@item.UpperLimit</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div id="divChartContainer"></div>
+
+
+
+
+

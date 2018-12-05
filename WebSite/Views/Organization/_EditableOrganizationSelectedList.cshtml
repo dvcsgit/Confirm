@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Models.OrganizationManagement.EditableOrganizationModel>
+
+<table class="table table-striped table-bordered table-hover nowrap">
+    <thead class="thin-border-bottom">
+        <tr>
+            <th class="col-sm-1"></th>
+            <th>@Resources.Resource.OrganizationDescription</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="col-sm-1 center">
+                    @if (item.CanDelete)
+                    {
+                        <div class="action-buttons">
+                            <a class="red" href="#" onclick="DeleteEditableOrganization('@item.UniqueID'); return false;" title="@Resources.Resource.Delete">
+                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                            </a>
+                        </div>
+                    }
+                </td>
+                <td>@item.FullDescription</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

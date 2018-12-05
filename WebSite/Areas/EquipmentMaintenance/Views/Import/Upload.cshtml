@@ -1,0 +1,70 @@
+﻿@model Models.EquipmentMaintenance.Import.UploadFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts
+{
+<script type="text/javascript">
+    $(function () {
+        var file_input = $('input[name="FormInput.Attach"]');
+
+        var upload_in_progress = false;
+
+        file_input.ace_file_input({
+            style: 'well',
+            btn_choose: '@Resources.Resource.UploadButtonChoose',
+            btn_change: '@Resources.Resource.UploadButtonChange',
+            droppable: true,
+            thumbnail: 'small',
+            before_remove: function () {
+                if (upload_in_progress) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            },
+            before_change: function (files, dropped) {
+                return true;
+            }
+        });
+    });
+</script>
+
+@if (!string.IsNullOrEmpty(Model.InitialMessage))
+{
+    <script type="text/javascript">
+        $(function () {
+            $.ErrorDialog('@Model.InitialMessage');
+        });
+    </script>
+}
+}
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="$('#UploadForm').submit();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Upload
+    </button>
+</p>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Upload</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-8">
+                    @using (Html.BeginForm("Upload", null, FormMethod.Post, new { @ID = "UploadForm", enctype = "multipart/form-data" }))
+                    {
+                        <input type="file" name="FormInput.Attach">
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

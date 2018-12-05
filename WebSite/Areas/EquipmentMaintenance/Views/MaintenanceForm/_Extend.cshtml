@@ -1,0 +1,118 @@
+﻿@model Models.EquipmentMaintenance.MaintenanceFormManagement.ExtendFormModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#ExtendForm");
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+    });
+
+    var Submit = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Extend")',
+            data: $('#ExtendForm').serialize(),
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.FormUniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Submit();" type="button">
+        <i class="ace-icon fa fa-upload bigger-160"></i>
+        @Resources.Resource.Submit
+    </button>
+
+    <button class="btn btn-app btn-success btn-xs" onclick="Edit('@Model.FormUniqueID');" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">展延申請</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            @using (Html.BeginForm("Extend", null, FormMethod.Post, new { @ID = "ExtendForm" }))
+            {
+                @Html.HiddenFor(x => x.FormUniqueID)
+                @Html.HiddenFor(x => x.OBeginDateString)
+                @Html.HiddenFor(x => x.OEndDateString)
+                
+                <table class="table table-bordered table-input">
+                    <tr>
+                        <th>@Html.LabelFor(x => x.VHNO)</th>
+                        <td>@Html.DisplayFor(x => x.VHNO)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.Subject)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.Subject)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(x => x.Equipment)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.Equipment)</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.OBeginDateString)</th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.OBeginDateString)</td>
+                        <th class="col-sm-1">@Html.LabelFor(x => x.OEndDateString)</th>
+                        <td class="col-sm-5">@Html.DisplayFor(x => x.OEndDateString)</td>
+                    </tr>
+                    <tr>
+                        <th><label>展延後日期(起)</label></th>
+                        <td>
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.FormInput.NBeginDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                        <th><label>展延後日期(迄)</label></th>
+                        <td>
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.FormInput.NEndDateString, new { @class = "form-control datepicker" })
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label>展延原因</label></th>
+                        <td colspan="3">@Html.TextBoxFor(x => x.FormInput.Reason, new { @class = "col-sm-11" })</td>
+                    </tr>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+

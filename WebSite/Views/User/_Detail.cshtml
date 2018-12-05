@@ -1,0 +1,96 @@
+﻿@model Models.UserManagement.DetailViewModel
+
+<p>
+    @if (Model.Permission == Utility.Define.EnumOrganizationPermission.Editable)
+    { 
+        if (ViewBag.CanEdit)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Edit('@Model.ID');" type="button">
+                <i class="ace-icon fa fa-pencil bigger-160"></i>
+                @Resources.Resource.Edit
+            </button>
+
+            <button class="btn btn-app btn-primary btn-xs" onclick="ResetPassword('@Model.ID');" type="button">
+                <i class="ace-icon fa fa-unlock-alt bigger-160"></i>
+                @Resources.Resource.ResetPassword
+            </button>
+        }
+
+        if (ViewBag.CanDelete)
+        {
+            <button class="btn btn-app btn-danger btn-xs" onclick="Delete('@Model.ID');" type="button">
+                <i class="ace-icon fa fa-trash-o bigger-160"></i>
+                @Resources.Resource.Delete
+            </button>
+        }
+
+        if (ViewBag.CanCreate)
+        {
+            <button class="btn btn-app btn-primary btn-xs" onclick="Copy('@Model.ID');" type="button">
+                <i class="ace-icon fa fa-copy bigger-160"></i>
+                @Resources.Resource.Copy
+            </button>
+        }
+    }
+    
+    @if (Model.OrganizationUniqueID == "*")
+    {
+        <button class="btn btn-app btn-success btn-xs" onclick="Cancel();" type="button">
+            <i class="ace-icon fa fa-ban bigger-160"></i>
+            @Resources.Resource.Cancel
+        </button>
+    }
+    else
+    {
+        <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+            <i class="ace-icon fa fa-ban bigger-160"></i>
+            @Resources.Resource.Cancel
+        </button>
+    }
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.User</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.ID)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.ID)</td>
+                    <th class="col-sm-1">@Html.LabelFor(x => x.Name)</th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.Name)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.IsMobileUser)</th>
+                    <td colspan="3">
+                        @if (Model.IsMobileUser)
+                        {
+                            <i class="ace-icon fa fa-check bigger-110 red"></i>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.EMail)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.EMail)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Title)</th>
+                    <td>@Html.DisplayFor(x => x.Title)</td>
+                    <th>@Html.LabelFor(x => x.UID)</th>
+                    <td>@Html.DisplayFor(x => x.UID)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.AuthGroups)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.AuthGroups)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,228 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts
+{   
+<script type="text/javascript" src="@Url.Content("~/Scripts/flot/jquery.flot.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/flot/jquery.flot.time.min.js")"></script>
+
+    @if (ViewBag.ReturnUrl != null && !string.IsNullOrEmpty(ViewBag.ReturnUrl))
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $.Redirect('@ViewBag.ReturnUrl');
+            });
+        </script>
+    }
+    else
+    {
+        //簽核清單
+        <script type="text/javascript">
+            $(document).ready(function () {
+                //GetVerifyList();
+            });
+            
+            function GetVerifyList() {
+                var list = $('#divVerifyList');
+
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: '@Url.Action("GetVerifyList")',
+                    dataType: "html",
+                    beforeSend: function () { list.Overlay('show'); },
+                    success: function (data) { list.Overlay('show').html(data); },
+                    error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                });
+            }
+        </script>
+
+        //巡檢或保養模組 異常追蹤管理
+        if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.EquipmentPatrol) || Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.EquipmentMaintenance))
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    GetAbnormalHandlingList();
+                });
+
+                function GetAbnormalHandlingList() {
+                    var list = $('#divAbnormalHandling');
+
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '@Url.Action("GetAbnormalHandlingList")',
+                        dataType: "html",
+                        beforeSend: function () { list.Overlay('show'); },
+                        success: function (data) { list.Overlay('show').html(data); },
+                        error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                    });
+                }
+            </script>
+
+            //修復單
+            if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.RepairForm))
+            {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        GetRepairFormList();
+                    });
+
+                    function GetRepairFormList() {
+                        var list = $('#divRepairForm');
+
+                        $.ajax({
+                            type: "GET",
+                            cache: false,
+                            url: '@Url.Action("GetRepairFormList")',
+                            dataType: "html",
+                            beforeSend: function () { list.Overlay('show'); },
+                            success: function (data) { list.Overlay('show').html(data); },
+                            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                        });
+                    }
+                </script>
+            }
+
+            //巡檢模組
+            if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.EquipmentPatrol))
+            {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        GetEquipmentPatrolList();
+                    });
+
+                    function GetEquipmentPatrolList() {
+                        var list = $('#divEquipmemtPatrol');
+
+                        $.ajax({
+                            type: "GET",
+                            cache: false,
+                            url: '@Url.Action("GetEquipmentPatrolList")',
+                            dataType: "html",
+                            beforeSend: function () { list.Overlay('show'); },
+                            success: function (data) { list.Overlay('show').html(data); },
+                            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                        });
+                    }
+                </script>
+            }
+
+            //保養模組
+            if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.EquipmentMaintenance))
+            {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        GetMaintenanceFormList();
+                    });
+
+                    function GetMaintenanceFormList() {
+                        var list = $('#divMaintenanceForm');
+
+                        $.ajax({
+                            type: "GET",
+                            cache: false,
+                            url: '@Url.Action("GetMaintenanceFormList")',
+                            dataType: "html",
+                            beforeSend: function () { list.Overlay('show'); },
+                            success: function (data) { list.Overlay('show').html(data); },
+                            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                        });
+                    }
+                </script>
+            }
+        }
+
+        //管線巡檢模組
+        if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.PipelinePatrol))
+        {
+        }
+
+        //槽車檢查模組
+        if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.TankPatrol))
+        {
+        }
+
+        //車輛檢查模組
+        if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.TruckPatrol))
+        {
+        }
+
+        //警衛巡檢模組
+        if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.GuardPatrol))
+        {
+        }
+
+        //報修單
+        if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.QForm))
+        {
+            @*<script type="text/javascript">
+                $(document).ready(function () {
+                    GetQFormList();
+                });
+
+                function GetQFormList() {
+                    var list = $('#divQForm');
+
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '@Url.Action("GetQFormList")',
+                        dataType: "html",
+                        beforeSend: function () { list.Overlay('show'); },
+                        success: function (data) { list.Overlay('show').html(data); },
+                        error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+                    });
+                }
+            </script>*@
+        }
+    }
+}
+
+<div id="divVerifyList" style="min-height:30px;"></div>
+
+@if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.EquipmentPatrol) || Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.EquipmentMaintenance))
+{
+    <div id="divAbnormalHandling" style="min-height:30px;"></div>
+    
+    if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.RepairForm))
+    { 
+    <div id="divRepairForm" style="min-height:30px;"></div>
+    }
+    
+    if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.EquipmentPatrol))
+    { 
+    <div id="divEquipmemtPatrol" style="min-height:30px;"></div>
+    }
+
+    if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.EquipmentMaintenance))
+    {
+    <div id="divMaintenanceForm" style="min-height:30px;"></div>
+    }
+}
+
+@if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.PipelinePatrol))
+{
+}
+
+
+@if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.TankPatrol))
+{
+}
+
+
+@if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.TruckPatrol))
+{
+}
+
+
+@if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.GuardPatrol))
+{
+}
+
+
+@if (Utility.Config.Modules.Contains(Utility.Define.EnumSystemModule.QForm))
+{
+    <div id="divQForm" style="min-height:30px;"></div>
+}

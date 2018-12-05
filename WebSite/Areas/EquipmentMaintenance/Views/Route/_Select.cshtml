@@ -1,0 +1,383 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetSelectedList('');
+
+        InitControlPointSelectTree();
+        InitEquipmentSelectTree();
+
+        $('#divControlPointSelectTreeWidget').hide();
+        $('#divEquipmentSelectTreeWidget').hide();
+    });
+
+    function GetSelectedList(controlPointUniqueID) {
+        var list = $('#divSelectedList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSelectedList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) {
+                list.Overlay('show').html(data);
+
+                if (controlPointUniqueID != '') {
+                    $('#divTab a[data-controlpointuniqueid="' + controlPointUniqueID + '"]').tab('show');
+                }
+                else {
+                    $('#divTab a:first').tab('show');
+                }
+            },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitControlPointSelectTree() {
+        var container = $('#divControlPointSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitControlPointSelectTree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitEquipmentSelectTree() {
+        var container = $('#divEquipmentSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitEquipmentSelectTree")',
+            data: { RefOrganizationUniqueID: $('#OrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectControlPoint = function () {
+        $('#divSelectedListWidget').hide();
+        $('#divControlPointSelectTreeWidget').show();
+    };
+
+    var CancelSelectControlPoint = function () {
+        $('#divSelectedListWidget').show();
+        $('#divControlPointSelectTreeWidget').hide();
+    };
+
+    var SelectEquipment = function () {
+        if ($('.tabLink.active').length == 0) {
+            $.InfoDialog('@string.Format("{0} {1}", Resources.Resource.Select, Resources.Resource.ControlPoint)');
+        }
+        else {
+            $('#divSelectedListWidget').hide();
+            $('#divEquipmentSelectTreeWidget').show();
+        }
+    };
+
+    var CancelSelectEquipment = function () {
+        $('#divSelectedListWidget').show();
+        $('#divEquipmentSelectTreeWidget').hide();
+    };
+
+    var ControlPointPageState = function () {
+        var pageState = [];
+
+        $('.tabLink').each(function () {
+            var controlPointUniqueID = $(this).data('controlpointuniqueid');
+
+            var minTimeSpan = $('.MinTimeSpan[data-controlpointuniqueid="' + controlPointUniqueID + '"]').val();
+
+            pageState.push(controlPointUniqueID + '@Utility.Define.Seperator' + minTimeSpan + '@Utility.Define.Seperator' + $(this).index());
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var ControlPointCheckItemPageState = function () {
+        var pageState = [];
+
+        $('.ControlPointCheckItem').each(function () {
+            var chk = $(this);
+            var checked = chk.prop('checked') ? 'Y' : 'N';
+            var controlPointUniqueID = chk.data('controlpointuniqueid');
+            var checkItemUniqueID = chk.data('checkitemuniqueid');
+            var seq = chk.parent().parent().parent().index();
+
+            pageState.push(controlPointUniqueID + '@Utility.Define.Seperator' + checkItemUniqueID + '@Utility.Define.Seperator' + seq + '@Utility.Define.Seperator' + checked);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var EquipmentPageState = function () {
+        var pageState = [];
+
+        $('.accordionContainer').each(function () {
+            var controlPointUniqueID = $(this).data('controlpointuniqueid');
+
+            $(this).find('.accordionEquipment').each(function () {
+                var equipmentUniqueID = $(this).data('equipmentuniqueid');
+                var partUniqueID = $(this).data('partuniqueid');
+                pageState.push(controlPointUniqueID + '@Utility.Define.Seperator' + equipmentUniqueID + '@Utility.Define.Seperator' + partUniqueID + '@Utility.Define.Seperator' + $(this).index());
+            });
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var EquipmentCheckItemPageState = function () {
+        var pageState = [];
+
+        $('.EquipmentCheckItem').each(function () {
+            var chk = $(this);
+            var checked = chk.prop('checked') ? 'Y' : 'N';
+            var controlPointUniqueID = chk.data('controlpointuniqueid');
+            var equipmentUniqueID = chk.data('equipmentuniqueid');
+            var partUniqueID = chk.data('partuniqueid');
+            var checkItemUniqueID = chk.data('checkitemuniqueid');
+            var seq = chk.parent().parent().parent().index();
+
+            pageState.push(controlPointUniqueID + '@Utility.Define.Seperator' + equipmentUniqueID + '@Utility.Define.Seperator' + partUniqueID + '@Utility.Define.Seperator' + checkItemUniqueID + '@Utility.Define.Seperator' + seq + '@Utility.Define.Seperator' + checked);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddControlPoint = function () {
+        var data = [];
+
+        $("#divControlPointSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.ControlPointUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddControlPoint")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                ControlPointPageStates: ControlPointPageState(),
+                ControlPointCheckItemPageStates: ControlPointCheckItemPageState(),
+                EquipmentPageStates: EquipmentPageState(),
+                EquipmentCheckItemPageStates: EquipmentCheckItemPageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divControlPointSelectTreeWidget').hide();
+                $('#divSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedList('');
+                    $("#divControlPointSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteControlPoint = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteControlPoint")',
+            data: {
+                ControlPointUniqueID: uniqueID,
+                ControlPointPageStates: ControlPointPageState(),
+                ControlPointCheckItemPageStates: ControlPointCheckItemPageState(),
+                EquipmentPageStates: EquipmentPageState(),
+                EquipmentCheckItemPageStates: EquipmentCheckItemPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedList('');
+                    $("#divControlPointSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var AddEquipment = function () {
+        var controlPointUniqueID = $('.tabLink.active').data('controlpointuniqueid');
+
+        var data = [];
+
+        $("#divEquipmentSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.OrganizationUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.EquipmentUniqueID") + '@Utility.Define.Seperator' + $(this).attr("@Utility.Define.EnumTreeAttribute.PartUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddEquipment")',
+            data: {
+                ControlPointUniqueID: controlPointUniqueID,
+                Selecteds: JSON.stringify(data),
+                ControlPointPageStates: ControlPointPageState(),
+                ControlPointCheckItemPageStates: ControlPointCheckItemPageState(),
+                EquipmentPageStates: EquipmentPageState(),
+                EquipmentCheckItemPageStates: EquipmentCheckItemPageState(),
+                RefOrganizationUniqueID: $('#OrganizationUniqueID').val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divEquipmentSelectTreeWidget').hide();
+                $('#divSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedList(controlPointUniqueID);
+                    $("#divEquipmentSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteEquipment = function (controlPointUniqueID, equipmentUniqueID, partUniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteEquipment")',
+            data: {
+                ControlPointUniqueID: controlPointUniqueID,
+                EquipmentUniqueID: equipmentUniqueID,
+                PartUniqueID: partUniqueID,
+                ControlPointPageStates: ControlPointPageState(),
+                ControlPointCheckItemPageStates: ControlPointCheckItemPageState(),
+                EquipmentPageStates: EquipmentPageState(),
+                EquipmentCheckItemPageStates: EquipmentCheckItemPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSelectedList(controlPointUniqueID);
+                    $("#divEquipmentSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+
+<div id="divControlPointSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.ControlPoint</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divControlPointSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddControlPoint(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectControlPoint(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divEquipmentSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Equipment</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divEquipmentSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddEquipment(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectEquipment(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Route @Resources.Resource.ControlPoint @Resources.Resource.Equipment @Resources.Resource.CheckItem</h5>
+        <div class="widget-toolbar">
+            <div class="widget-menu">
+                <a href="#" data-toggle="dropdown">
+                    <i class="ace-icon fa fa-plus white"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right dropdown-caret dropdown-closer dropdown-warning">
+                    <li>
+                        <a href="#" onclick="SelectControlPoint(); return false;">@Resources.Resource.ControlPoint</a>
+                    </li>
+
+                    <li>
+                        <a href="#" onclick="SelectEquipment(); return false;">@Resources.Resource.Equipment</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divSelectedList" style="min-height:200px;"></div>
+        </div>
+    </div>
+</div>

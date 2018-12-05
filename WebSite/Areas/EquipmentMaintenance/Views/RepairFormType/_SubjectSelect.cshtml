@@ -1,0 +1,167 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        GetSubjectSelectedList();
+
+        InitSubjectSelectTree();
+
+        $('#divSubjectSelectTreeWidget').hide();
+    });
+
+    function GetSubjectSelectedList() {
+        var list = $('#divSubjectSelectedList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetSubjectSelectedList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); $('#tableSubject tbody').sortable().disableSelection(); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    function InitSubjectSelectTree() {
+        var container = $('#divSubjectSelectTreeContainer');
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("InitSubjectSelectTree")',
+            data: { AncestorOrganizationUniqueID: $('#AncestorOrganizationUniqueID').val() },
+            dataType: "html",
+            beforeSend: function () { container.Overlay('show'); },
+            success: function (data) { container.Overlay('hide').html(data); },
+            error: function (x, h, r) { container.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var SelectSubject = function () {
+        $('#divSubjectSelectedListWidget').hide();
+        $('#divSubjectSelectTreeWidget').show();
+    };
+
+    var CancelSelectSubject = function () {
+        $('#divSubjectSelectedListWidget').show();
+        $('#divSubjectSelectTreeWidget').hide();
+    };
+
+    var SubjectPageState = function () {
+        var pageState = [];
+
+        $('.Subject').each(function () {
+            pageState.push($(this).val());
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var AddSubject = function () {
+        var data = [];
+
+        $("#divSubjectSelectTree").jstree("get_checked", null, true).each(function () {
+            data.push($(this).attr("@Utility.Define.EnumTreeAttribute.RepairFormSubjectUniqueID"));
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("AddSubject")',
+            data: {
+                Selecteds: JSON.stringify(data),
+                PageStates: SubjectPageState()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                $('#divSubjectSelectTreeWidget').hide();
+                $('#divSubjectSelectedListWidget').show().Overlay('show');
+            },
+            success: function (data) {
+                $('#divSubjectSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSubjectSelectedList();
+                    $("#divSubjectSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSubjectSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var DeleteSubject = function (uniqueID) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteSubject")',
+            data: {
+                'SubjectUniqueID': uniqueID,
+                'PageStates': SubjectPageState()
+            },
+            dataType: "json",
+            beforeSend: function () { $('#divSubjectSelectedListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divSubjectSelectedListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetSubjectSelectedList();
+                    $("#divSubjectSelectTree").jstree("uncheck_all");
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divSubjectSelectedListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+
+<div id="divSubjectSelectTreeWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.RepairFormSubject</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main padding-4">
+            <div id="divSubjectSelectTreeContainer" style="min-height:200px;"></div>
+        </div>
+        <div class="widget-toolbox padding-8 clearfix">
+            <button class="btn btn-primary" onclick="AddSubject(); return false;">
+                <i class="ace-icon fa fa-plus"></i>
+                @Resources.Resource.Select
+            </button>
+            <button class="btn btn-success" onclick="CancelSelectSubject(); return false;">
+                <i class="ace-icon fa fa-ban"></i>
+                @Resources.Resource.Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="divSubjectSelectedListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.RepairFormSubject</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="SelectSubject(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:50px;">
+            <div id="divSubjectSelectedList"></div>
+        </div>
+    </div>
+</div>

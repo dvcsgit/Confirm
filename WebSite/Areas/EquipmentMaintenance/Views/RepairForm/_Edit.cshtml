@@ -1,0 +1,387 @@
+﻿@model Models.EquipmentMaintenance.RepairFormManagement.EditFormModel
+
+@Html.Partial("_MaintenanceUserSelectScripts", Model.AncestorOrganizationUniqueID)
+
+@Html.HiddenFor(x => x.OrganizationUniqueID)
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        GetWorkingHourList();
+
+        $('#divCreateWorkingHourWidget').hide();
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+    });
+
+    function GetWorkingHourList() {
+        var list = $('#divWorkingHourList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("GetWorkingHourList")',
+            dataType: "html",
+            beforeSend: function () { list.Overlay('show'); },
+            success: function (data) { list.Overlay('show').html(data); },
+            error: function (x, h, r) { list.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var CreateWorkingHourForm = function () {
+        $('#divWorkingHourListWidget').hide();
+        $('#divCreateWorkingHourWidget').show();
+
+        var form = $('#divCreateWorkingHourForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("CreateWorkingHour")',
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    var DeleteWorkingHour = function (seq) {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteWorkingHour")',
+            data: { 'Seq': seq },
+            dataType: "json",
+            beforeSend: function () { $('#divWorkingHourListWidget').Overlay('show'); },
+            success: function (data) {
+                $('#divWorkingHourListWidget').Overlay('hide');
+
+                if (data.IsSuccess) {
+                    GetWorkingHourList();
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $('#divWorkingHourListWidget').Overlay('hide');
+
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var ColumnPageStates = function () {
+        var pageState = [];
+
+        $('.Column').each(function () {
+            var columnUniqueID = $(this).val();
+            var optionUniqueID = '';
+            var value = '';
+
+            var isselect = $(this).data('isselect');
+
+            if (isselect == 'Y') {
+                optionUniqueID = $(this).siblings().val();
+            }
+            else {
+                value = $(this).siblings().val();
+            }
+
+            pageState.push(columnUniqueID + '@Utility.Define.Seperator' + optionUniqueID + '@Utility.Define.Seperator' + value);
+        });
+
+        return JSON.stringify(pageState);
+    };
+
+    var Save = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Edit")',
+            data: $('#EditForm').serialize() + '&ColumnPageStates=' + ColumnPageStates() + '&MaterialPageStates=' + MaterialPageStates(),
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+
+    var Submit = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Submit")',
+            data: $('#EditForm').serialize() + '&ColumnPageStates=' + ColumnPageStates() + '&MaterialPageStates=' + MaterialPageStates(),
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                if (data.IsSuccess) {
+                    Detail('@Model.UniqueID');
+                    $.SuccessDialog(data.Message);
+                }
+                else {
+                    $.ErrorDialog(data.Message);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+                $.ErrorDialog(x.responseText);
+            }
+        });
+    };
+</script>
+
+<p>
+    <button class="btn btn-app btn-primary btn-xs" onclick="Save();" type="button">
+        <i class="ace-icon fa fa-save bigger-160"></i>
+        @Resources.Resource.Save
+    </button>
+
+    <button class="btn btn-app btn-primary btn-xs" onclick="Submit();" type="button">
+        <i class="ace-icon fa fa-paper-plane bigger-160"></i>
+        @Resources.Resource.Submit
+    </button>
+    
+    <button class="btn btn-app btn-success btn-xs" onclick="Query();" type="button">
+        <i class="ace-icon fa fa-ban bigger-160"></i>
+        @Resources.Resource.Cancel
+    </button>
+</p>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.RepairForm</h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+@using (Html.BeginForm("Edit", null, FormMethod.Post, new { @ID = "EditForm" }))
+            {
+            <table class="table table-bordered table-input">
+                <tr>
+                    <th>@Html.LabelFor(x => x.VHNO)</th>
+                    <td>
+                        @Html.DisplayFor(x => x.VHNO)
+                        @if (Model.StatusCode == "0" || Model.StatusCode == "2" || Model.StatusCode == "3")
+                        {
+                            <span class="label label-lg label-warning arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.StatusCode == "1" || Model.StatusCode == "8")
+                        {
+                            <span class="label label-lg label-success arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.StatusCode == "4")
+                        {
+                            <span class="label label-lg label-info arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.StatusCode == "5" || Model.StatusCode == "7")
+                        {
+                            <span class="label label-lg label-danger arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else if (Model.StatusCode == "6" || Model.StatusCode == "9")
+                        {
+                            <span class="label label-lg label-purple arrowed-right">@Model.StatusDescription</span>
+                        }
+                        else
+                        {
+                            <span>@Model.StatusDescription</span>
+                        }
+                    </td>
+                    <th>@Html.LabelFor(x => x.RepairFormType)</th>
+                    <td>@Html.DisplayFor(x => x.RepairFormType)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.ParentOrganizationFullDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.ParentOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.MaintenanceOrganizationFullDescription)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.MaintenanceOrganizationFullDescription)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Subject)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Subject)</td>
+                </tr>
+                <tr>
+                    <th>@Html.LabelFor(x => x.Description)</th>
+                    <td colspan="3">@Html.DisplayFor(x => x.Description)</td>
+                </tr>
+                @if (!string.IsNullOrEmpty(Model.Equipment))
+                {
+                    <tr>
+                        <th>@Html.LabelFor(x => x.Equipment)</th>
+                        <td colspan="3">@Html.DisplayFor(x => x.Equipment)</td>
+                    </tr>
+                }
+                <tr>
+                    <th class="col-sm-1"><label>預計修復日期(起)</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.EstBeginDateString)</td>
+                    <th class="col-sm-1"><label>預計修復日期(迄)</label></th>
+                    <td class="col-sm-5">
+                        @if (Model.Status == "5")
+                        {
+                        <span class="label label-lg label-danger arrowed-right">@Model.EstBeginDateString</span>
+                        }
+                        else
+                        { 
+                            @Html.DisplayFor(x => x.EstEndDateString)
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1"><label>實際接案時間</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.RealTakeJobTimeString)</td>
+                    <th class="col-sm-1"><label>實際接案人員</label></th>
+                    <td class="col-sm-5">@Html.DisplayFor(x => x.RealTakeJobUser.User)</td>
+                </tr>
+                <tr>
+                    <th class="col-sm-1">結案日期</th>
+                    <td class="col-sm-5">
+
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.ClosedDateString, new { @class = "form-control datepicker" })
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar bigger-110"></i>
+                            </span>
+                        </div>
+                    </td>
+                    <th class="col-sm-1">結案時間</th>
+                    <td class="col-sm-5">
+                        @Html.DropDownListFor(x => x.ClosedHour, Model.HourSelectItemList)
+                        <label>時</label>
+                        @Html.DropDownListFor(x => x.ClosedMin, Model.MinSelectItemList)
+                        <label>分</label>
+                    </td>
+                </tr>
+                @foreach (var item in Model.ColumnList)
+                {
+                    <tr>
+                        <th>@item.Description</th>
+                        <td colspan="3">
+                            <input type="hidden" class="Column" value="@item.UniqueID" data-isselect="@(item.OptionList.Count>0?"Y":"N")" />
+                            @if (item.OptionList.Count > 0)
+                            {
+                                <select>
+                                    @foreach (var option in item.OptionList)
+                                    {
+                                        if (item.OptionUniqueID == option.UniqueID)
+                                        {
+                                            <option value="@option.UniqueID" selected="selected">@option.Description</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@option.UniqueID">@option.Description</option>
+                                        }
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <textarea class="col-sm-11" rows="5">@item.Value</textarea>
+                                @*<input type="text" class="col-sm-11" value="@item.Value" />*@
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+}
+        </div>
+    </div>
+</div>
+
+@if (Model.JobUserList.Count > 0)
+{
+    <div class="space"></div>
+
+    <div class="widget-box widget-color-dark">
+        <div class="widget-header">
+            <h5 class="widget-title">@Resources.Resource.JobUser</h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding" style="overflow-x:scroll; min-height:50px;">
+                <table class="table table-striped table-bordered table-hover nowrap">
+                    <thead class="thin-border-bottom">
+                        <tr>
+                            <th>@Resources.Resource.Organization</th>
+                            <th>@Resources.Resource.UserID</th>
+                            <th>@Resources.Resource.UserName</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model.JobUserList)
+                        {
+                            <tr>
+                                <td>@item.OrganizationDescription</td>
+                                <td>@item.ID</td>
+                                <td>@item.Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="space"></div>
+
+<div id="divWorkingHourListWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.WorkingHourRecord</h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="CreateWorkingHourForm(); return false;">
+                <i class="ace-icon fa fa-plus white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow-x:scroll; min-height:50px;">
+            <div id="divWorkingHourList"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divCreateWorkingHourWidget" class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title">@Resources.Resource.Create @Resources.Resource.WorkingHour</h5>
+    </div>
+
+    <div class="widget-body">
+        <div id="divCreateWorkingHourForm" class="widget-main no-padding"></div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+@Html.Partial("_MaterialSelect", Model)
+
+<div class="space"></div>
+
+@Html.Partial("_File")

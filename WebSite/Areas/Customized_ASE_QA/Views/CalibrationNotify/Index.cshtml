@@ -1,0 +1,291 @@
+﻿@model Models.ASE.QA.CalibrationNotify.QueryFormModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+<link href="@Url.Content("~/Content/tree.css")" rel="stylesheet">
+<link href="@Url.Content("~/assets/css/datepicker.css")" rel="stylesheet" />
+<link href="@Url.Content("~/assets/css/select2.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jstree.js")"></script>
+
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/bootstrap-datepicker.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/date-time/locales/bootstrap-datepicker."+ViewBag.Lang+".js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.maskedinput.min.js")"></script>
+
+<script type="text/javascript" src="@Url.Content("~/assets/js/select2.min.js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#Parameters_OwnerID").select2(select2GetUserOptions());
+        $("#Parameters_OwnerManagerID").select2(select2GetUserOptions());
+        $("#Parameters_PEID").select2(select2GetUserOptions());
+        $("#Parameters_PEManagerID").select2(select2GetUserOptions());
+
+        $('.datepicker').datepicker({
+            format: '@string.Format("yyyy{0}mm{0}dd", Utility.Define.DateTimeFormat_DateSeperator)',
+            language: "@ViewBag.Lang"
+        }).on('changeDate', function () {
+            $(this).focusout();
+            $(this).datepicker('hide');
+        }).mask('@string.Format("9999{0}99{0}99", Utility.Define.DateTimeFormat_DateSeperator)').next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+        $('#Modal').hide();
+
+        Query();
+    });
+
+    var CalibrationForm = function (uniqueID) {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("CalibrationForm")',
+            data: { UniqueID: uniqueID },
+            dataType: "html",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+
+                $('#ModalContent').html(data);
+                $('#Modal').show().modal('show');
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+
+    function select2GetUserOptions() {
+        var url = '@Url.Action("GetUserOptions")';
+
+        var jsonOption = {
+            minimumInputLength: 0,
+            escapeMarkup: function (m) { return m; },
+            allowClear: true,
+            placeholder: '= @Resources.Resource.SelectAll =',
+            width: '90%',
+            ajax: {
+                url: url,
+                dataType: 'json',
+                quietMillis: 100,
+                data: function (term, page) {
+                    return {
+                        Term: term,
+                        PageSize: 10,
+                        PageIndex: page
+                    };
+                },
+                results: function (data, page) {
+                    var more = (page * 10) < data.Total;
+                    return { results: data.Data, more: more };
+                }
+            },
+            initSelection: function (element, callback) {
+                var id = $(element).val();
+                if (id !== "") {
+                    $.ajax(url, {
+                        data: {
+                            Term: id,
+                            IsInit: true
+                        },
+                        dataType: "json"
+                    }).done(function (data) {
+                        if (data.Data.length == 1) {
+                            callback(data.Data[0]);
+                        }
+                    });
+                }
+            }
+        };
+
+        return jsonOption;
+    }
+
+    var Form = function (url, data) {
+        $('#divQueryFormContainer').hide();
+        $('#divQueryResult').empty();
+        $('#divFormContainer').show();
+
+        var form = $('#divForm');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            data: data,
+            dataType: "html",
+            beforeSend: function () { form.Overlay('show'); },
+            success: function (data) { form.Overlay('show').html(data); },
+            error: function (x, h, r) { form.Overlay('hide').html(x.responseText); }
+        });
+    };
+
+    function Query() {
+        $('#divQueryFormContainer').show();
+        $('#divForm').empty();
+        $('#divFormContainer').hide();
+
+        var div = $('#divQueryResult');
+
+        var data = [];
+
+        $('.Status:checked').each(function () {
+            data.push($(this).val());
+        });
+
+        $('#Parameters_Status').val(JSON.stringify(data));
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Query")',
+            data: $('#QueryForm').serialize(),
+            dataType: "html",
+            beforeSend: function () { div.Overlay('show'); },
+            success: function (data) { div.Overlay('show').html(data); },
+            error: function (x, h, r) { div.Overlay('hide').html(x.responseText); }
+        });
+    }
+
+    var Edit = function (uniqueID) {
+        Form('@Url.Action("Edit")', { UniqueID: uniqueID });
+    }
+
+    var Detail = function (uniqueID) {
+        Form('@Url.Action("Detail")', { UniqueID: uniqueID });
+    }
+
+    var Manager = function (uniqueID) {
+        Form('@Url.Action("Manager")', { UniqueID: uniqueID });
+    }
+
+    var QA = function (uniqueID) {
+        Form('@Url.Action("QA")', { UniqueID: uniqueID });
+    }
+</script>
+}
+
+<div class="row" id="divQueryFormContainer">
+    <div class="col-xs-12">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h5 class="widget-title">@Resources.Resource.Search</h5>
+                <div class="widget-toolbar">
+                    <a href="#" onclick="Query(); return false;">
+                        <i class="ace-icon fa fa-search white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main no-padding">
+                    @using (Html.BeginForm("Query", null, FormMethod.Post, new { @ID = "QueryForm" }))
+                    {
+                        @Html.HiddenFor(x => x.Parameters.Status)
+                        
+                        <table class="table table-bordered table-input">
+                            <tr>
+                                <th class="col-sm-1"><label>預計校驗日期</label></th>
+                                <td class="col-sm-2">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.BeginDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="col-sm-2">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Parameters.EndDateString, new { @class = "form-control datepicker" })
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar bigger-110"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.VHNO)</th>
+                                <td class="col-sm-6">@Html.TextBoxFor(x => x.Parameters.VHNO)</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.CalNo)</th>
+                                <td colspan="2">@Html.TextBoxFor(x => x.Parameters.CalNo)</td>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.SerialNo)</th>
+                                <td class="col-sm-6">@Html.TextBoxFor(x => x.Parameters.SerialNo)</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.Status)</th>
+                                <td colspan="4">
+                                    @foreach (var status in Model.StatusList)
+                                    {
+                                        <label>
+                                            <input class="ace ace-checkbox-2 Status" type="checkbox" value="@status.Value" checked="@status.Selected">
+                                            <span class="lbl"> @status.Text</span>
+                                        </label>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.OwnerID)</th>
+                                <td colspan="2">@Html.TextBoxFor(x => x.Parameters.OwnerID)</td>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.PEID)</th>
+                                <td class="col-sm-6">@Html.TextBoxFor(x => x.Parameters.PEID)</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.OwnerManagerID)</th>
+                                <td colspan="2">@Html.TextBoxFor(x => x.Parameters.OwnerManagerID)</td>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.PEManagerID)</th>
+                                <td class="col-sm-6">@Html.TextBoxFor(x => x.Parameters.PEManagerID)</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.Brand)</th>
+                                <td colspan="2">@Html.TextBoxFor(x => x.Parameters.Brand)</td>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.Model)</th>
+                                <td class="col-sm-6">@Html.TextBoxFor(x => x.Parameters.Model)</td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.FactoryUniqueID)</th>
+                                <td colspan="2">@Html.DropDownListFor(x => x.Parameters.FactoryUniqueID, Model.FactorySelectItemList)</td>
+                                <th class="col-sm-1">@Html.LabelFor(x => x.Parameters.IchiName)</th>
+                                <td class="col-sm-6">@Html.TextBoxFor(x => x.Parameters.IchiName)</td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+
+        <div id="divQueryResult" style="min-height:200px;"></div>
+    </div>
+</div>
+
+<div class="row" id="divFormContainer">
+    <div class="col-xs-12">
+        <div id="divForm" style="min-height:200px;"></div>
+    </div>
+</div>
+
+<div class="modal" id="Modal">
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-body" id="ModalContent"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>

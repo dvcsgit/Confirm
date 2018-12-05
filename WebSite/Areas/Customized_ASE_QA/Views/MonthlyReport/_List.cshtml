@@ -1,0 +1,295 @@
+﻿@model Models.ASE.QA.MonthlyReport.GridViewModel
+
+
+<script type="text/javascript">
+    var Export = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Export")',
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+                if (data.success) {
+                    $("body").append("<iframe src='" + data.data + "' style='display: none;' ></iframe>");
+                }
+                else {
+                    $.ErrorDialog(data.errors);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+</script>
+
+@if (Model.ItemCount > 0)
+{
+    <p>
+        <button class="btn btn-app btn-primary btn-xs" onclick="Export();" type="button">
+            <i class="ace-icon fa fa-cloud-download bigger-160"></i>
+            匯出
+        </button>
+    </p>
+}
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            CAL-Monthly
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th><label>Weekly</label></th>
+                        @foreach (var key in Model.KeyList)
+                        { 
+                            <th><label>@key.Display</label><br /><label>@(string.Format("{0}~{1}", Utility.DateTimeHelper.DateTime2DateStringWithSeperator(key.BeginDate), Utility.DateTimeHelper.DateTime2DateStringWithSeperator(key.EndDate)))</label></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                   <tr>
+                       <th><label>Total Cal Q'ty</label></th>
+                       @foreach (var key in Model.KeyList)
+                       {
+                        <td>@Model.CalItemList.Count(x => DateTime.Compare(x.EstCalibrateDate, key.BeginDate) >= 0 && DateTime.Compare(x.EstCalibrateDate, key.EndDate) <= 0)</td>
+                       }
+                   </tr>
+                    <tr>
+                        <th><label>Abnormal Q'ty</label></th>
+                        @foreach (var key in Model.KeyList)
+                        {
+                            <td>@Model.CalItemList.Count(x => DateTime.Compare(x.EstCalibrateDate, key.BeginDate) >= 0 && DateTime.Compare(x.EstCalibrateDate, key.EndDate) <= 0 && x.IsAbnormal)</td>
+                        }
+                    </tr>
+                    <tr>
+                        <th><label>New Q'ty</label></th>
+                        @foreach (var key in Model.KeyList)
+                        {
+                            <td>@Model.CalItemList.Count(x => DateTime.Compare(x.EstCalibrateDate, key.BeginDate) >= 0 && DateTime.Compare(x.EstCalibrateDate, key.EndDate) <= 0 && !string.IsNullOrEmpty(x.CalibrationApplyUniqueID))</td>
+                        }
+                    </tr>
+                    <tr>
+                        <th><label>Complete Rate%</label></th>
+                        @foreach (var key in Model.KeyList)
+                        {
+                            double total = Model.CalItemList.Count(x => DateTime.Compare(x.EstCalibrateDate, key.BeginDate) >= 0 && DateTime.Compare(x.EstCalibrateDate, key.EndDate) <= 0);
+                            double finished = Model.CalItemList.Count(x => DateTime.Compare(x.EstCalibrateDate, key.BeginDate) >= 0 && DateTime.Compare(x.EstCalibrateDate, key.EndDate) <= 0 && x.Status._Status == "5");
+                            <td>@((finished / total).ToString("P"))</td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            MSA-Monthly
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th><label>Weekly</label></th>
+                        @foreach (var key in Model.KeyList)
+                        {
+                            <th><label>@key.Display</label><br /><label>@(string.Format("{0}~{1}", Utility.DateTimeHelper.DateTime2DateStringWithSeperator(key.BeginDate), Utility.DateTimeHelper.DateTime2DateStringWithSeperator(key.EndDate)))</label></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><label>Total MSA Q'ty</label></th>
+                        @foreach (var key in Model.KeyList)
+                        {
+                            <td>@Model.MSAItemList.Count(x => DateTime.Compare(x.EstMSADate, key.BeginDate) >= 0 && DateTime.Compare(x.EstMSADate, key.EndDate) <= 0)</td>
+                        }
+                    </tr>
+                    <tr>
+                        <th><label>NEW Q'ty</label></th>
+                        @foreach (var key in Model.KeyList)
+                        {
+                            <td>@Model.MSAItemList.Count(x => DateTime.Compare(x.EstMSADate, key.BeginDate) >= 0 && DateTime.Compare(x.EstMSADate, key.EndDate) <= 0 && x.IsNew)</td>
+                        }
+                    </tr>
+                    <tr>
+                        <th><label>Completed Rate</label></th>
+                        @foreach (var key in Model.KeyList)
+                        {
+                            double total = Model.MSAItemList.Count(x => DateTime.Compare(x.EstMSADate, key.BeginDate) >= 0 && DateTime.Compare(x.EstMSADate, key.EndDate) <= 0);
+                            double finished = Model.MSAItemList.Count(x => DateTime.Compare(x.EstMSADate, key.BeginDate) >= 0 && DateTime.Compare(x.EstMSADate, key.EndDate) <= 0 && x.Status.StatusCode == "5");
+                            <td>@((finished / total).ToString("P"))</td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            CAL-HISORY
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="center">@Resources.Resource.VHNO</th>
+                        <th>@Resources.Resource.Status</th>
+                        <th>校驗類別</th>
+                        <th>負責單位</th>
+                        <th>廠別</th>
+                        <th>@Resources.Resource.Department</th>
+                        <th>@Resources.Resource.CalNo</th>
+                        <th>預計校驗日期</th>
+                        <th>實際校驗日期</th>
+                        <th>@Resources.Resource.SerialNo</th>
+                        <th>機台編號</th>
+                        <th>@Resources.Resource.IchiName</th>
+                        <th>@Resources.Resource.Brand</th>
+                        <th>@Resources.Resource.Model</th>
+                        <th>@Resources.Resource.EquipmentOwner</th>
+                        <th>校驗負責人員</th>
+                        <th>@Resources.Resource.Calibrator</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CalItemList)
+                    {
+                        <tr>
+                            <td class="center">@item.VHNO</td>
+                            <td><span class="label label-lg @item.Status.LabelClass">@item.Status.Display</span></td>
+                            <td class="center">@item.CalibrateTypeDisplay</td>
+                            <td class="center">@item.CalibrateUnitDisplay</td>
+                            <td>@item.Factory</td>
+                            <td>@item.OrganizationDescription</td>
+                            <td>@item.CalNo</td>
+                            <td>@item.EstCalibrateDateString</td>
+                            <td>@item.CalibrateDateString</td>
+                            <td>@item.SerialNo</td>
+                            <td>@item.MachineNo</td>
+                            <td>@item.Ichi</td>
+                            <td>@item.Brand</td>
+                            <td>@item.Model</td>
+                            <td>@item.Owner</td>
+                            <td>@item.Responsor</td>
+                            <td>@item.Calibrator</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="space"></div>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            MSA-HISTORY
+        </h5>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th class="center">@Resources.Resource.VHNO</th>
+                        <th>@Resources.Resource.CalNo</th>
+                        <th>@Resources.Resource.Status</th>
+                        <th>預計MSA日期</th>
+                        <th>實際MSA日期</th>
+                        <th>@Resources.Resource.PE</th>
+                        <th>@Resources.Resource.MSAResponsor</th>
+                        <th>廠別</th>
+                        <th>@Resources.Resource.Department</th>
+                        <th>類型</th>
+                        <th>@Resources.Resource.Station</th>
+                        <th>@Resources.Resource.ICHI</th>
+                        <th>@Resources.Resource.Characteristic</th>
+                        <th>@Resources.Resource.MSARange</th>
+                        <th>@Resources.Resource.NotifyTime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.MSAItemList)
+                    {
+                        <tr>
+                            <td class="center">@item.VHNO</td>
+                            <td>@item.CalNo</td>
+                            <td>
+                                @if (item.Status.StatusCode == "2" || item.Status.StatusCode == "4")
+                                {
+                                    <span class="label label-lg label-danger arrowed-right">@item.Status.Display</span>
+                                }
+                                else if (item.Status.StatusCode == "1")
+                                {
+                                    <span class="label label-lg label-primary arrowed-right">@item.Status.Display</span>
+                                }
+                                else if (item.Status.StatusCode == "3")
+                                {
+                                    <span class="label label-lg label-purple arrowed-right">@item.Status.Display</span>
+                                }
+                                else if (item.Status.StatusCode == "5")
+                                {
+                                    <span class="label label-lg label-success arrowed-right">@item.Status.Display</span>
+                                }
+                                else if (item.Status.StatusCode == "6")
+                                {
+                                    <span class="label label-lg label-grey arrowed-right">@item.Status.Display</span>
+                                }
+                                else
+                                {
+                                    <span>@item.Status.Display</span>
+                                }
+                            </td>
+                            <td>@item.EstMSADateString</td>
+                            <td>@item.MSADateString</td>
+                            <td>@item.PE</td>
+                            <td>@item.MSAResponsor</td>
+                            <td>@item.Factory</td>
+                            <td>@item.OrganizationDescription</td>
+                            <td>@item.TypeDisplay</td>
+                            <td>@item.Station</td>
+                            <td>@item.MSAIchi</td>
+                            <td>@item.MSACharacteristic</td>
+                            <td>@item.MSARange</td>
+                            <td>@item.CreateTimeString</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+

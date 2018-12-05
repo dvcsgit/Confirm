@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Models.ASE.QA.QAPerformance.GridItem>
+
+<script type="text/javascript">
+    var Export = function () {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: '@Url.Action("Export")',
+            dataType: "json",
+            beforeSend: function () { $.Overlay('show'); },
+            success: function (data) {
+                $.Overlay('hide');
+                if (data.success) {
+                    $("body").append("<iframe src='" + data.data + "' style='display: none;' ></iframe>");
+                }
+                else {
+                    $.ErrorDialog(data.errors);
+                }
+            },
+            error: function (x, h, r) {
+                $.Overlay('hide');
+            }
+        });
+    };
+</script>
+
+<div class="widget-box widget-color-dark">
+    <div class="widget-header">
+        <h5 class="widget-title bigger lighter">
+            
+        </h5>
+        <div class="widget-toolbar">
+            <a href="#" onclick="Export(); return false;">
+                <i class="ace-icon fa fa-cloud-download white"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main no-padding" style="overflow:scroll; max-height:500px;">
+            <table class="table table-striped table-bordered table-hover nowrap">
+                <thead class="thin-border-bottom">
+                    <tr>
+                        <th rowspan="2"><label>人員</label></th>
+                        <th colspan="8"><label>核簽數量</label></th>
+                        <th colspan="5"><label>校驗</label></th>
+                    </tr>
+                    <tr>
+                        <th><label>校驗申請單</label></th>
+                        <th><label>校驗通知單</label></th>
+                        <th><label>校驗執行單</label></th>
+                        <th><label>MSA通知單</label></th>
+                        <th><label>MSA執行單</label></th>
+                        <th><label>異動申請單</label></th>
+                        <th><label>異常通知單</label></th>
+                        <th><label>小計</label></th>
+                        <th><label>收件次數</label></th>
+                        <th><label>送件次數</label></th>
+                        <th><label>回件次數</label></th>
+                        <th><label>發件次數</label></th>
+                        <th><label>執行數量</label></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.User</td>
+                            <td>@item.CalibrationApplyCount</td>
+                            <td>@item.CalibrationNotifyCount</td>
+                            <td>@item.CalibrationFormCount</td>
+                            <td>@item.MSANotifyCount</td>
+                            <td>@item.MSAFormCount</td>
+                            <td>@item.ChangeFormCount</td>
+                            <td>@item.AbnormalFormCount</td>
+                            <td>@item.VerifyCount</td>
+                            <td>@item.Step1Count</td>
+                            <td>@item.Step2Count</td>
+                            <td>@item.Step3Count</td>
+                            <td>@item.Step4Count</td>
+                            <td>@item.CalibrationCount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

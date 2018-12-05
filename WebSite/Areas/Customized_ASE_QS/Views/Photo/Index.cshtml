@@ -1,0 +1,88 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles
+{
+    <link href="@Url.Content("~/assets/css/colorbox.css")" rel="stylesheet" />
+}
+
+@section Scripts
+{
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/validator.parseDynamicContent.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/js/jquery.colorbox-min.js")"></script>
+
+<script type="text/javascript">
+    $(function () {
+        Query();
+
+        $('#Parameters_KeyWord').keydown(function (event) {
+            if (event.which == 13) {
+                Query();
+                return false;
+            }
+        });
+    });
+
+    var Query = function () {
+        var grid = $('#divList');
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '@Url.Action("Query")',
+            dataType: "html",
+            beforeSend: function () {
+                grid.Overlay('show');
+            },
+            success: function (data) {
+                grid.Overlay('hide').html(data);
+            },
+            error: function (x, h, r) {
+                grid.Overlay('hide').html(x.responseText);
+            }
+        });
+    };
+
+    var Delete = function (uniqueID) {
+        $.ConfirmDialog('@string.Format("{0} {1} ?", Resources.Resource.Confirm, Resources.Resource.Delete)', function (confirmed) {
+            if (confirmed) {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    url: '@Url.Action("Delete")',
+                    data: { UniqueID: uniqueID },
+                    dataType: "json",
+                    beforeSend: function () { $.Overlay('show'); },
+                    success: function (data) {
+                        $.Overlay('hide');
+
+                        if (data.IsSuccess) {
+                            Query();
+                            $.SuccessDialog(data.Message);
+                        }
+                        else {
+                            $.ErrorDialog(data.Message);
+                        }
+                    },
+                    error: function (x, h, r) {
+                        $.Overlay('hide');
+                        $.ErrorDialog(x.responseText);
+                    }
+                });
+            }
+        });
+    };
+</script>
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div id="divList" style="min-height:200px;"></div>
+    </div>
+</div>
+
+
